@@ -1,0 +1,545 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+
+class AuthController extends Controller
+{
+    public function index()
+    {
+        $user = Auth::user();
+        return $user->getRoleNames();
+        if ($user) {
+            return view('layouts.index');
+        }
+
+        return view('auth.login');
+    }
+    // LOGIN
+    public function login()
+    {
+        $user = Auth::user();
+        // return $user->getRoleNames();
+        if ($user) {
+            return redirect()->route('dashboard.index');
+        }
+
+        return view('auth.login');
+    }
+
+    public function do_login(Request $request)
+    {
+        if (request()->ajax()) {
+            try {
+                $email = $request->email;
+                $password = $request->password;
+                DB::beginTransaction();
+                $results_data = User::where("email", "=", $email)->first();
+            
+                if ($results_data) {
+                    if (Hash::check($password, $results_data->password)) {
+                        if (!$results_data->deleted_at) {
+                            $data = [
+                                'email' => $email,
+                                'password' => $password,
+                            ];
+            
+                            Auth::attempt($data);
+            
+                            if (Auth::check()) {
+                                return response()->json([
+                                    "code" => 200,
+                                    "response" => [
+                                        'type' => 'success',
+                                        'title' => 'Login Successful!',
+                                        'message' => 'You will be redirected to the main page shortly.',
+                                    ],
+                                ]);
+                            }
+                        } else {
+                            return response()->json([
+                                "code" => -1,
+                                "response" => [
+                                    'type' => 'error',
+                                    'title' => 'Login Failed!',
+                                    'message' => 'Account cannot be accessed.',
+                                ],
+                            ]);
+                        }
+                    }
+                }
+            
+                return response()->json([
+                    "code" => -1,
+                    "response" => [
+                        'type' => 'error',
+                        'title' => 'Login Failed!',
+                        'message' => 'Incorrect email or password.',
+                    ],
+                ]);
+            } catch (Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    "code" => -1,
+                    "response" => [
+                        'type' => 'error',
+                        'title' => 'Login Failed!',
+                        'message' => 'Incorrect email or password.',
+                    ],
+                ]);
+            }
+            
+        }
+
+        return response()->json([
+            "code" => -1,
+            "response" => [
+                'type' => 'error',
+                'title' => 'Login Failed!',
+                'message' => 'Incorrect email or password.',
+            ],
+        ]);
+    }
+
+    // REGISTER
+    public function register(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user) {
+            return redirect()->route('dashboard.index');
+        }
+
+        return view('auth.register');
+    }
+
+    public function do_register(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $validator = Validator::make($request->all(), [
+                'captcha' => 'required|captcha'
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    "code" => -1,
+                    "response" => [
+                        'type' => 'error',
+                        'title' => 'Registrasi Gagal',
+                        'message' => 'Captcha Tidak Sesuai',
+                    ],
+                ]);
+            }
+
+            $name = $request->name;
+            $email = $request->email;
+            $password = $request->password;
+            $retype_password = $request->retype_password;
+
+            if (empty($name)) {
+                return response()->json([
+                    "code" => -1,
+                    "response" => [
+                        'type' => 'error',
+                        'title' => 'Registration Failed',
+                        'message' => 'Name Required',
+                    ],
+                ]);
+            }
+            if (empty($email)) {
+                return response()->json([
+                    "code" => -1,
+                    "response" => [
+                        'type' => 'error',
+                        'title' => 'Registration Failed',
+                        'message' => 'Email Required',
+                    ],
+                ]);
+            }
+            if (empty($password)) {
+                return response()->json([
+                    "code" => -1,
+                    "response" => [
+                        'type' => 'error',
+                        'title' => 'Registration Failed',
+                        'message' => 'Password Required',
+                    ],
+                ]);
+            }
+            if ($retype_password != $password) {
+                return response()->json([
+                    "code" => -1,
+                    "response" => [
+                        'type' => 'error',
+                        'title' => 'Registration Failed',
+                        'message' => 'Password Confirmation do not match',
+                    ],
+                ]);
+            }
+
+            $checkEmail = User::where('email', '=', $email)->first();
+            if (!empty($checkEmail)) {
+                return response()->json([
+                    "code" => -1,
+                    "response" => [
+                        'type' => 'error',
+                        'title' => 'Registration Failed',
+                        'message' => 'This email address is already registered. Please try a different email address',
+                    ],
+                ]);
+            }
+
+            $user = User::create([
+                'email' => $email,
+                'name' => $name,
+                'password' => Hash::make($password),
+            ]);
+
+            if (!$user) {
+                DB::rollBack();
+                return response()->json([
+                    "code" => -1,
+                    "response" => [
+                        'type' => 'error',
+                        'title' => 'Registration Failed',
+                        'message' => 'Registration Failed',
+                    ],
+                ]);
+            }
+            $user->assignRole('member');
+            DB::commit();
+            return response()->json([
+                "code" => 200,
+                "response" => [
+                    'type' => 'success',
+                    'title' => 'Successfully Registered',
+                    'message' => 'Your account have been registered successfully',
+                ],
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e);
+        }
+    }
+
+    // EMAIL VERIFICATION
+    public function email_verification(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user) {
+            if ($user->role == User::ADMIN) {
+                return redirect()->route('dashboard.index');
+            } else if ($user->role == User::MEMBER) {
+                return redirect()->route('dashboard.index');
+            }
+        }
+
+        return view('auth.email-verification', ['email' => $request->email]);
+    }
+
+    public function email_verification_store(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'captcha' => 'required|captcha'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    "code" => -1,
+                    "response" => [
+                        'type' => 'error',
+                        'title' => 'Verifikasi Email',
+                        'message' => 'Captcha Tidak Sesuai',
+                    ],
+                ]);
+            }
+
+            $email = $request->email;
+
+            if (empty($email)) {
+                return response()->json([
+                    "code" => -1,
+                    "response" => [
+                        'type' => 'error',
+                        'title' => 'Verifikasi Email',
+                        'message' => 'Email Belum Diisi',
+                    ],
+                ]);
+            }
+            $user = User::where('email', '=', $email)->first();
+            if (empty($user)) {
+                return response()->json([
+                    "code" => -1,
+                    "response" => [
+                        'type' => 'error',
+                        'title' => 'Verifikasi Email',
+                        'message' => 'Email Belum Terdaftar. Silahkan Lakukan Pendaftaran',
+                    ],
+                ]);
+            }
+            if ($user->email_verified_at) {
+                return response()->json([
+                    "code" => 200,
+                    "response" => [
+                        'type' => 'success',
+                        'title' => 'Verifikasi Email',
+                        'message' => 'Email Anda Sudah Diverifikasi. Silahkan Coba Masuk Kembali',
+                    ],
+                ]);
+            }
+
+            $user->sendEmailVerificationNotification();
+            return response()->json([
+                "code" => 201,
+                "response" => [
+                    'type' => 'success',
+                    'title' => 'Verifikasi Email',
+                    'message' => 'Email Verifikasi Berhasil Dikirim. Silahkan Periksa Email Anda',
+                ],
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                "code" => -1,
+                "response" => [
+                    'type' => 'error',
+                    'title' => 'Verifikasi Email',
+                    'message' => 'Terjadi Kesalahan Pada Sistem',
+                ],
+            ]);
+        }
+    }
+
+    public function coba(){
+        $user = User::find(1);
+        return sha1($user->getEmailForVerification());
+    }
+
+    public function email_verification_verify(Request $request)
+    {
+        $user = User::find($request->id);
+        if (!hash_equals(sha1($user->getEmailForVerification()), (string) $request->hash)) {
+            return redirect()->route('login.index');
+        }
+
+        $user->email_verified_at = Carbon::now();
+        $user->save();
+
+        Auth::loginUsingId($user->id);
+
+        if ($user->role == User::ADMIN) {
+            return redirect()->route('admin.dashboard.index');
+        } else if ($user->role == User::MEMBER) {
+            return redirect()->route('member.dashboard.index');
+        }
+    }
+
+    // LOGOUT
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('');
+    }
+
+    // CAPTCHA
+    public function reload_captcha()
+    {
+        return response()->json(['captcha' => captcha_img()]);
+    }
+
+    // FORGOT PASSWORD
+    public function forgot_password(Request $request)
+    {
+        return view('auth.forgot-password');
+    }
+
+    public function forgot_password_store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'captcha' => 'required|captcha'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "code" => -1,
+                "response" => [
+                    'type' => 'error',
+                    'title' => 'Lupa Password',
+                    'message' => 'Captcha Tidak Sesuai',
+                ],
+            ]);
+        }
+
+        if (empty($request->email)) {
+            return response()->json([
+                "code" => -1,
+                "response" => [
+                    'type' => 'error',
+                    'title' => 'Lupa Password',
+                    'message' => 'Email Belum Diisi',
+                ],
+            ]);
+        }
+
+        $checkEmail = User::where('email', '=', $request->email)->first();
+        if (empty($checkEmail)) {
+            return response()->json([
+                "code" => -1,
+                "response" => [
+                    'type' => 'error',
+                    'title' => 'Lupa Password',
+                    'message' => 'Email Belum Terdaftar. Silahkan Lakukan Pendaftaran',
+                ],
+            ]);
+        }
+
+        $status = Password::sendResetLink($request->only('email'));
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return response()->json([
+                "code" => 200,
+                "response" => [
+                    'type' => 'success',
+                    'title' => 'Lupa Password',
+                    'message' => 'Email Reset Password Berhasil Dikirim, Silahkan Periksa Email Anda.',
+                ],
+            ]);
+        } else {
+            response()->json([
+                "code" => -1,
+                "response" => [
+                    'type' => 'error',
+                    'title' => 'Lupa Password',
+                    'message' => 'Email Reset Password Gagal Dikirim',
+                ],
+            ]);
+        }
+    }
+
+    // RESET PASSWORD
+    public function reset_password(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user) {
+            if ($user->role == User::ADMIN) {
+                return redirect()->route('admin.dashboard.index');
+            } else if ($user->role == User::MEMBER) {
+                return redirect()->route('member.dashboard.index');
+            }
+        }
+
+        return view('auth.reset-password', ['token' => $request->token]);
+    }
+
+    public function reset_password_store(Request $request)
+    {
+        $token = $request->token;
+        $email = $request->email;
+        $password = $request->password;
+        $password_confirmation = $request->password_confirmation;
+
+        if (empty($token)) {
+            return response()->json([
+                "code" => -1,
+                "response" => [
+                    'type' => 'error',
+                    'title' => 'Reset Password',
+                    'message' => 'Token Tidak Valid',
+                ],
+            ]);
+        }
+        if (empty($email)) {
+            return response()->json([
+                "code" => -1,
+                "response" => [
+                    'type' => 'error',
+                    'title' => 'Reset Password',
+                    'message' => 'Email Belum Diisi',
+                ],
+            ]);
+        }
+        if (empty($password)) {
+            return response()->json([
+                "code" => -1,
+                "response" => [
+                    'type' => 'error',
+                    'title' => 'Reset Password',
+                    'message' => 'Password Belum Diisi',
+                ],
+            ]);
+        }
+        if ($password_confirmation != $password) {
+            return response()->json([
+                "code" => -1,
+                "response" => [
+                    'type' => 'error',
+                    'title' => 'Reset Password',
+                    'message' => 'Ketik Ulang Password Tidak Sama',
+                ],
+            ]);
+        }
+
+        $user = User::where('email', '=', $request->email)->first();
+        if (empty($user)) {
+            return response()->json([
+                "code" => -1,
+                "response" => [
+                    'type' => 'error',
+                    'title' => 'Reset Password',
+                    'message' => 'Email Belum Terdaftar. Silahkan Lakukan Pendaftaran',
+                ],
+            ]);
+        }
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ]);
+
+                $user->email_verified_at = Carbon::now();
+                $user->save();
+
+                Auth::loginUsingId($user->id);
+
+                event(new PasswordReset($user));
+            }
+        );
+
+
+        if ($status === Password::PASSWORD_RESET) {
+            return response()->json([
+                "code" => 200,
+                "response" => [
+                    'type' => 'success',
+                    'title' => 'Reset Password',
+                    'message' => 'Reset Password Berhasil',
+                ],
+            ]);
+        } else {
+            response()->json([
+                "code" => -1,
+                "response" => [
+                    'type' => 'error',
+                    'title' => 'Reset Password',
+                    'message' => 'Reset Password Gagal',
+                ],
+            ]);
+        }
+    }
+}
