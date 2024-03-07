@@ -9,9 +9,7 @@ Route::middleware('guest')->group(function () {
     Route::get("/logout", [AuthController::class, "logout"])->name('logout');
     Route::get("/register", [AuthController::class, "register"])->name("register");
     Route::get('/forgot-password', [AuthController::class, 'forgot_password'])->name('password.request');
-    Route::post('/forgot-password', [AuthController::class, 'forgot_password_store'])->name('password.email');
     Route::get('/reset-password/{token}',  [AuthController::class, 'reset_password'])->name('password.reset');
-    Route::post('/reset-password', [AuthController::class, 'reset_password_store'])->name('password.update');
     Route::get("/email_verification", [AuthController::class, "email_verification"])->name("verification.index");
     Route::get('/email/verify/{id}/{hash}', [AuthController::class, "email_verification_verify"])->middleware('signed')->name('verification.verify');
 });
