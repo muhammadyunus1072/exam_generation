@@ -32,13 +32,15 @@ return new class extends Migration
 
         if ($is_history) {
             $table->bigInteger('obj_id')->unsigned();
-            $table->string('email');
         } else {
-            $table->string('email')->unique();
+            $table->index('email', 'users_email_idx');
         }
+
         $table->string('name');
+        $table->string('email');
         $table->string('password');
         $table->datetime('email_verified_at')->nullable()->default(null);
+        $table->rememberToken();
 
         $table->bigInteger("created_by")->unsigned()->nullable();
         $table->bigInteger("updated_by")->unsigned()->nullable();

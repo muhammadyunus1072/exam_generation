@@ -2,10 +2,11 @@
 
 namespace App\Livewire\Role;
 
+use App\Helpers\Alert;
 use Carbon\Carbon;
 use App\Models\User;
 use Livewire\Component;
-use Livewire\Attributes\On; 
+use Livewire\Attributes\On;
 use App\Traits\WithDatatable;
 use App\Helpers\PermissionHelper;
 use Spatie\Permission\Models\Role;
@@ -29,13 +30,13 @@ class Datatable extends Component
         $this->end_date = Carbon::now()->format('Y-m-d');
         $this->start_date = Carbon::now()->subMonths(1)->format('Y-m-d');
     }
-    
-    #[On('refreshDatatable')] 
+
+    #[On('refreshDatatable')]
     public function refreshDatatable()
     {
         $this->dispatch('$refresh');
     }
-    #[On('addFilter')] 
+    #[On('addFilter')]
     public function addFilter($filter)
     {
         foreach ($filter as $key => $value) {
@@ -51,7 +52,7 @@ class Datatable extends Component
         }
 
         $item->delete();
-        $this->dispatch('onSuccessSweetAlert', 'Data has been successfully deleted!');
+        Alert::success($this, 'Success', 'Data has been successfully deleted!');
     }
 
     public function getColumns(): array
@@ -78,8 +79,8 @@ class Datatable extends Component
                     if ($authUser->hasPermissionTo("delete roles")) {
                         $destroyHtml = "<div class='col-auto'>
                             <form wire:submit.prevent=\"destroy('$item->id')\">"
-                                . method_field('DELETE') . csrf_field() .
-                                "<button type='submit' class='btn btn-danger btn-sm'
+                            . method_field('DELETE') . csrf_field() .
+                            "<button type='submit' class='btn btn-danger btn-sm'
                                     onclick=\"return confirm('Delete Data?')\">
                                     <i class='fa fa-trash mr-2'></i>Delete
                                 </button>
@@ -108,9 +109,9 @@ class Datatable extends Component
                 'name' => 'Permission',
                 'render' => function ($item) {
                     $permissions = Role::find($item->id)->permissions;
-                    
+
                     $html = "<ul class='list-group list-group-flush'>";
-                    foreach($permissions as $permission){
+                    foreach ($permissions as $permission) {
                         $html .= "<li class='list-group-item'>$permission->name</li>";
                     }
                     $html .= "</ul>";

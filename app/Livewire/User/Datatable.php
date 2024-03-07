@@ -2,14 +2,14 @@
 
 namespace App\Livewire\User;
 
+use App\Helpers\Alert;
 use Carbon\Carbon;
 use App\Models\User;
 use Livewire\Component;
 use App\Traits\WithDatatable;
-use App\Helpers\PermissionHelper;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
-use Livewire\Attributes\On; 
+use Livewire\Attributes\On;
 
 class Datatable extends Component
 {
@@ -28,19 +28,21 @@ class Datatable extends Component
         $this->end_date = Carbon::now()->format('Y-m-d');
         $this->start_date = Carbon::now()->subMonths(1)->format('Y-m-d');
     }
-    
-    #[On('refreshDatatable')] 
+
+    #[On('refreshDatatable')]
     public function refreshDatatable()
     {
         $this->dispatch('$refresh');
     }
-    #[On('addFilter')] 
+
+    #[On('addFilter')]
     public function addFilter($filter)
     {
         foreach ($filter as $key => $value) {
             $this->$key = $value;
         }
     }
+
     public function destroy($id)
     {
         $item = User::find($id);
@@ -50,7 +52,7 @@ class Datatable extends Component
         }
 
         $item->delete();
-        $this->dispatch('onSuccessSweetAlert', 'Data has been successfully deleted!');
+        Alert::success($this, 'Success', 'Data has been successfully deleted!');
     }
 
     public function getColumns(): array
@@ -77,8 +79,8 @@ class Datatable extends Component
                     if ($authUser->hasPermissionTo("delete users")) {
                         $destroyHtml = "<div class='col-auto'>
                             <form wire:submit.prevent=\"destroy('$item->id')\">"
-                                . method_field('DELETE') . csrf_field() .
-                                "<button type='submit' class='btn btn-danger btn-sm'
+                            . method_field('DELETE') . csrf_field() .
+                            "<button type='submit' class='btn btn-danger btn-sm'
                                     onclick=\"return confirm('Delete Data?')\">
                                     <i class='fa fa-trash mr-2'></i>Delete
                                 </button>
@@ -121,9 +123,6 @@ class Datatable extends Component
 
     public function getQuery(): Builder
     {
-        $start_date = $this->start_date . " 00:00:00";
-        $end_date = $this->end_date . " 23:59:59";
-
         return User::query();
     }
 

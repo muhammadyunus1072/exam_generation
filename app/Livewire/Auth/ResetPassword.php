@@ -1,0 +1,78 @@
+<?php
+
+namespace App\Livewire\Auth;
+
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Livewire\Component;
+use Illuminate\Support\Facades\Password;
+use Livewire\Attributes\Validate;
+use App\Helpers\Alert;
+
+class ResetPassword extends Component
+{
+    public $token;
+
+    #[Validate('required', message: 'Email Harus Diisi', onUpdate: false)]
+    public $email;
+
+    #[Validate('required', message: 'Password Baru Harus Diisi', onUpdate: false)]
+    public $password;
+
+    #[Validate('required', message: 'Ketik Ulang Password Harus Diisi', onUpdate: false)]
+    public $retype_password;
+
+    #[Validate('required', message: 'Captcha Harus Diisi', onUpdate: false)]
+    #[Validate('captcha', message: 'Captcha Tidak Sesuai', onUpdate: false)]
+    public $captcha;
+
+    public function store()
+    {
+        $this->dispatch('reload-captcha');
+        $this->validate();
+
+        if ($this->password != $this->retype_password) {
+            Alert::fail($this, 'Register Gagal', 'Pengetikan Ulang Password Tidak Sama');
+            return;
+        }
+
+        $user = User::where("email", "=", $this->email)->first();
+        if (empty($user)) {
+            Alert::fail($this, 'Gagal', 'Email Belum Terdaftar');
+            return;
+        }
+
+        $status = Password::reset(
+            [
+                'email' => $this->email,
+                'password' => $this->password,
+                'token' => $this->token,
+            ],
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ]);
+
+                $user->email_verified_at = Carbon::now();
+                $user->save();
+
+                Auth::loginUsingId($user->id);
+            }
+        );
+
+
+        if ($status === Password::PASSWORD_RESET) {
+            Alert::success($this, 'Berhasil', 'Password Berhasil Diatur Ulang');
+            $this->redirectRoute('dashboard.index');
+        } else {
+            Alert::fail($this, 'Gagal', 'Password Gagal Diatur Ulang');
+        }
+    }
+
+    public function render()
+    {
+        return view('livewire.auth.reset-password');
+    }
+}

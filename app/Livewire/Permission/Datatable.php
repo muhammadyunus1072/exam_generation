@@ -2,13 +2,11 @@
 
 namespace App\Livewire\Permission;
 
-use Carbon\Carbon;
+use App\Helpers\Alert;
 use App\Models\User;
 use Livewire\Component;
-use Livewire\Attributes\On; 
+use Livewire\Attributes\On;
 use App\Traits\WithDatatable;
-use App\Helpers\PermissionHelper;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,13 +26,13 @@ class Datatable extends Component
     {
         $this->sortDirection = 'desc';
     }
-    
-    #[On('refreshDatatable')] 
+
+    #[On('refreshDatatable')]
     public function refreshDatatable()
     {
         $this->dispatch('$refresh');
     }
-    #[On('addFilter')] 
+    #[On('addFilter')]
     public function addFilter($filter)
     {
         foreach ($filter as $key => $value) {
@@ -50,7 +48,7 @@ class Datatable extends Component
         }
 
         $item->delete();
-        $this->dispatch('onSuccessSweetAlert', 'Data has been successfully deleted!');
+        Alert::success($this, 'Success', 'Data has been successfully deleted!');
     }
 
     public function getColumns(): array
@@ -77,8 +75,8 @@ class Datatable extends Component
                     if ($authUser->hasPermissionTo("delete permissions")) {
                         $destroyHtml = "<div class='col-auto'>
                             <form wire:submit.prevent=\"destroy('$item->id')\">"
-                                . method_field('DELETE') . csrf_field() .
-                                "<button type='submit' class='btn btn-danger btn-sm'
+                            . method_field('DELETE') . csrf_field() .
+                            "<button type='submit' class='btn btn-danger btn-sm'
                                     onclick=\"return confirm('Delete Data?')\">
                                     <i class='fa fa-trash mr-2'></i>Delete
                                 </button>
