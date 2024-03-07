@@ -32,7 +32,7 @@
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <!--begin::Repeat Password-->
-        <input type="password" placeholder="Repeat Password" wire:model.defer="retype_password" autocomplete="off"
+        <input type="password" placeholder="Repeat Password" wire:model.defer="retypePassword" autocomplete="off"
             class="form-control bg-transparent" />
         <!--end::Repeat Password-->
     </div>

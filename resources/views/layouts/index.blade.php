@@ -187,7 +187,7 @@
                         <!--end::Sidebar toggle-->
                     </div>
                     <!--end::Logo-->
-                    @include('layouts.left-sidebar')
+                    @include('layouts.sidebar')
                 </div>
                 <!--end::Sidebar-->
                 <!--begin::Main-->
@@ -220,31 +220,16 @@
                     <!--begin::Footer-->
                     <div id="kt_app_footer" class="app-footer">
                         <!--begin::Footer container-->
-                        <div
+                        {{-- <div
                             class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
                             <!--begin::Copyright-->
                             <div class="text-dark order-2 order-md-1">
-                                <span class="text-muted fw-semibold me-1">2023&copy;</span>
+                                <span class="text-muted fw-semibold me-1">2024&copy;</span>
                                 <a href="https://keenthemes.com" target="_blank"
-                                    class="text-gray-800 text-hover-primary">Keenthemes</a>
+                                    class="text-gray-800 text-hover-primary">Smart Integrated System</a>
                             </div>
                             <!--end::Copyright-->
-                            <!--begin::Menu-->
-                            <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
-                                <li class="menu-item">
-                                    <a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
-                                </li>
-                                <li class="menu-item">
-                                    <a href="https://devs.keenthemes.com" target="_blank"
-                                        class="menu-link px-2">Support</a>
-                                </li>
-                                <li class="menu-item">
-                                    <a href="https://1.envato.market/EA4JP" target="_blank"
-                                        class="menu-link px-2">Purchase</a>
-                                </li>
-                            </ul>
-                            <!--end::Menu-->
-                        </div>
+                        </div> --}}
                         <!--end::Footer container-->
                     </div>
                     <!--end::Footer-->
@@ -262,12 +247,6 @@
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
     <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
-    <!--end::Global Javascript Bundle-->
-    {{-- begin::Livewire --}}
-
-    {{-- <script>
-            $("#kt_datatable_zero_configuration").DataTable();
-        </script> --}}
 
     @livewireScripts
 
@@ -284,7 +263,6 @@
         });
     </script>
     @stack('js')
-    {{-- end::Livewire --}}
     <!--end::Javascript-->
 </body>
 <!--end::Body-->

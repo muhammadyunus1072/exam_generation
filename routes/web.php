@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::group([], __DIR__ . '/web/Auth.php');
 Route::group([], __DIR__ . '/web/Other.php');
 Route::group([], __DIR__ . '/web/User.php');
+
+Route::middleware(['auth', 'access_permission'])->group(function () {
+    Route::group(["controller" => DashboardController::class, "prefix" => "dashboard", "as" => "dashboard."], function () {
+        Route::get('/', 'index')->name('index');
+    });
+});

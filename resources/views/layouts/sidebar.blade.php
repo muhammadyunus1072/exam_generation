@@ -1,145 +1,83 @@
-<a href="{{ route('admin.dashboard.index') }}" class="sidebar-brand ">
-    <span class="avatar avatar-xl sidebar-brand-icon h-auto">
-        <span class="avatar-title rounded bg-white">
-            <img src="{{ asset('ic_logo.png') }}" class="img-fluid" alt="logo" />
-        </span>
-    </span>
-</a>
-
-<div class="sidebar-heading">Instructor</div>
-<ul class="sidebar-menu">
-    {{-- Dashboard --}}
-    <li class="sidebar-menu-item {{ Request::segment(1) == 'admin' && Request::segment(2) === null ? 'active' : '' }}">
-        <a class="sidebar-menu-button" href="{{ route('admin.dashboard.index') }}">
-            <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">account_box</span>
-            <span class="sidebar-menu-text">Dashboard</span>
-        </a>
-    </li>
-    {{-- Transaction --}}
-    <?php $name = 'transaction'; ?>
-    <li
-        class="sidebar-menu-item {{ Request::segment(2) == $name ? 'active' : '' }}">
-        <a class="sidebar-menu-button" href="{{ route('admin.'. $name .'.index') }}">
-            <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">receipt</span>
-            <span class="sidebar-menu-text">{{ master_sidebar($name) }}</span>
-        </a>
-    </li>
-    {{-- Payment Method --}}
-    <?php $name = 'payment_method'; ?>
-    <li
-        class="sidebar-menu-item {{ Request::segment(2) == $name ? 'active' : '' }}">
-        <a class="sidebar-menu-button" href="{{ route('admin.'. $name .'.index') }}">
-            <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">money</span>
-            <span class="sidebar-menu-text">{{ master_sidebar($name) }}</span>
-        </a>
-    </li>
-
-    {{-- Kursus --}}
-    <li class="sidebar-menu-item {{ Request::segment(2) == 'master_data' ? 'active open' : '' }}">
-        <a class="sidebar-menu-button" data-toggle="collapse" href="#master_data_menu">
-            <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">folder</span>
-            Kursus
-            <span class="ml-auto sidebar-menu-toggle-icon"></span>
-        </a>
-        <ul class="sidebar-submenu collapse sm-indent" id="master_data_menu">
-            <?php $name = 'course'; ?>
-            <li class="sidebar-menu-item {{ Request::segment(3) == $name ? 'active' : '' }}">
-                <a class="sidebar-menu-button" href="{{ route('admin.' . $name . '.index') }}">
-                    <span class="sidebar-menu-text">{{ master_sidebar($name) }}</span>
-                </a>
-            </li>
-            <?php $name = 'offline_course'; ?>
-            <li class="sidebar-menu-item {{ Request::segment(3) == $name ? 'active' : '' }}">
-                <a class="sidebar-menu-button" href="{{ route('admin.' . $name . '.index') }}">
-                    <span class="sidebar-menu-text">{{ master_sidebar($name) }}</span>
-                </a>
-            </li>
-            <?php $name = 'product'; ?>
-            <li class="sidebar-menu-item {{ Request::segment(3) == $name ? 'active' : '' }}">
-                <a class="sidebar-menu-button" href="{{ route('admin.' . $name . '.index') }}">
-                    <span class="sidebar-menu-text">{{ master_sidebar($name) }}</span>
-                </a>
-            </li>
-            <?php $name = 'group_category_course'; ?>
-            <li class="sidebar-menu-item {{ Request::segment(3) == $name ? 'active' : '' }}">
-                <a class="sidebar-menu-button" href="{{ route('admin.' . $name . '.index') }}">
-                    <span class="sidebar-menu-text">{{ master_sidebar($name) }}</span>
-                </a>
-            </li>
-            <?php $name = 'category_course'; ?>
-            <li class="sidebar-menu-item {{ Request::segment(3) == $name ? 'active' : '' }}">
-                <a class="sidebar-menu-button" href="{{ route('admin.' . $name . '.index') }}">
-                    <span class="sidebar-menu-text">{{ master_sidebar($name) }}</span>
-                </a>
-            </li>
-            <?php $name = 'level'; ?>
-            <li class="sidebar-menu-item {{ Request::segment(3) == $name ? 'active' : '' }}">
-                <a class="sidebar-menu-button" href="{{ route('admin.' . $name . '.index') }}">
-                    <span class="sidebar-menu-text">{{ master_sidebar($name) }}</span>
-                </a>
-            </li>
-        </ul>
-    </li>
-
-    {{-- Report --}}
-    <li class="sidebar-menu-item {{ Request::segment(2) == 'report' ? 'active open' : '' }}">
-        <a class="sidebar-menu-button js-sidebar-collapse" data-toggle="collapse" href="#report_menu">
-            <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">receipt</span>
-            Laporan
-            <span class="ml-auto sidebar-menu-toggle-icon"></span>
-        </a>
-        <ul class="sidebar-submenu collapse sm-indent" id="report_menu">
-            <?php $name = 'transaction'; ?>
-            <li class="sidebar-menu-item {{ Request::segment(3) == $name ? 'active' : '' }}">
-                <a class="sidebar-menu-button" href="{{ route('admin.report.' . $name . '.index') }}">
-                    <span class="sidebar-menu-text">{{ master_sidebar($name) }}</span>
-                </a>
-            </li>
-            <?php $name = 'course_member'; ?>
-            <li class="sidebar-menu-item {{ Request::segment(3) == $name ? 'active' : '' }}">
-                <a class="sidebar-menu-button" href="{{ route('admin.report.' . $name . '.index') }}">
-                    <span class="sidebar-menu-text">{{ master_sidebar($name) }}</span>
-                </a>
-            </li>
-            <?php $name = 'recap_course'; ?>
-            <li class="sidebar-menu-item {{ Request::segment(3) == $name ? 'active' : '' }}">
-                <a class="sidebar-menu-button" href="{{ route('admin.report.' . $name . '.index') }}">
-                    <span class="sidebar-menu-text">{{ master_sidebar($name) }}</span>
-                </a>
-            </li>
-            <li class="sidebar-menu-item {{ Request::segment(3) == 'offline_course' ? 'active' : '' }}">
-                <a class="sidebar-menu-button" href="{{ route('admin.report.offline_course') }}">
-                    <span class="sidebar-menu-text">Kursus Offline</span>
-                </a>
-            </li>
-            <li class="sidebar-menu-item {{ Request::segment(3) == 'registrar_offline_course' ? 'active' : '' }}">
-                <a class="sidebar-menu-button" href="{{ route('admin.report.registrar_offline_course') }}">
-                    <span class="sidebar-menu-text">Pendaftar Kursus Offline</span>
-                </a>
-            </li>
-        </ul>
-    </li>
-
-    {{-- ADMIN & MEMBER --}}
-    <li class="sidebar-menu-item {{ Request::segment(2) == 'account' ? 'active open' : '' }}">
-        <a class="sidebar-menu-button js-sidebar-collapse" data-toggle="collapse" href="#account">
-            <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">account_circle</span>
-            Akun
-            <span class="ml-auto sidebar-menu-toggle-icon"></span>
-        </a>
-        <ul class="sidebar-submenu collapse sm-indent" id="account">
-            <?php $name = 'account_member'; ?>
-            <li class="sidebar-menu-item {{ Request::segment(3) == $name ? 'active' : '' }}">
-                <a class="sidebar-menu-button" href="{{ route('admin.' . $name . '.index') }}">
-                    <span class="sidebar-menu-text">{{ master_sidebar($name) }}</span>
-                </a>
-            </li>
-            <?php $name = 'account_admin'; ?>
-            <li class="sidebar-menu-item {{ Request::segment(3) == $name ? 'active' : '' }}">
-                <a class="sidebar-menu-button" href="{{ route('admin.' . $name . '.index') }}">
-                    <span class="sidebar-menu-text">{{ master_sidebar($name) }}</span>
-                </a>
-            </li>
-        </ul>
-    </li>
-</ul>
+<!--begin::sidebar menu-->
+<div class="app-sidebar-menu overflow-hidden flex-column-fluid">
+    <!--begin::Menu wrapper-->
+    <div id="kt_app_sidebar_menu_wrapper" class="app-sidebar-wrapper">
+        <!--begin::Scroll wrapper-->
+        <div id="kt_app_sidebar_menu_scroll" class="scroll-y my-5 mx-3" data-kt-scroll="true" data-kt-scroll-activate="true"
+            data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer"
+            data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
+            <!--begin::Menu-->
+            <div class="menu menu-column menu-rounded menu-sub-indention fw-semibold fs-6" id="#kt_app_sidebar_menu"
+                data-kt-menu="true" data-kt-menu-expand="false">
+                @foreach (App\Helpers\MenuHelper::menu() as $menu)
+                    @if (isset($menu['submenu']))
+                        <!--begin:Menu item-->
+                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+                            <!--begin:Menu link-->
+                            <span class="menu-link {{ $menu['is_active'] ? 'active' : '' }}">
+                                @if (isset($menu['icon']))
+                                    <span class="menu-icon">
+                                        <i class="{{ $menu['icon'] }} fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                            <span class="path3"></span>
+                                            <span class="path4"></span>
+                                        </i>
+                                    </span>
+                                @endif
+                                <span class="menu-title">{{ $menu['text'] }}</span>
+                                <span class="menu-arrow"></span>
+                            </span>
+                            <!--end:Menu link-->
+                            <!--begin:Menu sub-->
+                            <div class="menu-sub menu-sub-accordion">
+                                @foreach ($menu['submenu'] as $submenu)
+                                    <!--begin:Menu item-->
+                                    <div class="menu-item">
+                                        <!--begin:Menu link-->
+                                        <a class="menu-link {{ $submenu['is_active'] ? 'active' : '' }}"
+                                            href="{{ route($submenu['route']) }}">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">{{ $submenu['text'] }}</span>
+                                        </a>
+                                        <!--end:Menu link-->
+                                    </div>
+                                    <!--end:Menu item-->
+                                @endforeach
+                            </div>
+                            <!--end:Menu sub-->
+                        </div>
+                        <!--end:Menu item -->
+                    @else
+                        <!--begin:Menu item-->
+                        <div class="menu-item">
+                            <!--begin:Menu link-->
+                            <a class="menu-link {{ $menu['is_active'] ? 'active' : '' }}"
+                                href="{{ route($menu['route']) }}">
+                                @if (isset($menu['icon']))
+                                    <span class="menu-icon">
+                                        <i class="{{ $menu['icon'] }} fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                            <span class="path3"></span>
+                                            <span class="path4"></span>
+                                        </i>
+                                    </span>
+                                @endif
+                                <span class="menu-title">{{ $menu['text'] }}</span>
+                            </a>
+                            <!--end:Menu link-->
+                        </div>
+                        <!--end:Menu item-->
+                    @endif
+                @endforeach
+            </div>
+            <!--end::Menu-->
+        </div>
+        <!--end::Scroll wrapper-->
+    </div>
+    <!--end::Menu wrapper-->
+</div>
+<!--end::sidebar menu-->

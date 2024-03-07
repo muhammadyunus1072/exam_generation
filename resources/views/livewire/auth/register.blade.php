@@ -58,10 +58,10 @@
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <!--begin::Repeat Password-->
-        <input placeholder="Repeat Password" wire:model.defer="retype_password" type="password" autocomplete="off"
-            class="form-control bg-transparent @error('retype_password') is-invalid @enderror" />
+        <input placeholder="Repeat Password" wire:model.defer="retypePassword" type="password" autocomplete="off"
+            class="form-control bg-transparent @error('retypePassword') is-invalid @enderror" />
 
-        @error('retype_password')
+        @error('retypePassword')
             <div class="invalid-feedback">
                 {{ $message }}
             </div>

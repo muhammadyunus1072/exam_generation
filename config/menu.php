@@ -1,40 +1,30 @@
 <?php
 
 return [
-
     'title' => env('APP_NAME', 'Template Project'),
-
     'menu' => [
         [
             'text' => 'Dashboard',
-            'url'  => 'dashboard',
-            'icon' => '<i class="ki-duotone ki-element-11 fs-2">
-            <span class="path1"></span>
-            <span class="path2"></span>
-            <span class="path3"></span>
-            <span class="path4"></span>
-        </i>',
+            'route'  => 'dashboard.index',
+            'icon' => 'ki-duotone ki-element-11',
         ],
         [
             'text' => 'Admin',
-            'icon' => '<i class="ki-duotone ki-shield-tick fs-1">
-                <span class="path1"></span>
-                <span class="path2"></span>
-                </i>',
+            'icon' => 'ki-duotone ki-shield-tick',
             'submenu' => [
                 [
                     'text' => 'User',
-                    'url' => 'users',
+                    'route' => 'user.index',
                     'icon_color' => 'success',
                 ],
                 [
                     'text' => 'Role',
-                    'url' => 'roles',
+                    'route' => 'role.index',
                     'icon_color' => 'primary',
                 ],
                 [
-                    'text' => 'Permissions',
-                    'url' => 'permissions',
+                    'text' => 'Permission',
+                    'route' => 'permission.index',
                     'icon_color' => 'primary',
                 ],
             ],

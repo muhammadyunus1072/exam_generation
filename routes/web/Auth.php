@@ -8,10 +8,10 @@ Route::middleware('guest')->group(function () {
     Route::get("/login", [AuthController::class, "login"])->name("login");
     Route::get("/logout", [AuthController::class, "logout"])->name('logout');
     Route::get("/register", [AuthController::class, "register"])->name("register");
-    Route::get('/forgot-password', [AuthController::class, 'forgot_password'])->name('password.request');
-    Route::get('/reset-password/{token}',  [AuthController::class, 'reset_password'])->name('password.reset');
-    Route::get("/email_verification", [AuthController::class, "email_verification"])->name("verification.index");
-    Route::get('/email/verify/{id}/{hash}', [AuthController::class, "email_verification_verify"])->middleware('signed')->name('verification.verify');
+    Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.request');
+    Route::get('/reset-password/{token}',  [AuthController::class, 'resetPassword'])->name('password.reset');
+    Route::get("/email_verification", [AuthController::class, "emailVerification"])->name("verification.index");
+    Route::get('/email/verify/{id}/{hash}', [AuthController::class, "emailVerificationVerify"])->middleware('signed')->name('verification.verify');
 });
 
 Route::middleware('auth')->group(function () {

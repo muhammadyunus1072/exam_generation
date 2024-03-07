@@ -22,7 +22,7 @@ class ResetPassword extends Component
     public $password;
 
     #[Validate('required', message: 'Ketik Ulang Password Harus Diisi', onUpdate: false)]
-    public $retype_password;
+    public $retypePassword;
 
     #[Validate('required', message: 'Captcha Harus Diisi', onUpdate: false)]
     #[Validate('captcha', message: 'Captcha Tidak Sesuai', onUpdate: false)]
@@ -33,7 +33,7 @@ class ResetPassword extends Component
         $this->dispatch('reload-captcha');
         $this->validate();
 
-        if ($this->password != $this->retype_password) {
+        if ($this->password != $this->retypePassword) {
             Alert::fail($this, 'Register Gagal', 'Pengetikan Ulang Password Tidak Sama');
             return;
         }
