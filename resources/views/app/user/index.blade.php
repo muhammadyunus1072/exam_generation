@@ -1,4 +1,4 @@
-@extends('layouts.index')
+@extends('app.layouts.panel')
 
 @section('title', 'Master Data User')
 

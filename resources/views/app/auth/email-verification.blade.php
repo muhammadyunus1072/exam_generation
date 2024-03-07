@@ -1,4 +1,4 @@
-@extends('app.auth.layout')
+@extends('app.layouts.auth')
 
 @section('body-class', 'layout-default layout-login-image')
 

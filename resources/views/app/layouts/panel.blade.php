@@ -69,8 +69,7 @@
                     <!--begin::Mobile logo-->
                     <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
                         <a class="d-lg-none">
-                            <img alt="Logo" src="{{ asset('assets/media/logos/default-small.svg') }}"
-                                class="h-30px" />
+                            <img alt="Logo" src="{{ asset(config('template.logo_panel')) }}" class="h-30px" />
                         </a>
                     </div>
                     <!--end::Mobile logo-->
@@ -84,9 +83,9 @@
                             data-kt-drawer-toggle="#kt_app_header_menu_toggle" data-kt-swapper="true"
                             data-kt-swapper-mode="{default: 'append', lg: 'prepend'}"
                             data-kt-swapper-parent="{default: '#kt_app_body', lg: '#kt_app_header_wrapper'}">
-
                         </div>
                         <!--end::Menu wrapper-->
+
                         <!--begin::Navbar-->
                         <div class="app-navbar flex-shrink-0">
                             <!--begin::User menu-->
@@ -138,19 +137,6 @@
                                 <!--end::Menu wrapper-->
                             </div>
                             <!--end::User menu-->
-                            <!--begin::Header menu toggle-->
-                            <div class="app-navbar-item d-lg-none ms-2 me-n2" title="Show header menu">
-                                <div class="btn btn-flex btn-icon btn-active-color-primary w-30px h-30px"
-                                    id="kt_app_header_menu_toggle">
-                                    <i class="ki-duotone ki-element-4 fs-1">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                    </i>
-                                </div>
-                            </div>
-                            <!--end::Header menu toggle-->
-                            <!--begin::Aside toggle-->
-                            <!--end::Header menu toggle-->
                         </div>
                         <!--end::Navbar-->
                     </div>
@@ -161,6 +147,7 @@
             <!--end::Header-->
             <!--begin::Wrapper-->
             <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
+
                 <!--begin::Sidebar-->
                 <div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true"
                     data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}"
@@ -168,13 +155,17 @@
                     data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
                     <!--begin::Logo-->
                     <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
+
                         <!--begin::Logo image-->
                         <a href="{{ route('dashboard.index') }}">
-                            <h1 class="text-light">{{ config('menu.title') }}</h1>
+                            <img alt="Logo" src="{{ asset(config('template.logo_panel')) }}"
+                                class="h-50px app-sidebar-logo-default p-1 rounded bg-{{ config('template.logo_panel_background') }}">
+                            <img alt="Logo" src="{{ asset(config('template.logo_auth')) }}"
+                                class="h-35px app-sidebar-logo-minimize p-1 rounded bg-{{ config('template.logo_panel_background') }}">
                         </a>
                         <!--end::Logo image-->
-                        <!--begin::Sidebar toggle-->
 
+                        <!--begin::Sidebar toggle-->
                         <div id="kt_app_sidebar_toggle"
                             class="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary h-30px w-30px position-absolute top-50 start-100 translate-middle rotate"
                             data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body"
@@ -187,9 +178,10 @@
                         <!--end::Sidebar toggle-->
                     </div>
                     <!--end::Logo-->
-                    @include('layouts.sidebar')
+                    @include('app.layouts.panel-sidebar')
                 </div>
                 <!--end::Sidebar-->
+
                 <!--begin::Main-->
                 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
                     <!--begin::Content wrapper-->
@@ -219,18 +211,6 @@
                     <!--end::Content wrapper-->
                     <!--begin::Footer-->
                     <div id="kt_app_footer" class="app-footer">
-                        <!--begin::Footer container-->
-                        {{-- <div
-                            class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
-                            <!--begin::Copyright-->
-                            <div class="text-dark order-2 order-md-1">
-                                <span class="text-muted fw-semibold me-1">2024&copy;</span>
-                                <a href="https://keenthemes.com" target="_blank"
-                                    class="text-gray-800 text-hover-primary">Smart Integrated System</a>
-                            </div>
-                            <!--end::Copyright-->
-                        </div> --}}
-                        <!--end::Footer container-->
                     </div>
                     <!--end::Footer-->
                 </div>

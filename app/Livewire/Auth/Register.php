@@ -51,9 +51,9 @@ class Register extends Component
             'email' => $this->email,
             'password' => Hash::make($this->password),
         ]);
-        $user->assignRole(Config::get('template.registration_default_role'));
+        $user->assignRole(config('template.registration_default_role'));
 
-        if (Config::get('template.email_verification_feature')) {
+        if (config('template.email_verification_feature')) {
             $user->sendEmailVerificationNotification();
             $this->redirectRoute('verification.index', ['email' => $this->email]);
             return;

@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>{{ Config::get('template.title') }}</title>
+    <title>{{ config('template.title') }}</title>
 
     <!-- Prevent the demo from appearing in search engines -->
     <meta name="robots" content="noindex">
@@ -73,15 +73,15 @@
                 <!--begin::Content-->
                 <div class="d-flex flex-column flex-center pb-0 pb-lg-10 p-10 w-100">
                     <!--begin::Image-->
-                    <img class="theme-light-show mx-auto mw-100 w-150px w-lg-300px mb-4 p-5 rounded bg-{{ Config::get('template.logo_auth_background') }}"
-                        src="{{ asset(Config::get('template.logo_auth')) }}" alt="" />
+                    <img class="theme-light-show mx-auto mw-100 w-150px w-lg-300px mb-4 p-5 rounded bg-{{ config('template.logo_auth_background') }}"
+                        src="{{ asset(config('template.logo_auth')) }}" alt="" />
                     <!--end::Image-->
                     <!--begin::Title-->
-                    <h1 class="text-gray-800 fs-2qx fw-bold text-center">{{ Config::get('template.title') }}</h1>
+                    <h1 class="text-gray-800 fs-2qx fw-bold text-center">{{ config('template.title') }}</h1>
                     <!--end::Title-->
                     <!--begin::Text-->
                     <div class="text-gray-600 fs-1qx text-center fw-semibold">
-                        {{ Config::get('template.subtitle') }}
+                        {{ config('template.subtitle') }}
                     </div>
                     <!--end::Text-->
                 </div>

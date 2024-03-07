@@ -9,7 +9,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('layouts.index');
+        return view('app.layouts.panel');
     }
 
 }

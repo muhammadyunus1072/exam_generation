@@ -89,7 +89,7 @@
         });
 
         function disable_send_email() {
-            time_send_email = {{ Config::get('template.email_verification_delay_time') }};
+            time_send_email = {{ config('template.email_verification_delay_time') }};
 
             $('#btn-submit').attr('disabled', true);
             $('#btn-submit-info').text(`Kirim Ulang Email Dalam ${time_send_email} Detik`);
