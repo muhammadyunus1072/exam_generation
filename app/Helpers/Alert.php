@@ -6,24 +6,15 @@ use Livewire\Component;
 
 class Alert
 {
-    const EVENT_FAIL_ALERT = 'onFailSweetAlert';
-    const EVENT_SUCCESS_ALERT = 'onSuccessSweetAlert';
+    const EVENT_INFO = 'SwalFire';
 
     public static function success(Component $component, $title, $message)
     {
-        $component->dispatch(self::EVENT_SUCCESS_ALERT, [
-            'icon' => 'success',
-            'title' => $title,
-            'text' => $message,
-        ]);
+        $component->dispatch(self::EVENT_INFO, 'success', $title, $message);
     }
 
     public static function fail(Component $component, $title, $message)
     {
-        $component->dispatch(self::EVENT_FAIL_ALERT, [
-            'icon' => 'error',
-            'title' => $title,
-            'text' => $message,
-        ]);
+        $component->dispatch(self::EVENT_INFO, 'error', $title, $message);
     }
 }

@@ -108,19 +108,11 @@
     @livewireScripts
 
     <script>
-        Livewire.on('onSuccessSweetAlert', (event) => {
+        Livewire.on('SwalFire', (event) => {
             Swal.fire({
-                icon: 'success',
-                title: event[0],
-                text: event[1],
-            });
-        });
-
-        Livewire.on('onFailSweetAlert', (event) => {
-            Swal.fire({
-                icon: 'error',
-                title: event[0],
-                text: event[1],
+                icon: event[0],
+                title: event[1],
+                text: event[2],
             });
         });
     </script>

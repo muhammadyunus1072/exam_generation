@@ -32,7 +32,7 @@ class AuthController extends Controller
 
     public function reset_password(Request $request)
     {
-        return view('app.auth.reset-password', ['token' => $request->token]);
+        return view('app.auth.reset-password', ['token' => $request->token, 'email' => $request->email]);
     }
 
     public function email_verification(Request $request)

@@ -8,7 +8,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Validate;
 
-class EmailVerification extends Component
+class ForgotPassword extends Component
 {
     #[Validate('required', message: 'Email Harus Diisi', onUpdate: false)]
     public $email;
@@ -28,7 +28,7 @@ class EmailVerification extends Component
             return;
         }
 
-        $status = Password::sendResetLink($this->email);
+        $status = Password::sendResetLink(['email' => $this->email]);
         if ($status === Password::RESET_LINK_SENT) {
             Alert::success($this, 'Berhasil', 'Email Reset Password Telah Dikirim. Silahkan Periksa Email Anda');
             return;

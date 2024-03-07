@@ -13,3 +13,7 @@ Route::middleware('guest')->group(function () {
     Route::get("/email_verification", [AuthController::class, "email_verification"])->name("verification.index");
     Route::get('/email/verify/{id}/{hash}', [AuthController::class, "email_verification_verify"])->middleware('signed')->name('verification.verify');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::get("/logout", [AuthController::class, "logout"])->name('logout');
+});

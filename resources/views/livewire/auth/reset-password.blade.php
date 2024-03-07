@@ -17,14 +17,14 @@
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <!--begin::Email-->
-        <input type="text" placeholder="Email" wire:model.defer="email" autocomplete="off"
-            class="form-control bg-transparent" />
+        <input type="text" placeholder="Email" class="form-control form-controller-solid" value="{{ $email }}"
+            disabled />
         <!--end::Email-->
     </div>
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <!--begin::Password-->
-        <input type="text" placeholder="Password" wire:model.defer="password" autocomplete="off"
+        <input type="password" placeholder="Password" wire:model.defer="password" autocomplete="off"
             class="form-control bg-transparent" />
         <!--end::Password-->
     </div>
@@ -32,7 +32,7 @@
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <!--begin::Repeat Password-->
-        <input placeholder="Repeat Password" wire:model.defer="retype_password" type="text" autocomplete="off"
+        <input type="password" placeholder="Repeat Password" wire:model.defer="retype_password" autocomplete="off"
             class="form-control bg-transparent" />
         <!--end::Repeat Password-->
     </div>

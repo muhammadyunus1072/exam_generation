@@ -6,6 +6,7 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 use App\Helpers\Alert;
+use Illuminate\Support\Facades\Hash;
 
 class Register extends Component
 {
@@ -45,7 +46,7 @@ class Register extends Component
         $user = User::create([
             'name' => $this->name,
             'email' => $this->email,
-            'password' => $this->password,
+            'password' => Hash::make($this->password),
         ]);
         $user->sendEmailVerificationNotification();
 
