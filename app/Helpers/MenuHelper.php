@@ -19,7 +19,7 @@ class MenuHelper
     private static function getValidatedMenu()
     {
         $user = Auth::user();
-        $menus = config('menu.menu');
+        $menus = config('template.menu');
         $currentRoute = Route::currentRouteName();
 
         $validatedMenu = [];

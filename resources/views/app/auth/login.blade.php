@@ -12,6 +12,19 @@
                 <!--begin::Wrapper-->
                 <div class="d-flex flex-center flex-column flex-column-fluid pb-15 pb-lg-20">
                     <livewire:auth.login />
+
+                    @if (Config::get('template.forgot_password_feature'))
+                        <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
+                            <a href="{{ route('password.request') }}" class="link-primary">Forgot Password ?</a>
+                        </div>
+                    @endif
+
+                    @if (Config::get('template.registration_feature'))
+                        <div class="text-gray-500 text-center fw-semibold fs-6">
+                            Not a Member yet?
+                            <a href="{{ route('register') }}" class="link-primary">Sign up</a>
+                        </div>
+                    @endif
                 </div>
                 <!--end::Wrapper-->
             </div>

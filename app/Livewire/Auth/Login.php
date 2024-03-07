@@ -6,6 +6,7 @@ use App\Helpers\Alert;
 use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Validate;
 
@@ -35,6 +36,12 @@ class Login extends Component
 
         if (!Hash::check($this->password, $user->password)) {
             Alert::fail($this, 'Login Gagal', 'Password Tidak Sesuai');
+            return;
+        }
+
+        if (empty($user->email_verified_at) && Config::get('template.email_verification_feature')) {
+            $user->sendEmailVerificationNotification();
+            $this->redirectRoute('verification.index', ['email' => $this->email]);
             return;
         }
 

@@ -6,6 +6,9 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 use App\Helpers\Alert;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 
 class Register extends Component
@@ -48,9 +51,16 @@ class Register extends Component
             'email' => $this->email,
             'password' => Hash::make($this->password),
         ]);
-        $user->sendEmailVerificationNotification();
+        $user->assignRole(Config::get('template.registration_default_role'));
 
-        $this->redirectRoute('verification.index', ['email' => $this->email]);
+        if (Config::get('template.email_verification_feature')) {
+            $user->sendEmailVerificationNotification();
+            $this->redirectRoute('verification.index', ['email' => $this->email]);
+            return;
+        }
+
+        Auth::loginUsingId($user->id);
+        $this->redirectRoute('login');
     }
 
     public function render()
