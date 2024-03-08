@@ -1,6 +1,6 @@
 @extends('app.layouts.panel')
 
-@section('title', 'Master Data User')
+@section('title', 'Permission')
 
 @section('header')
     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
@@ -28,9 +28,13 @@
         @can(PermissionHelper::TYPE_CREATE . ' ' . PermissionHelper::ACCESS_PERMISSION)
             <div class='row'>
                 <div class="col-md-auto mt-2">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#permissionModal">
-                        <i class="fa fa-plus"></i>
-                        Create Permission
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#permissionModal">
+                        <i class="ki-duotone ki-plus fs-1">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                            <span class="path3"></span>
+                        </i>
+                        Tambah Baru
                     </button>
                 </div>
             </div>

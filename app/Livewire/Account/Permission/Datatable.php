@@ -43,30 +43,38 @@ class Datatable extends Component
     {
         return [
             [
-                'name' => 'Action',
+                'name' => 'Aksi',
                 'sortable' => false,
                 'searchable' => false,
                 'render' => function ($item) {
 
                     $editHtml = "";
                     if ($this->isCanUpdate) {
-                        $editHtml = "<div class='col-auto'>
-                            <button class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#permissionModal' wire:click=\"\$dispatch('editDetail', { id: '$item->id' })\">
-                                <i class='fa fa-edit'></i> Edit
-                            </button>
+                        $editUrl = route('permission.edit', $item->id);
+                        $editHtml = "<div class='col-auto mb-2'>
+                            <a class='btn btn-primary btn-sm' href='$editUrl'>
+                                <i class='ki-duotone ki-notepad-edit fs-1'>
+                                    <span class='path1'></span>
+                                    <span class='path2'></span>
+                                </i>
+                                Ubah
+                            </a>
                         </div>";
                     }
 
                     $destroyHtml = "";
                     if ($this->isCanDelete) {
-                        $destroyHtml = "<div class='col-auto'>
-                            <form wire:submit.prevent=\"destroy('$item->id')\">"
-                            . method_field('DELETE') . csrf_field() .
-                            "<button type='submit' class='btn btn-danger btn-sm'
-                                    onclick=\"return confirm('Delete Data?')\">
-                                    <i class='fa fa-trash mr-2'></i>Delete
-                                </button>
-                            </form>
+                        $destroyHtml = "<div class='col-auto mb-2'>
+                            <button class='btn btn-danger btn-sm m-0'>
+                                <i class='ki-duotone ki-trash fs-1'>
+                                    <span class='path1'></span>
+                                    <span class='path2'></span>
+                                    <span class='path3'></span>
+                                    <span class='path4'></span>
+                                    <span class='path5'></span>
+                                </i>
+                                Hapus
+                            </button>
                         </div>";
                     }
 
@@ -79,7 +87,7 @@ class Datatable extends Component
             ],
             [
                 'key' => 'name',
-                'name' => 'Name',
+                'name' => 'Nama',
                 'render' => function ($item) {
                     return $item->name;
                 }

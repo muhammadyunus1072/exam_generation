@@ -39,10 +39,10 @@
                                             </div>
                                             <div class="d-flex flex-column">
                                                 <i
-                                                    class="ki ki-duotone ki-up fs-4 m-0 p-0
+                                                    class="ki-duotone ki-up fs-4 m-0 p-0
                                 {{ $isSortAscending ? 'text-dark' : 'text-secondary' }}"></i>
                                                 <i
-                                                    class="ki ki-duotone ki-down fs-4 m-0 p-0
+                                                    class="ki-duotone ki-down fs-4 m-0 p-0
                                 {{ $isSortAscending ? 'text-secondary' : 'text-dark' }}"></i>
                                             </div>
                                         </div>
