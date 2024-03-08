@@ -24,7 +24,7 @@
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <!--begin::Password-->
-        <input type="password" placeholder="Password" wire:model.defer="password" autocomplete="off"
+        <input type="password" placeholder="Password" wire:model="password" autocomplete="off"
             class="form-control bg-transparent" />
         <!--end::Password-->
     </div>
@@ -32,7 +32,7 @@
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <!--begin::Repeat Password-->
-        <input type="password" placeholder="Repeat Password" wire:model.defer="retypePassword" autocomplete="off"
+        <input type="password" placeholder="Repeat Password" wire:model="retypePassword" autocomplete="off"
             class="form-control bg-transparent" />
         <!--end::Repeat Password-->
     </div>
@@ -46,7 +46,7 @@
     </div>
     <div class="fv-row mb-8">
         <input id="captcha" type="text" class="form-control" placeholder="Enter Captcha"
-            wire:model.defer="captcha">
+            wire:model="captcha">
     </div>
     <!--begin::Submit button-->
     <div class="d-grid mb-10">

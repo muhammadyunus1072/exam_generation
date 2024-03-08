@@ -10,7 +10,7 @@ class PermissionController extends Controller
 {
     public function index()
     {
-        return view('app.permission.index');
+        return view('app.account.permission.index');
     }
     
     public function getPermissions(Request $request){

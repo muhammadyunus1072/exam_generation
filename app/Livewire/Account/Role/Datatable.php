@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Role;
+namespace App\Livewire\Account\Role;
 
 use App\Helpers\Alert;
 use Carbon\Carbon;

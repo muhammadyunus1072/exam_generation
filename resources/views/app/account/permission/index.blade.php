@@ -24,15 +24,24 @@
             <!--end::Item-->
         </ul>
         <!--end::Breadcrumb-->
+
+        @can(PermissionHelper::TYPE_CREATE . ' ' . PermissionHelper::ACCESS_PERMISSION)
+            <div class='row'>
+                <div class="col-md-auto mt-2">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#permissionModal">
+                        <i class="fa fa-plus"></i>
+                        Create Permission
+                    </button>
+                </div>
+            </div>
+        @endcan
     </div>
 @stop
+
 @section('content')
     <div class="card">
-        <div class="card-header">
-            @livewire('permission.filter')
-        </div>
         <div class="card-body">
-            @livewire('permission.datatable')
+            <livewire:account.permission.datatable lazy>
         </div>
     </div>
 @stop

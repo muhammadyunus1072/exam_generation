@@ -3,7 +3,7 @@
 namespace App\Traits;
 
 use Livewire\WithPagination;
-use Livewire\Attributes\On; 
+use Livewire\Attributes\On;
 
 trait WithDatatable
 {
@@ -11,23 +11,15 @@ trait WithDatatable
 
     protected $paginationTheme = 'bootstrap';
 
-    public $lengthOptions = [1, 2, 5, 10];
-    // public $lengthOptions = [10, 25, 50, 100];
-
+    public $lengthOptions = [10, 25, 50, 100];
     public $length = 10;
-
     public $search;
-
     public $sortBy = '';
-
     public $sortDirection = 'asc';
-
     public $loading = false;
 
     abstract public function getColumns(): array;
-
     abstract public function getQuery();
-
     abstract public function getView(): string;
 
     public function onMount()
@@ -50,34 +42,44 @@ trait WithDatatable
         $this->onMount();
     }
 
-    public function paginate($query)
-    {
-        return $query->paginate($this->length);
-    }
-
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
-    #[On('sortBy')] 
-    public function sortBy($field)
+    #[On('datatable-add-filter')]
+    public function datatableAddFilter($filter)
     {
-        $this->sortDirection = $this->sortBy === $field
-            ? $this->reverseSort()
-            : 'asc';
+        foreach ($filter as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+
+    #[On('datatable-refresh')]
+    public function datatableRefresh()
+    {
+        $this->refresh();
+    }
+
+    public function datatablePaginate($query)
+    {
+        return $query->paginate($this->length);
+    }
+
+    public function datatableSort($field)
+    {
+        if ($this->sortBy === $field) {
+            $this->sortDirection = 'asc' === $this->sortDirection
+                ? 'desc'
+                : 'asc';
+        } else {
+            $this->sortDirection = 'asc';
+        }
 
         $this->sortBy = $field;
     }
 
-    public function reverseSort()
-    {
-        return 'asc' === $this->sortDirection
-            ? 'desc'
-            : 'asc';
-    }
-
-    public function getProcessedQuery()
+    public function datatableGetProcessedQuery()
     {
         $columns = $this->getColumns();
         $query = $this->getQuery();
@@ -105,16 +107,15 @@ trait WithDatatable
         return $query;
     }
 
-    public function getData()
+    public function datatableGetData()
     {
-        return $this->paginate($this->getProcessedQuery());
+        return $this->datatablePaginate($this->datatableGetProcessedQuery());
     }
 
     public function render()
     {
-        $this->loading = false;
         return view($this->getView(), [
-            'data' => $this->getData(),
+            'data' => $this->datatableGetData(),
             'columns' => $this->getColumns(),
         ]);
     }

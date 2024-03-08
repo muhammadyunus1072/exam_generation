@@ -17,7 +17,7 @@
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <!--begin::Email-->
-        <input type="text" placeholder="Email" wire:model.defer="email" autocomplete="off"
+        <input type="text" placeholder="Email" wire:model="email" autocomplete="off"
             class="form-control bg-transparent @error('email') is-invalid @enderror" />
         @error('email')
             <div class="invalid-feedback">
@@ -29,7 +29,7 @@
     <!--end::Input group=-->
     <div class="fv-row mb-3">
         <!--begin::Password-->
-        <input type="password" placeholder="Password" wire:model.defer="password" autocomplete="off"
+        <input type="password" placeholder="Password" wire:model="password" autocomplete="off"
             class="form-control bg-transparent @error('password') is-invalid @enderror" />
         @error('password')
             <div class="invalid-feedback">
@@ -48,7 +48,7 @@
     </div>
     <div class="fv-row mb-8">
         <input id="captcha" type="text" class="form-control @error('captcha') is-invalid @enderror"
-            placeholder="Enter Captcha" wire:model.defer="captcha">
+            placeholder="Enter Captcha" wire:model="captcha">
         @error('captcha')
             <div class="invalid-feedback">
                 {{ $message }}

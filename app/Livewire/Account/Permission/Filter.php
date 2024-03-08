@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Permission;
+namespace App\Livewire\Account\Permission;
 
 use Exception;
 use App\Helpers\Alert;

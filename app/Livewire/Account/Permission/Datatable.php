@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Livewire\Permission;
+namespace App\Livewire\Account\Permission;
 
 use App\Helpers\Alert;
+use App\Helpers\PermissionHelper;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\Attributes\On;
@@ -15,38 +16,25 @@ class Datatable extends Component
 {
     use WithDatatable;
 
-    public $end_date;
-    public $start_date;
-
-    protected $listeners = [
-        'addFilter',
-    ];
+    public $isCanUpdate;
+    public $isCanDelete;
 
     public function onMount()
     {
         $this->sortDirection = 'desc';
+
+        $authUser = User::find(Auth::id());
+        $this->isCanUpdate = $authUser->hasPermissionTo(PermissionHelper::TYPE_UPDATE . " " . PermissionHelper::ACCESS_PERMISSION);
+        $this->isCanDelete = $authUser->hasPermissionTo(PermissionHelper::TYPE_DELETE . " " . PermissionHelper::ACCESS_PERMISSION);
     }
 
-    #[On('refreshDatatable')]
-    public function refreshDatatable()
-    {
-        $this->dispatch('$refresh');
-    }
-    #[On('addFilter')]
-    public function addFilter($filter)
-    {
-        foreach ($filter as $key => $value) {
-            $this->$key = $value;
-        }
-    }
     public function destroy($id)
     {
-        $item = Permission::find($id);
-        $authUser = User::find(Auth::id());
-        if (!$authUser->hasPermissionTo("delete permissions")) {
+        if (!$this->isCanDelete) {
             return;
         }
 
+        $item = Permission::find($id);
         $item->delete();
         Alert::success($this, 'Success', 'Data has been successfully deleted!');
     }
@@ -60,19 +48,17 @@ class Datatable extends Component
                 'searchable' => false,
                 'render' => function ($item) {
 
-                    $authUser = User::find(Auth::id());
-
                     $editHtml = "";
-                    if ($authUser->hasPermissionTo("edit permissions")) {
+                    if ($this->isCanUpdate) {
                         $editHtml = "<div class='col-auto'>
-                        <button class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#permissionModal' wire:click=\"\$dispatch('editDetail', { id: '$item->id' })\">
-                        <i class='fa fa-edit'></i> Edit
-                        </button>
+                            <button class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#permissionModal' wire:click=\"\$dispatch('editDetail', { id: '$item->id' })\">
+                                <i class='fa fa-edit'></i> Edit
+                            </button>
                         </div>";
                     }
 
                     $destroyHtml = "";
-                    if ($authUser->hasPermissionTo("delete permissions")) {
+                    if ($this->isCanDelete) {
                         $destroyHtml = "<div class='col-auto'>
                             <form wire:submit.prevent=\"destroy('$item->id')\">"
                             . method_field('DELETE') . csrf_field() .
@@ -81,8 +67,7 @@ class Datatable extends Component
                                     <i class='fa fa-trash mr-2'></i>Delete
                                 </button>
                             </form>
-                        </div>
-                        ";
+                        </div>";
                     }
 
                     $html = "<div class='row'>
@@ -104,12 +89,11 @@ class Datatable extends Component
 
     public function getQuery(): Builder
     {
-
         return Permission::query();
     }
 
     public function getView(): string
     {
-        return 'livewire.permission.datatable';
+        return 'livewire.account.permission.datatable';
     }
 }
