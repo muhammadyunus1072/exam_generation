@@ -41,12 +41,15 @@ class Detail extends Component
             DB::beginTransaction();
             if ($this->objId) {
                 $permission = Permission::find($this->objId);
-                $permission->name = $this->name;
-                $permission->save();
+                $permission->update([
+                    'name' => $this->name
+                ]);
                 Alert::success($this, 'Berhasil', 'Permission berhasil diperbarui');
             } else {
                 $permission = Permission::whereName($this->name)->first();
-                Permission::create(['name' => $this->name]);
+                Permission::create([
+                    'name' => $this->name
+                ]);
                 Alert::success($this, 'Berhasil', 'Permission berhasil dibuat');
             }
             DB::commit();

@@ -6,7 +6,6 @@ use App\Helpers\Alert;
 use App\Helpers\PermissionHelper;
 use App\Models\User;
 use Livewire\Component;
-use Livewire\Attributes\On;
 use App\Traits\WithDatatable;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
