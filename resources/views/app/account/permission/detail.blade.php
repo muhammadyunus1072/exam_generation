@@ -1,6 +1,6 @@
 @extends('app.layouts.panel')
 
-@section('title', 'Permission')
+@section('title', 'Permission - Detail')
 
 @section('header')
     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
@@ -25,27 +25,24 @@
         </ul>
         <!--end::Breadcrumb-->
 
-        @can(PermissionHelper::TYPE_CREATE . ' ' . PermissionHelper::ACCESS_PERMISSION)
-            <div class='row'>
-                <div class="col-md-auto mt-2">
-                    <a class="btn btn-success" href="{{ route('permission.create') }}">
-                        <i class="ki-duotone ki-plus fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                            <span class="path3"></span>
-                        </i>
-                        Tambah Baru
-                    </a>
-                </div>
+        <div class='row'>
+            <div class="col-md-auto mt-2">
+                <a class="btn btn-info" href="{{ route('permission.index') }}">
+                    <i class="ki-duotone ki-arrow-left fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                    Kembali
+                </a>
             </div>
-        @endcan
+        </div>
     </div>
 @stop
 
 @section('content')
     <div class="card">
         <div class="card-body">
-            <livewire:account.permission.datatable lazy>
+            <livewire:account.permission.detail :objId="$objId">
         </div>
     </div>
 @stop

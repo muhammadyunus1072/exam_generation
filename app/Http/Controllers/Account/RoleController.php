@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Account;
 
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;

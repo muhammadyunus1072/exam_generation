@@ -21,14 +21,12 @@ class Datatable extends Component
 
     public function onMount()
     {
-        $this->sortDirection = 'desc';
-
         $authUser = User::find(Auth::id());
         $this->isCanUpdate = $authUser->hasPermissionTo(PermissionHelper::TYPE_UPDATE . " " . PermissionHelper::ACCESS_PERMISSION);
         $this->isCanDelete = $authUser->hasPermissionTo(PermissionHelper::TYPE_DELETE . " " . PermissionHelper::ACCESS_PERMISSION);
     }
 
-    public function destroy($id)
+    public function delete($id)
     {
         if (!$this->isCanDelete) {
             return;
@@ -36,7 +34,7 @@ class Datatable extends Component
 
         $item = Permission::find($id);
         $item->delete();
-        Alert::success($this, 'Success', 'Data has been successfully deleted!');
+        Alert::success($this, 'Berhasil', 'Data berhasil dihapus');
     }
 
     public function getColumns(): array
@@ -65,7 +63,9 @@ class Datatable extends Component
                     $destroyHtml = "";
                     if ($this->isCanDelete) {
                         $destroyHtml = "<div class='col-auto mb-2'>
-                            <button class='btn btn-danger btn-sm m-0'>
+                            <button class='btn btn-danger btn-sm m-0' 
+                                wire:click=\"delete($item->id)\"
+                                wire:confirm=\"Apakah Anda Yakin Menghapus Data Ini?\">
                                 <i class='ki-duotone ki-trash fs-1'>
                                     <span class='path1'></span>
                                     <span class='path2'></span>
