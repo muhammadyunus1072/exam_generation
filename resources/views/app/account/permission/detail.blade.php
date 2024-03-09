@@ -1,26 +1,21 @@
 @extends('app.layouts.panel')
 
-@section('title', 'Permission - Detail')
+@section('title', 'Akses - Detail')
 
 @section('header')
     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
         <!--begin::Title-->
-        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Master Data</h1>
+        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Akses - Detail</h1>
         <!--end::Title-->
         <!--begin::Breadcrumb-->
         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-            <!--begin::Item-->
-            <li class="breadcrumb-item text-muted">
-                <a href="../../demo1/dist/index.html" class="text-muted text-hover-primary">Admin</a>
-            </li>
-            <!--end::Item-->
             <!--begin::Item-->
             <li class="breadcrumb-item">
                 <span class="bullet bg-gray-400 w-5px h-2px"></span>
             </li>
             <!--end::Item-->
             <!--begin::Item-->
-            <li class="breadcrumb-item text-muted">Permission</li>
+            <li class="breadcrumb-item text-muted">Akses</li>
             <!--end::Item-->
         </ul>
         <!--end::Breadcrumb-->

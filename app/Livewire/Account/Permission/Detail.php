@@ -4,10 +4,11 @@ namespace App\Livewire\Account\Permission;
 
 use Exception;
 use App\Helpers\Alert;
+use App\Helpers\PermissionHelper;
+use App\Repositories\Account\PermissionRepository;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Validate;
-use Spatie\Permission\Models\Permission;
 
 
 class Detail extends Component
@@ -17,12 +18,17 @@ class Detail extends Component
     #[Validate('required', message: 'Nama Harus Diisi', onUpdate: false)]
     public $name;
 
+    #[Validate('required', message: 'Tipe Harus Dipilih', onUpdate: false)]
+    public $type = PermissionHelper::TYPE_ALL[0];
+
     public function mount()
     {
         if ($this->objId) {
-            $permission = Permission::find($this->objId);
+            $permission = PermissionRepository::find($this->objId);
 
-            $this->name = $permission->name;
+            $permissionName = explode(PermissionHelper::SEPARATOR, $permission->name);
+            $this->name = $permissionName[0];
+            $this->type = $permissionName[1];
         }
     }
 
@@ -30,27 +36,27 @@ class Detail extends Component
     {
         $this->validate();
 
-        $permission = Permission::whereName($this->name)->first();
+        $permissionName = PermissionHelper::transform($this->name, $this->type);
+
+        $permission = PermissionRepository::findByName($permissionName);
         if (!empty($permission) && $permission->id != $this->objId) {
-            Alert::fail($this, 'Gagal', "Permission dengan nama {$this->name} sudah pernah dibuat");
+            $translatedPermissionName = PermissionHelper::translate($permissionName);
+            Alert::fail($this, 'Gagal', "Akses dengan nama {$translatedPermissionName} sudah pernah dibuat");
             return;
         }
 
+        $validatedData = [
+            'name' => $permissionName
+        ];
 
         try {
             DB::beginTransaction();
             if ($this->objId) {
-                $permission = Permission::find($this->objId);
-                $permission->update([
-                    'name' => $this->name
-                ]);
-                Alert::success($this, 'Berhasil', 'Permission berhasil diperbarui');
+                PermissionRepository::update($this->objId, $validatedData);
+                Alert::success($this, 'Berhasil', 'Akses berhasil diperbarui');
             } else {
-                $permission = Permission::whereName($this->name)->first();
-                Permission::create([
-                    'name' => $this->name
-                ]);
-                Alert::success($this, 'Berhasil', 'Permission berhasil dibuat');
+                PermissionRepository::create($validatedData);
+                Alert::success($this, 'Berhasil', 'Akses berhasil dibuat');
             }
             DB::commit();
 

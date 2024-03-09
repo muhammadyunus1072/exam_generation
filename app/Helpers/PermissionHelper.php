@@ -4,12 +4,11 @@ namespace App\Helpers;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use PDO;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class PermissionHelper
 {
+    const SEPARATOR =  ".";
+
     const TYPE_CREATE = "create";
     const TYPE_READ = "read";
     const TYPE_UPDATE = "update";
@@ -26,34 +25,44 @@ class PermissionHelper
     const ACCESS_PERMISSION = "permission";
     const ACCESS_ROLE = "role";
 
+    const TRANSLATE_TYPE = [
+        self::TYPE_CREATE => "Buat",
+        self::TYPE_READ => "Lihat",
+        self::TYPE_UPDATE => "Edit",
+        self::TYPE_DELETE => "Hapus",
+    ];
+
+    const TRANSLATE_ACCESS = [
+        self::ACCESS_DASHBOARD => "Dashboard",
+        self::ACCESS_USER => "Pengguna",
+        self::ACCESS_PERMISSION => "Akses",
+        self::ACCESS_ROLE => "Jabatan",
+    ];
+
     /*
     | Parameters
-    | name (string) : Nama dari permission yang akan dibuat
-    | types (array) : Array yang berisikan tipe permission
-    |                 Contoh: [PermissionHelper::TYPE_CREATE, PermissionHelper::TYPE_READ]
+    | permission (string) : merupakan nama dari permission
     */
-    public static function create($name, $types = [])
+    public static function translate($permission)
     {
-        foreach ($types as $type) {
-            Permission::create(['name' => "$type $name"]);
-        }
+        $explode = explode(self::SEPARATOR, $permission);
+        $access = $explode[0];
+        $type = $explode[1];
+
+        $translateAccess = isset(self::TRANSLATE_ACCESS[$access]) ? self::TRANSLATE_ACCESS[$access] : $access;
+        $translateType = isset(self::TRANSLATE_TYPE[$type]) ? self::TRANSLATE_TYPE[$type] : $type;
+
+        return $translateAccess . " - " . $translateType;
     }
 
     /*
     | Parameters
-    | name (string)       : Nama dari role yang akan dibuat
-    | permissions (array) : Array yang berisikan tipe permission
-    |                       Contoh: [PermissionHelper::ACCESS_DASHBOARD => [PermissionHelper::TYPE_CREATE, PermissionHelper::TYPE_READ]]
+    | access (string) : merupakan access yang tersedia pada helper ini
+    | type (string) : merupakan type yang tersedia pada helper ini
     */
-    public static function createRole($name, $permissions = [])
+    public static function transform($access, $type)
     {
-        $role = Role::create(['name' => $name]);
-
-        foreach ($permissions as $access => $types) {
-            foreach ($types as $type) {
-                $role->givePermissionTo("$type $access");
-            }
-        }
+        return $access . self::SEPARATOR . $type;
     }
 
     /*
@@ -79,6 +88,6 @@ class PermissionHelper
 
         // Pemeriksaan Hak Akses
         $user = $user == null ? User::find(Auth::id()) : $user;
-        return $user->hasPermissionTo("$type $access");
+        return $user->hasPermissionTo(self::transform($access, $type));
     }
 }

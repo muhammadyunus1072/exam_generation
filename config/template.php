@@ -29,17 +29,17 @@ return [
             'icon' => 'ki-duotone ki-shield-tick',
             'submenu' => [
                 [
-                    'text' => 'User',
+                    'text' => 'Pengguna',
                     'route' => 'user.index',
                     'icon_color' => 'success',
                 ],
                 [
-                    'text' => 'Role',
+                    'text' => 'Jabatan',
                     'route' => 'role.index',
                     'icon_color' => 'primary',
                 ],
                 [
-                    'text' => 'Permission',
+                    'text' => 'Akses',
                     'route' => 'permission.index',
                     'icon_color' => 'primary',
                 ],

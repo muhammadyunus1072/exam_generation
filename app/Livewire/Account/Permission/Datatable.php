@@ -2,13 +2,12 @@
 
 namespace App\Livewire\Account\Permission;
 
+use Livewire\Component;
 use App\Helpers\Alert;
 use App\Helpers\PermissionHelper;
-use App\Models\User;
-use Livewire\Component;
+use App\Repositories\Account\PermissionRepository;
+use App\Repositories\Account\UserRepository;
 use App\Traits\WithDatatable;
-use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Eloquent\Builder;
 
 class Datatable extends Component
@@ -20,9 +19,9 @@ class Datatable extends Component
 
     public function onMount()
     {
-        $authUser = User::find(Auth::id());
-        $this->isCanUpdate = $authUser->hasPermissionTo(PermissionHelper::TYPE_UPDATE . " " . PermissionHelper::ACCESS_PERMISSION);
-        $this->isCanDelete = $authUser->hasPermissionTo(PermissionHelper::TYPE_DELETE . " " . PermissionHelper::ACCESS_PERMISSION);
+        $authUser = UserRepository::authenticatedUser();
+        $this->isCanUpdate = $authUser->hasPermissionTo(PermissionHelper::transform(PermissionHelper::ACCESS_PERMISSION, PermissionHelper::TYPE_UPDATE));
+        $this->isCanDelete = $authUser->hasPermissionTo(PermissionHelper::transform(PermissionHelper::ACCESS_PERMISSION, PermissionHelper::TYPE_DELETE));
     }
 
     public function delete($id)
@@ -31,7 +30,7 @@ class Datatable extends Component
             return;
         }
 
-        $item = Permission::find($id);
+        $item = PermissionRepository::find($id);
         $item->delete();
         Alert::success($this, 'Berhasil', 'Data berhasil dihapus');
     }
@@ -87,8 +86,13 @@ class Datatable extends Component
             [
                 'key' => 'name',
                 'name' => 'Nama',
+            ],
+            [
+                'sortable' => false,
+                'searchable' => false,
+                'name' => 'Alias',
                 'render' => function ($item) {
-                    return $item->name;
+                    return PermissionHelper::translate($item->name);
                 }
             ],
         ];
@@ -96,7 +100,7 @@ class Datatable extends Component
 
     public function getQuery(): Builder
     {
-        return Permission::query();
+        return PermissionRepository::query();
     }
 
     public function getView(): string
