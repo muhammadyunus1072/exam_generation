@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Livewire\Account\Permission;
+namespace App\Livewire\Account\Role;
 
 use Exception;
 use App\Helpers\Alert;
+use App\Helpers\PermissionHelper;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Validate;
@@ -17,27 +18,38 @@ class Detail extends Component
     #[Validate('required', message: 'Nama Harus Diisi', onUpdate: false)]
     public $name;
 
-    public $permissions = [];
+    public $accesses = [];
 
     public function mount()
     {
-        $this->permissions = Permission::select(
-            'id',
-            'name',
-            DB::raw("0 as is_selected")
-        )
-            ->get()
-            ->toArray();
+        foreach (PermissionHelper::ACCESS_ALL as $access) {
+            $this->accesses[$access] = [
+                'name' => PermissionHelper::TRANSLATE_ACCESS[$access],
+                'permissions' => []
+            ];
+        }
+
+        $permissions = Permission::select('id', 'name')->orderBy('name')->get();
+        foreach ($permissions as $permission) {
+            $this->accesses[PermissionHelper::getAccess($permission->name)]['permissions'][] = [
+                'id' => $permission->id,
+                'name' => $permission->name,
+                'translated_name' => PermissionHelper::getTranslatedType($permission->name),
+                'is_checked' => false,
+            ];
+        }
 
         if ($this->objId) {
             $role = Role::find($this->objId);
             $this->name = $role->name;
 
             foreach ($role->permissions as $rolePermission) {
-                foreach ($this->permissions as $index => $permission) {
-                    if ($rolePermission->id == $permission['id']) {
-                        $this->permissions[$index]['is_selected'] = 1;
-                        break;
+                foreach ($this->accesses as $keyAccess => $access) {
+                    foreach ($access['permissions'] as $keyPermission => $permission) {
+                        if ($rolePermission->id == $permission['id']) {
+                            $this->accesses[$keyAccess]['permissions'][$keyPermission]['is_checked'] = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -49,9 +61,11 @@ class Detail extends Component
         $this->validate();
 
         $selectedPermissions = [];
-        foreach ($this->permissions as $permission) {
-            if ($permission['is_selected']) {
-                $selectedPermissions[] = $permission['name'];
+        foreach ($this->accesses as $access) {
+            foreach ($access['permissions'] as $permission) {
+                if ($permission['is_checked']) {
+                    $selectedPermissions[] = $permission['name'];
+                }
             }
         }
 

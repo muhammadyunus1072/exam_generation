@@ -2,13 +2,12 @@
 
 namespace App\Livewire\Account\Role;
 
+use App\Traits\WithDatatable;
 use App\Helpers\Alert;
 use App\Helpers\PermissionHelper;
-use App\Models\User;
+use App\Repositories\Account\RoleRepository;
+use App\Repositories\Account\UserRepository;
 use Livewire\Component;
-use App\Traits\WithDatatable;
-use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 
 class Datatable extends Component
@@ -20,9 +19,9 @@ class Datatable extends Component
 
     public function onMount()
     {
-        $authUser = User::find(Auth::id());
-        $this->isCanUpdate = $authUser->hasPermissionTo(PermissionHelper::ACCESS_ROLE . " " . PermissionHelper::TYPE_UPDATE);
-        $this->isCanDelete = $authUser->hasPermissionTo(PermissionHelper::ACCESS_ROLE . " " . PermissionHelper::TYPE_DELETE);
+        $authUser = UserRepository::authenticatedUser();
+        $this->isCanUpdate = $authUser->hasPermissionTo(PermissionHelper::transform(PermissionHelper::ACCESS_ROLE, PermissionHelper::TYPE_UPDATE));
+        $this->isCanDelete = $authUser->hasPermissionTo(PermissionHelper::transform(PermissionHelper::ACCESS_ROLE, PermissionHelper::TYPE_DELETE));
     }
 
     public function delete($id)
@@ -31,9 +30,8 @@ class Datatable extends Component
             return;
         }
 
-        $item = Role::find($id);
-        $item->delete();
-        Alert::success($this, 'Success', 'Data has been successfully deleted!');
+        RoleRepository::delete($id);
+        Alert::success($this, 'Berhasil', 'Data berhasil dihapus');
     }
 
     public function getColumns(): array
@@ -91,11 +89,12 @@ class Datatable extends Component
             [
                 'sortable' => false,
                 'searchable' => false,
-                'name' => 'Permission',
+                'name' => 'Akses',
                 'render' => function ($item) {
                     $html = "<ul class='list-group list-group-flush'>";
                     foreach ($item->permissions as $permission) {
-                        $html .= "<li class='list-group-item'>$permission->name</li>";
+                        $translatedName = PermissionHelper::translate($permission->name);
+                        $html .= "<li class='list-group-item'>$translatedName</li>";
                     }
                     $html .= "</ul>";
                     return $html;
@@ -106,11 +105,11 @@ class Datatable extends Component
 
     public function getQuery(): Builder
     {
-        return Role::with('permissions');
+        return RoleRepository::datatable();
     }
 
     public function getView(): string
     {
-        return 'livewire.role.datatable';
+        return 'livewire.account.role.datatable';
     }
 }

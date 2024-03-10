@@ -30,8 +30,7 @@ class Datatable extends Component
             return;
         }
 
-        $item = PermissionRepository::find($id);
-        $item->delete();
+        PermissionRepository::delete($id);
         Alert::success($this, 'Berhasil', 'Data berhasil dihapus');
     }
 
@@ -100,7 +99,7 @@ class Datatable extends Component
 
     public function getQuery(): Builder
     {
-        return PermissionRepository::query();
+        return PermissionRepository::datatable();
     }
 
     public function getView(): string

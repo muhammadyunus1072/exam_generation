@@ -11,4 +11,9 @@ class RoleRepository extends MasterDataRepository
     {
         return Role::class;
     }
+
+    public static function datatable()
+    {
+        return Role::with('permissions');
+    }
 }

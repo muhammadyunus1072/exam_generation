@@ -14,6 +14,12 @@ class PermissionHelper
     const TYPE_UPDATE = "update";
     const TYPE_DELETE = "delete";
     const TYPE_ALL = [self::TYPE_CREATE, self::TYPE_READ, self::TYPE_UPDATE, self::TYPE_DELETE];
+    const TRANSLATE_TYPE = [
+        self::TYPE_CREATE => "Buat",
+        self::TYPE_READ => "Lihat",
+        self::TYPE_UPDATE => "Edit",
+        self::TYPE_DELETE => "Hapus",
+    ];
 
     const ROUTE_TYPE_CREATE = ['create', 'store'];
     const ROUTE_TYPE_READ = ['index', 'show', 'print', 'export', 'find'];
@@ -24,12 +30,11 @@ class PermissionHelper
     const ACCESS_USER = "user";
     const ACCESS_PERMISSION = "permission";
     const ACCESS_ROLE = "role";
-
-    const TRANSLATE_TYPE = [
-        self::TYPE_CREATE => "Buat",
-        self::TYPE_READ => "Lihat",
-        self::TYPE_UPDATE => "Edit",
-        self::TYPE_DELETE => "Hapus",
+    const ACCESS_ALL = [
+        self::ACCESS_DASHBOARD,
+        self::ACCESS_USER,
+        self::ACCESS_PERMISSION,
+        self::ACCESS_ROLE,
     ];
 
     const TRANSLATE_ACCESS = [
@@ -38,6 +43,8 @@ class PermissionHelper
         self::ACCESS_PERMISSION => "Akses",
         self::ACCESS_ROLE => "Jabatan",
     ];
+
+
 
     /*
     | Parameters
@@ -63,6 +70,44 @@ class PermissionHelper
     public static function transform($access, $type)
     {
         return $access . self::SEPARATOR . $type;
+    }
+
+    /*
+    | Parameters
+    | permission (string) : merupakan nama dari permission
+    */
+    public static function getAccess($permission)
+    {
+        return explode(self::SEPARATOR, $permission)[0];
+    }
+
+
+    /*
+    | Parameters
+    | permission (string) : merupakan nama dari permission
+    */
+    public static function getTranslatedAccess($permission)
+    {
+        return self::TRANSLATE_ACCESS[self::getAccess($permission)];
+    }
+
+
+    /*
+    | Parameters
+    | permission (string) : merupakan nama dari permission
+    */
+    public static function getType($permission)
+    {
+        return explode(self::SEPARATOR, $permission)[1];
+    }
+
+    /*
+    | Parameters
+    | permission (string) : merupakan nama dari permission
+    */
+    public static function getTranslatedType($permission)
+    {
+        return self::TRANSLATE_TYPE[self::getType($permission)];
     }
 
     /*

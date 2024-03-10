@@ -27,9 +27,4 @@ abstract class MasterDataRepository
         $obj = self::find($id);
         return $obj->delete();
     }
-
-    public static function query()
-    {
-        return app(static::className())::query();
-    }
 }

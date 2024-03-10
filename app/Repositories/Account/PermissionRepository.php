@@ -16,4 +16,9 @@ class PermissionRepository extends MasterDataRepository
     {
         return Permission::whereName($name)->first();
     }
+
+    public static function datatable()
+    {
+        return Permission::query();
+    }
 }
