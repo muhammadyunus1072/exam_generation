@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Account;
 
+use App\Helpers\MenuHelper;
 use App\Repositories\MasterDataRepository;
 use Spatie\Permission\Models\Role;
 
@@ -10,6 +11,15 @@ class RoleRepository extends MasterDataRepository
     protected static function className(): string
     {
         return Role::class;
+    }
+
+    public static function update($id, $data)
+    {
+        $obj = self::find($id);
+
+        MenuHelper::resetCacheByRole($id);
+
+        return $obj->update($data);
     }
 
     public static function datatable()

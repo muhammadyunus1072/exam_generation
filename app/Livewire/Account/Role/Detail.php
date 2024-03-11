@@ -5,11 +5,11 @@ namespace App\Livewire\Account\Role;
 use Exception;
 use App\Helpers\Alert;
 use App\Helpers\PermissionHelper;
+use App\Repositories\Account\PermissionRepository;
+use App\Repositories\Account\RoleRepository;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Validate;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class Detail extends Component
 {
@@ -29,7 +29,7 @@ class Detail extends Component
             ];
         }
 
-        $permissions = Permission::select('id', 'name')->orderBy('name')->get();
+        $permissions = PermissionRepository::getIdAndNames();
         foreach ($permissions as $permission) {
             $this->accesses[PermissionHelper::getAccess($permission->name)]['permissions'][] = [
                 'id' => $permission->id,
@@ -40,7 +40,7 @@ class Detail extends Component
         }
 
         if ($this->objId) {
-            $role = Role::find($this->objId);
+            $role = RoleRepository::find($this->objId);
             $this->name = $role->name;
 
             foreach ($role->permissions as $rolePermission) {
@@ -69,22 +69,20 @@ class Detail extends Component
             }
         }
 
+        $validatedData = [
+            'name' => $this->name
+        ];
+
         try {
             DB::beginTransaction();
             if ($this->objId) {
-                $role = Role::find($this->objId);
-                $role->update([
-                    'name' => $this->name
-                ]);
+                RoleRepository::update($this->objId, $validatedData);
+                $role = RoleRepository::find($this->objId);
                 $role->syncPermissions($selectedPermissions);
-
                 Alert::success($this, 'Berhasil', 'Jabatan berhasil diperbarui');
             } else {
-                $role = Role::create([
-                    'name' => $this->name
-                ]);
+                $role = RoleRepository::create($validatedData);
                 $role->givePermissionTo($selectedPermissions);
-
                 Alert::success($this, 'Berhasil', 'Jabatan berhasil dibuat');
             }
             DB::commit();

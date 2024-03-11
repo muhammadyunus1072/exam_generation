@@ -22,14 +22,4 @@ class RoleController extends Controller
     {
         return view('app.account.role.detail', ["objId" => $request->id]);
     }
-
-    public function getRoles(Request $request)
-    {
-        $roles = Role::where('name', 'like', '%' . $request->search . '%')->pluck('name');
-        $response = array();
-        foreach ($roles as $role) {
-            array_push($response, ['id' => $role, 'text' => $role]);
-        }
-        return $response;
-    }
 }

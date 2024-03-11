@@ -1,6 +1,6 @@
 <form wire:submit="store">
     <div class='row'>
-        <div class="col-md-12 mb-2">
+        <div class="col-md-12 mb-4">
             <label>Nama</label>
             <input type="text" class="form-control @error('name') is-invalid @enderror" wire:model.blur="name" />
 

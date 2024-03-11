@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\Models\User;
+use App\Repositories\Account\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
@@ -11,16 +13,17 @@ class MenuHelper
     public static function menu()
     {
         $user = Auth::user();
-        return Cache::remember(CacheHelper::KEY_MENU . $user->id, CacheHelper::TIME_MENU, function () {
+        $validatedMenu = Cache::remember(CacheHelper::KEY_MENU . $user->id, CacheHelper::TIME_MENU, function () {
             return self::getValidatedMenu();
         });
+
+        return self::markActiveMenu($validatedMenu);
     }
 
     private static function getValidatedMenu()
     {
         $user = Auth::user();
         $menus = config('template.menu');
-        $currentRoute = Route::currentRouteName();
 
         $validatedMenu = [];
         foreach ($menus as $menu) {
@@ -28,14 +31,7 @@ class MenuHelper
 
             if (isset($menu['submenu'])) {
                 $validatedSubmenu = [];
-
                 foreach ($menu['submenu'] as $submenu) {
-                    $submenu['is_active'] = 0;
-                    if (isset($submenu['route']) && $submenu['route'] == $currentRoute) {
-                        $menu['is_active'] = 1;
-                        $submenu['is_active'] = 1;
-                    }
-
                     if (!isset($submenu['route']) || PermissionHelper::isRoutePermitted($submenu['route'], $user)) {
                         $validatedSubmenu[] = $submenu;
                     }
@@ -46,9 +42,6 @@ class MenuHelper
                     $validatedMenu[] = $menu;
                 }
             } else {
-                if (isset($menu['route']) && $menu['route'] == $currentRoute) {
-                    $menu['is_active'] = 1;
-                }
 
                 if (!isset($menu['route']) || PermissionHelper::isRoutePermitted($menu['route'], $user)) {
                     $validatedMenu[] = $menu;
@@ -57,5 +50,39 @@ class MenuHelper
         }
 
         return $validatedMenu;
+    }
+
+    private static function markActiveMenu($menus)
+    {
+        $currentRoute = Route::currentRouteName();
+
+        foreach ($menus as $keyMenu => $menu) {
+            $menus[$keyMenu]['is_active'] = isset($menu['route']) && $menu['route'] == $currentRoute;
+
+            if (isset($menu['submenu'])) {
+                foreach ($menu['submenu'] as $keySubmenu => $submenu) {
+                    $menus[$keyMenu]['submenu'][$keySubmenu]['is_active'] = 0;
+                    if (isset($submenu['route']) && $submenu['route'] == $currentRoute) {
+                        $menus[$keyMenu]['is_active']['is_active'] = 1;
+                        $menus[$keyMenu]['submenu'][$keySubmenu]['is_active'] = 1;
+                    }
+                }
+            }
+        }
+
+        return $menus;
+    }
+
+    public static function resetCacheByUser($userId)
+    {
+        Cache::forget(CacheHelper::KEY_MENU . $userId);
+    }
+
+    public static function resetCacheByRole($roleId)
+    {
+        $users = UserRepository::getByRole($roleId);
+        foreach ($users as $user) {
+            Cache::forget(CacheHelper::KEY_MENU . $user->id);
+        }
     }
 }

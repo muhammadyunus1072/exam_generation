@@ -11,16 +11,12 @@ Route::middleware(['auth', 'access_permission'])->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('create', 'create')->name('create');
         Route::get('{id}/edit', 'edit')->name('edit');
-
-        Route::get('/roles/get', [RoleController::class, 'getRoles'])->name('get.roles');
     });
 
     Route::group(["controller" => RoleController::class, "prefix" => "role", "as" => "role."], function () {
         Route::get('/', 'index')->name('index');
         Route::get('create', 'create')->name('create');
         Route::get('{id}/edit', 'edit')->name('edit');
-
-        Route::get('find/permission', [PermissionController::class, 'getPermissions'])->name('find.permission');
     });
 
     Route::group(["controller" => PermissionController::class, "prefix" => "permission", "as" => "permission."], function () {

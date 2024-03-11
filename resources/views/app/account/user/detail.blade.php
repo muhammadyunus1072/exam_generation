@@ -1,15 +1,15 @@
 @extends('app.layouts.panel')
 
-@section('title', 'Jabatan - Detail')
+@section('title', 'Pengguna - Detail')
 
 @section('header')
     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
         <!--begin::Title-->
-        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Jabatan - Detail</h1>
+        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Pengguna</h1>
         <!--end::Title-->
         <!--begin::Breadcrumb-->
         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-            <li class="breadcrumb-item text-muted">Jabatan</li>
+            <li class="breadcrumb-item text-muted">Pengguna</li>
             {{-- <li class="breadcrumb-item">
                 <span class="bullet bg-gray-400 w-5px h-2px"></span>
             </li> --}}
@@ -18,7 +18,7 @@
 
         <div class='row'>
             <div class="col-md-auto mt-2">
-                <a class="btn btn-info" href="{{ route('role.index') }}">
+                <a class="btn btn-info" href="{{ route('user.index') }}">
                     <i class="ki-duotone ki-arrow-left fs-1">
                         <span class="path1"></span>
                         <span class="path2"></span>
@@ -33,7 +33,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <livewire:account.role.detail :objId="$objId">
+            <livewire:account.user.detail :objId="$objId">
         </div>
     </div>
 @stop

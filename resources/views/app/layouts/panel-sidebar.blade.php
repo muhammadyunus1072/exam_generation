@@ -12,7 +12,7 @@
                 @foreach (App\Helpers\MenuHelper::menu() as $menu)
                     @if (isset($menu['submenu']))
                         <!--begin:Menu item-->
-                        <div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+                        <div data-kt-menu-trigger="click" class="menu-item here menu-accordion {{ $menu['is_active'] ? 'show' : '' }}">
                             <!--begin:Menu link-->
                             <span class="menu-link {{ $menu['is_active'] ? 'active' : '' }}">
                                 @if (isset($menu['icon']))
