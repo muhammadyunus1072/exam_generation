@@ -16,7 +16,8 @@ return [
     'forgot_password_route' => 'password.request',
     'reset_password_route' => 'password.reset',
 
-    'email_verification_route' => 'verification.index',
+    // 'email_verification_route' => 'verification.index',
+    'email_verification_route' => '',
     'email_verification_delay_time' => 30,
 
     'email_verify_route' => 'verification.verify',

@@ -9,6 +9,7 @@ use App\Repositories\Account\PermissionRepository;
 use App\Repositories\Account\UserRepository;
 use App\Traits\WithDatatable;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\On;
 
 class Datatable extends Component
 {
@@ -17,6 +18,9 @@ class Datatable extends Component
     public $isCanUpdate;
     public $isCanDelete;
 
+    // Delete Dialog
+    public $targetDeleteId;
+
     public function onMount()
     {
         $authUser = UserRepository::authenticatedUser();
@@ -24,14 +28,37 @@ class Datatable extends Component
         $this->isCanDelete = $authUser->hasPermissionTo(PermissionHelper::transform(PermissionHelper::ACCESS_PERMISSION, PermissionHelper::TYPE_DELETE));
     }
 
-    public function delete($id)
+    #[On('on-delete-dialog-confirm')]
+    public function onDialogDeleteConfirm()
     {
-        if (!$this->isCanDelete) {
+        if (!$this->isCanDelete || $this->targetDeleteId == null) {
             return;
         }
 
-        PermissionRepository::delete($id);
+        PermissionRepository::delete($this->targetDeleteId);
         Alert::success($this, 'Berhasil', 'Data berhasil dihapus');
+    }
+
+    #[On('on-delete-dialog-cancel')]
+    public function onDialogDeleteCancel()
+    {
+        $this->targetDeleteId = null;
+    }
+
+    public function showDeleteDialog($id)
+    {
+        $this->targetDeleteId = $id;
+
+        Alert::confirmation(
+            $this,
+            Alert::ICON_QUESTION,
+            "Hapus Data",
+            "Apakah Anda Yakin Ingin Menghapus Data Ini ?",
+            "on-delete-dialog-confirm",
+            "on-delete-dialog-cancel",
+            "Hapus",
+            "Batal",
+        );
     }
 
     public function getColumns(): array
@@ -61,8 +88,7 @@ class Datatable extends Component
                     if ($this->isCanDelete) {
                         $destroyHtml = "<div class='col-auto mb-2'>
                             <button class='btn btn-danger btn-sm m-0' 
-                                wire:click=\"delete($item->id)\"
-                                wire:confirm=\"Apakah Anda Yakin Menghapus Data Ini?\">
+                                wire:click=\"showDeleteDialog($item->id)\">
                                 <i class='ki-duotone ki-trash fs-1'>
                                     <span class='path1'></span>
                                     <span class='path2'></span>
