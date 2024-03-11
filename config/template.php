@@ -18,6 +18,9 @@ return [
     'email_verification_feature' => false,
     'email_verification_delay_time' => 30,
 
+    'profile_route' => 'profile',
+    'profile_image' => 'assets/media/avatars/profile.png',
+
     'menu' => [
         [
             'text' => 'Dashboard',

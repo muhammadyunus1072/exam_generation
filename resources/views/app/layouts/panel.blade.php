@@ -98,7 +98,7 @@
                                 <div class="cursor-pointer symbol symbol-35px"
                                     data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
                                     data-kt-menu-placement="bottom-end">
-                                    <img src="{{ asset('assets/media/avatars/300-3.jpg') }}" class="rounded-3"
+                                    <img src="{{ asset(config('template.profile_image')) }}" class="rounded-3"
                                         alt="user" />
                                 </div>
                                 <!--begin::User account menu-->
@@ -110,7 +110,7 @@
                                             <!--begin::Avatar-->
                                             <div class="symbol symbol-50px me-5">
                                                 <img alt="Logo"
-                                                    src="{{ asset('assets/media/avatars/300-3.jpg') }}" />
+                                                    src="{{ asset(config('template.profile_image')) }}" />
                                             </div>
                                             <!--end::Avatar-->
                                             <!--begin::Username-->
@@ -126,10 +126,12 @@
                                     </div>
                                     <!--end::Menu item-->
                                     <!--begin::Menu item-->
-                                    <div class="menu-item px-5">
-                                        <a href="../../demo1/dist/authentication/layouts/corporate/sign-in.html"
-                                            class="menu-link px-5">Change Password</a>
-                                    </div>
+                                    @if (config('template.profile_route'))
+                                        <div class="menu-item px-5">
+                                            <a href="{{ route(config('template.profile_route')) }}"
+                                                class="menu-link px-5">Profil</a>
+                                        </div>
+                                    @endif
                                     <!--end::Menu item-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-5">

@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Route;
 
 class AuthController extends Controller
 {
@@ -39,6 +38,11 @@ class AuthController extends Controller
     public function emailVerification(Request $request)
     {
         return view('app.auth.email-verification', ['email' => $request->email]);
+    }
+
+    public function profile()
+    {
+        return view('app.auth.profile');
     }
 
     public function emailVerificationVerify(Request $request)
