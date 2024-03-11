@@ -5,6 +5,7 @@ namespace App\Livewire\Account\User;
 use Exception;
 use App\Helpers\Alert;
 use App\Repositories\Account\PermissionRepository;
+use App\Repositories\Account\RoleRepository;
 use App\Repositories\Account\UserRepository;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,7 @@ class Detail extends Component
 
     public function mount()
     {
-        $this->roles = Role::orderBy('name')->pluck('name');
+        $this->roles = RoleRepository::getIdAndNames()->pluck('name');
         $this->role = $this->roles[0];
 
         if ($this->objId) {

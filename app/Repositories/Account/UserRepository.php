@@ -41,8 +41,13 @@ class UserRepository extends MasterDataRepository
         return User::whereEmail($email)->first();
     }
 
-    public static function datatable()
+    public static function datatable($roleId)
     {
-        return User::with('roles');
+        return User::with('roles')
+            ->when($roleId, function ($query) use ($roleId) {
+                $query->whereHas('roles', function ($query) use ($roleId) {
+                    $query->whereId($roleId);
+                });
+            });
     }
 }

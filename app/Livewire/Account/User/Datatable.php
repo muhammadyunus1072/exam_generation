@@ -17,6 +17,9 @@ class Datatable extends Component
     public $isCanUpdate;
     public $isCanDelete;
 
+    // Filter
+    public $role;
+
     public function onMount()
     {
         $authUser = UserRepository::authenticatedUser();
@@ -122,7 +125,7 @@ class Datatable extends Component
 
     public function getQuery(): Builder
     {
-        return UserRepository::datatable();
+        return UserRepository::datatable($this->role);
     }
 
     public function getView(): string

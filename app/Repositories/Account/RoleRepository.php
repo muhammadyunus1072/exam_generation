@@ -22,6 +22,11 @@ class RoleRepository extends MasterDataRepository
         return $obj->update($data);
     }
 
+    public static function getIdAndNames()
+    {
+        return Role::select('id', 'name')->orderBy('name')->get();
+    }
+
     public static function datatable()
     {
         return Role::with('permissions');
