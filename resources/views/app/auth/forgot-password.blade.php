@@ -17,7 +17,7 @@
                     @if (config('template.registration_route'))
                         <div class="text-gray-500 text-center fw-semibold fs-6">
                             Not a Member yet?
-                            <a href="{{ route(config('template.registration_route'))) }}" class="link-primary">Sign up</a>
+                            <a href="{{ route(config('template.registration_route')) }}" class="link-primary">Sign up</a>
                         </div>
                     @endif
                 </div>
