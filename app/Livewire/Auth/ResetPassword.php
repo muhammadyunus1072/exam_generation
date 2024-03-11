@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Auth;
 
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -10,6 +9,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Validate;
 use App\Helpers\Alert;
+use App\Repositories\Account\UserRepository;
 
 class ResetPassword extends Component
 {
@@ -38,7 +38,7 @@ class ResetPassword extends Component
             return;
         }
 
-        $user = User::where("email", "=", $this->email)->first();
+        $user = UserRepository::findByEmail($this->email);
         if (empty($user)) {
             Alert::fail($this, 'Gagal', 'Email Belum Terdaftar');
             return;
@@ -50,7 +50,7 @@ class ResetPassword extends Component
                 'password' => $this->password,
                 'token' => $this->token,
             ],
-            function (User $user, string $password) {
+            function ($user, string $password) {
                 $user->forceFill([
                     'password' => Hash::make($password)
                 ]);

@@ -2,13 +2,11 @@
 
 namespace App\Livewire\Auth;
 
-use App\Models\User;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 use App\Helpers\Alert;
-use Carbon\Carbon;
+use App\Repositories\Account\UserRepository;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 
 class Register extends Component
@@ -40,13 +38,13 @@ class Register extends Component
             return;
         }
 
-        $user = User::where("email", "=", $this->email)->first();
+        $user = UserRepository::findByEmail($this->email);
         if (!empty($user)) {
             Alert::fail($this, 'Register Gagal', 'Email Sudah Digunakan');
             return;
         }
 
-        $user = User::create([
+        $user = UserRepository::create([
             'name' => $this->name,
             'email' => $this->email,
             'password' => Hash::make($this->password),
