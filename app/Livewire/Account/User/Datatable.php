@@ -108,14 +108,19 @@ class Datatable extends Component
             ],
         ];
 
-        if (config('template.email_verification_feature')) {
+        if (config('template.email_verification_route')) {
             $columns[] =
                 [
                     'sortable' => false,
                     'searchable' => false,
                     'name' => 'Verifikasi Email',
                     'render' => function ($item) {
-                        return Carbon::parse($item->email_verified_at)->isoFormat("DD MMMM Y, HH:mm");
+                        if ($item->email_verified_at) {
+                            $verifiedAt = Carbon::parse($item->email_verified_at)->isoFormat("DD MMMM Y, HH:mm");
+                            return "<div class='badge badge-success'>$verifiedAt</div>";
+                        } else {
+                            return "<div class='badge badge-secondary'>Belum Verifikasi</div>";
+                        }
                     }
                 ];
         }

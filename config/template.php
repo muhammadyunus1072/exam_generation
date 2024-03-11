@@ -10,13 +10,16 @@ return [
     'logo_panel' => 'files/images/logo_long.png',
     'logo_panel_background' => 'white',
 
-    'registration_feature' => true,
+    'registration_route' => 'register',
     'registration_default_role' => 'Member',
 
-    'forgot_password_feature' => true,
+    'forgot_password_route' => 'password.request',
+    'reset_password_route' => 'password.reset',
 
-    'email_verification_feature' => false,
+    'email_verification_route' => 'verification.index',
     'email_verification_delay_time' => 30,
+
+    'email_verify_route' => 'verification.verify',
 
     'profile_route' => 'profile',
     'profile_image' => 'assets/media/avatars/profile.png',

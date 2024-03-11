@@ -51,7 +51,7 @@ class Register extends Component
         ]);
         $user->assignRole(config('template.registration_default_role'));
 
-        if (config('template.email_verification_feature')) {
+        if (config('template.email_verification_route')) {
             $user->sendEmailVerificationNotification();
             $this->redirectRoute('verification.index', ['email' => $this->email]);
             return;

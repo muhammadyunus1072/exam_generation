@@ -9,6 +9,7 @@ use App\Repositories\Account\PermissionRepository;
 use App\Repositories\Account\RoleRepository;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 
 class Detail extends Component
@@ -22,16 +23,17 @@ class Detail extends Component
 
     public function mount()
     {
-        foreach (PermissionHelper::ACCESS_ALL as $access) {
-            $this->accesses[$access] = [
-                'name' => PermissionHelper::TRANSLATE_ACCESS[$access],
-                'permissions' => []
-            ];
-        }
-
         $permissions = PermissionRepository::getIdAndNames();
         foreach ($permissions as $permission) {
-            $this->accesses[PermissionHelper::getAccess($permission->name)]['permissions'][] = [
+            $access = PermissionHelper::getAccess($permission->name);
+            if (!isset($this->accesses[$access])) {
+                $this->accesses[$access] = [
+                    'name' => isset(PermissionHelper::TRANSLATE_ACCESS[$access]) ? PermissionHelper::TRANSLATE_ACCESS[$access] : $access,
+                    'permissions' => []
+                ];
+            }
+
+            $this->accesses[$access]['permissions'][] = [
                 'id' => $permission->id,
                 'name' => $permission->name,
                 'translated_name' => PermissionHelper::getTranslatedType($permission->name),
@@ -54,6 +56,23 @@ class Detail extends Component
                 }
             }
         }
+    }
+
+    #[On('on-dialog-confirm')]
+    public function onDialogConfirm()
+    {
+        $this->name = "";
+        foreach ($this->accesses as $keyAccess => $access) {
+            foreach ($access['permissions'] as $keyPermission => $permission) {
+                $this->accesses[$keyAccess]['permissions'][$keyPermission]['is_checked'] = false;
+            }
+        }
+    }
+
+    #[On('on-dialog-cancel')]
+    public function onDialogCancel()
+    {
+        $this->redirectRoute('role.index');
     }
 
     public function store()
@@ -79,15 +98,22 @@ class Detail extends Component
                 RoleRepository::update($this->objId, $validatedData);
                 $role = RoleRepository::find($this->objId);
                 $role->syncPermissions($selectedPermissions);
-                Alert::success($this, 'Berhasil', 'Jabatan berhasil diperbarui');
             } else {
                 $role = RoleRepository::create($validatedData);
                 $role->givePermissionTo($selectedPermissions);
-                Alert::success($this, 'Berhasil', 'Jabatan berhasil dibuat');
             }
             DB::commit();
 
-            $this->redirectRoute('role.index');
+            Alert::confirmation(
+                $this,
+                Alert::ICON_SUCCESS,
+                "Berhasil",
+                "Jabatan Berhasil Diperbarui",
+                "on-dialog-confirm",
+                "on-dialog-cancel",
+                "Oke",
+                "Tutup",
+            );
         } catch (Exception $e) {
             DB::rollBack();
             Alert::fail($this, "Gagal", $e->getMessage());

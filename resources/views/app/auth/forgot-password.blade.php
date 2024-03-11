@@ -14,10 +14,10 @@
                 <div class="d-flex flex-center flex-column flex-column-fluid pb-15 pb-lg-20">
                     <livewire:auth.forgot-password />
 
-                    @if (config('template.registration_feature'))
+                    @if (config('template.registration_route'))
                         <div class="text-gray-500 text-center fw-semibold fs-6">
                             Not a Member yet?
-                            <a href="{{ route('register') }}" class="link-primary">Sign up</a>
+                            <a href="{{ route(config('template.registration_route'))) }}" class="link-primary">Sign up</a>
                         </div>
                     @endif
                 </div>

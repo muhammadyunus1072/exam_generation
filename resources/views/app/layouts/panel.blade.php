@@ -237,13 +237,32 @@
     @livewireScripts
 
     <script>
-        Livewire.on('SwalFire', (event) => {
+        Livewire.on("{{ Alert::EVENT_INFO }}", (event) => {
             Swal.fire({
                 icon: event[0],
                 title: event[1],
                 text: event[2],
             });
         });
+        Livewire.on("{{ Alert::EVENT_CONFIRMATION }}", (event) => {
+            Swal.fire({
+                icon: event[0],
+                title: event[1],
+                text: event[2],
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: event[3],
+                cancelButtonText: event[4],
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Livewire.dispatch(event[5]);
+                } else {
+                    Livewire.dispatch(event[6]);
+                }
+            });
+        });
+
         Livewire.on('consoleLog', (data) => {
             console.log(data)
         });

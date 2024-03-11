@@ -4,14 +4,13 @@ namespace App\Livewire\Account\User;
 
 use Exception;
 use App\Helpers\Alert;
-use App\Repositories\Account\PermissionRepository;
 use App\Repositories\Account\RoleRepository;
 use App\Repositories\Account\UserRepository;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
-use Spatie\Permission\Models\Role;
 
 class Detail extends Component
 {
@@ -46,6 +45,21 @@ class Detail extends Component
         }
     }
 
+    #[On('on-dialog-confirm')]
+    public function onDialogConfirm()
+    {
+        $this->name = "";
+        $this->email = "";
+        $this->role = $this->roles[0];
+        $this->password = "";
+    }
+
+    #[On('on-dialog-cancel')]
+    public function onDialogCancel()
+    {
+        $this->redirectRoute('user.index');
+    }
+
     public function store()
     {
         $this->validate();
@@ -75,15 +89,22 @@ class Detail extends Component
                 UserRepository::update($this->objId, $validatedData);
                 $user = UserRepository::find($this->objId);
                 $user->syncRoles($this->role);
-                Alert::success($this, 'Berhasil', 'Pengguna berhasil diperbarui');
             } else {
                 $user = UserRepository::create($validatedData);
                 $user->assignRole($this->role);
-                Alert::success($this, 'Berhasil', 'Pengguna berhasil dibuat');
             }
             DB::commit();
 
-            $this->redirectRoute('user.index');
+            Alert::confirmation(
+                $this,
+                Alert::ICON_SUCCESS,
+                "Berhasil",
+                "Pengguna Berhasil Diperbarui",
+                "on-dialog-confirm",
+                "on-dialog-cancel",
+                "Oke",
+                "Tutup",
+            );
         } catch (Exception $e) {
             DB::rollBack();
             Alert::fail($this, "Gagal", $e->getMessage());

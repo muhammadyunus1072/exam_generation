@@ -8,6 +8,7 @@ use App\Helpers\PermissionHelper;
 use App\Repositories\Account\PermissionRepository;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 
 
@@ -32,6 +33,19 @@ class Detail extends Component
         }
     }
 
+    #[On('on-dialog-confirm')]
+    public function onDialogConfirm()
+    {
+        $this->name = "";
+        $this->type = PermissionHelper::TYPE_ALL[0];
+    }
+
+    #[On('on-dialog-cancel')]
+    public function onDialogCancel()
+    {
+        $this->redirectRoute('permission.index');
+    }
+
     public function store()
     {
         $this->validate();
@@ -53,14 +67,22 @@ class Detail extends Component
             DB::beginTransaction();
             if ($this->objId) {
                 PermissionRepository::update($this->objId, $validatedData);
-                Alert::success($this, 'Berhasil', 'Akses berhasil diperbarui');
             } else {
                 PermissionRepository::create($validatedData);
-                Alert::success($this, 'Berhasil', 'Akses berhasil dibuat');
             }
             DB::commit();
 
-            $this->redirectRoute('permission.index');
+            Alert::confirmation(
+                $this,
+                Alert::ICON_SUCCESS,
+                "Berhasil",
+                "Akses Berhasil Diperbarui",
+                "on-dialog-confirm",
+                "on-dialog-cancel",
+                "Oke",
+                "Tutup",
+            );
+            
         } catch (Exception $e) {
             DB::rollBack();
             Alert::fail($this, "Gagal", $e->getMessage());

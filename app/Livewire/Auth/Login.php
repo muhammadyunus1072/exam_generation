@@ -39,7 +39,7 @@ class Login extends Component
             return;
         }
 
-        if (empty($user->email_verified_at) && config('template.email_verification_feature')) {
+        if (empty($user->email_verified_at) && config('template.email_verification_route')) {
             $user->sendEmailVerificationNotification();
             $this->redirectRoute('verification.index', ['email' => $this->email]);
             return;
