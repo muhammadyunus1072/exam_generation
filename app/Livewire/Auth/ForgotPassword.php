@@ -3,7 +3,7 @@
 namespace App\Livewire\Auth;
 
 use App\Helpers\Alert;
-use App\Models\User;
+use App\Repositories\Account\UserRepository;
 use Livewire\Component;
 use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Validate;
@@ -22,7 +22,7 @@ class ForgotPassword extends Component
         $this->dispatch('reload-captcha');
         $this->validate();
 
-        $user = User::where("email", "=", $this->email)->first();
+        $user = UserRepository::findByEmail($this->email);
         if (empty($user)) {
             Alert::fail($this, 'Gagal', 'Email Belum Terdaftar');
             return;

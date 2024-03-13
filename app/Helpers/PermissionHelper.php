@@ -2,126 +2,137 @@
 
 namespace App\Helpers;
 
-use Illuminate\Http\Request;
-
-/*
-| Last Update : 2022/12/12
-| Update: getAccessFromRequest should not str_contains to all name
-|         ex: access 'user_other' will be readed as access 'user'
- */
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class PermissionHelper
 {
-    // ------LIST PERMISSION TYPE------
-    public const PERMISSION_TYPE_CREATE = 'create';
-    public const PERMISSION_TYPE_READ = 'read';
-    public const PERMISSION_TYPE_UPDATE = 'update';
-    public const PERMISSION_TYPE_DELETE = 'delete';
-    public const PERMISSION_TYPE_ALL = [self::PERMISSION_TYPE_CREATE, self::PERMISSION_TYPE_READ, self::PERMISSION_TYPE_UPDATE, self::PERMISSION_TYPE_DELETE];
-    public const PERMISSION_TYPE_ALL_EXCEPT_DELETE = [self::PERMISSION_TYPE_CREATE, self::PERMISSION_TYPE_READ, self::PERMISSION_TYPE_UPDATE];
+    const SEPARATOR =  ".";
 
-    // ---- ROUTE NAME ----
-    public const ROUTE_NAME_CREATE = ['create', 'store'];
-    public const ROUTE_NAME_READ = ['index', 'show', 'edit', 'print', 'get', 'find', 'export'];
-    public const ROUTE_NAME_UPDATE = ['edit', 'update', 'approve'];
-    public const ROUTE_NAME_DELETE = ['destroy'];
-    public const ROUTE_NAME_HISTORY = ['history'];
-
-    // ---- LIST ACCESS ----
-    // OPERASIONAL
-    public const ACCESS_DASHBOARD = "dashboard";
-
-    public const ALL_ACCESSIBLE = [
-        // OPERASIONAL
-        self::ACCESS_DASHBOARD => 'Dashboard',
+    const TYPE_CREATE = "create";
+    const TYPE_READ = "read";
+    const TYPE_UPDATE = "update";
+    const TYPE_DELETE = "delete";
+    const TYPE_ALL = [self::TYPE_CREATE, self::TYPE_READ, self::TYPE_UPDATE, self::TYPE_DELETE];
+    const TRANSLATE_TYPE = [
+        self::TYPE_CREATE => "Buat",
+        self::TYPE_READ => "Lihat",
+        self::TYPE_UPDATE => "Edit",
+        self::TYPE_DELETE => "Hapus",
     ];
 
-    public const ALL_ACCESSIBLE_PERMISSION = [
-        // OPERASIONAL
-        self::ACCESS_DASHBOARD => self::PERMISSION_TYPE_ALL,
+    const ROUTE_TYPE_CREATE = ['create', 'store'];
+    const ROUTE_TYPE_READ = ['index', 'show', 'print', 'export', 'find'];
+    const ROUTE_TYPE_UPDATE = ['edit', 'update'];
+    const ROUTE_TYPE_DELETE = ['destroy'];
+
+    const ACCESS_DASHBOARD = "dashboard";
+    const ACCESS_USER = "user";
+    const ACCESS_PERMISSION = "permission";
+    const ACCESS_ROLE = "role";
+    const ACCESS_ALL = [
+        self::ACCESS_DASHBOARD,
+        self::ACCESS_USER,
+        self::ACCESS_PERMISSION,
+        self::ACCESS_ROLE,
     ];
 
-    public static function generatePermissionAll()
-    {
-        $permissionAll = [];
-        foreach (self::ALL_ACCESSIBLE as $access => $name) {
-            $permissionAll[$access] = self::PERMISSION_TYPE_ALL;
-        }
-        $permissionAll = json_encode($permissionAll);
+    const TRANSLATE_ACCESS = [
+        self::ACCESS_DASHBOARD => "Dashboard",
+        self::ACCESS_USER => "Pengguna",
+        self::ACCESS_PERMISSION => "Akses",
+        self::ACCESS_ROLE => "Jabatan",
+    ];
 
-        return $permissionAll;
+
+
+    /*
+    | Parameters
+    | permission (string) : merupakan nama dari permission
+    */
+    public static function translate($permission)
+    {
+        $explode = explode(self::SEPARATOR, $permission);
+        $access = $explode[0];
+        $type = $explode[1];
+
+        $translateAccess = isset(self::TRANSLATE_ACCESS[$access]) ? self::TRANSLATE_ACCESS[$access] : $access;
+        $translateType = isset(self::TRANSLATE_TYPE[$type]) ? self::TRANSLATE_TYPE[$type] : $type;
+
+        return $translateAccess . " - " . $translateType;
     }
 
-    public static function generatePermission($arrayPermission)
+    /*
+    | Parameters
+    | access (string) : merupakan access yang tersedia pada helper ini
+    | type (string) : merupakan type yang tersedia pada helper ini
+    */
+    public static function transform($access, $type)
     {
-        $permissions = [];
-        foreach ($arrayPermission as $access => $type) {
-            $permissionAll[$access] = $type;
-        }
-        $permissions = json_encode($permissions);
-
-        return $permissions;
+        return $access . self::SEPARATOR . $type;
     }
 
-    public static function isPermitted($user, $permissionType, $access)
+    /*
+    | Parameters
+    | permission (string) : merupakan nama dari permission
+    */
+    public static function getAccess($permission)
     {
-        $jsonPermissions = json_decode($user->permissions);
-
-        if (empty($jsonPermissions->$access)) {
-            return false;
-        }
-
-        // ---Role Abilites For Spesific Access---
-        $permission = $jsonPermissions->$access;
-
-        return !empty($permission) && in_array($permissionType, $permission);
+        return explode(self::SEPARATOR, $permission)[0];
     }
 
-    public static function isRequestPermitted(Request $request)
-    {
-        $user = $request->user();
-        $permissionType = self::getPermissionTypeFromRequest($request);
-        $access = self::getAccessFromRequest($request);
 
-        return self::isPermitted($user, $permissionType, $access);
+    /*
+    | Parameters
+    | permission (string) : merupakan nama dari permission
+    */
+    public static function getTranslatedAccess($permission)
+    {
+        return self::TRANSLATE_ACCESS[self::getAccess($permission)];
     }
 
-    private static function getAccessFromRequest($request)
-    {
-        $routeName = explode('.', $request->route()->getName())[0];
-        foreach (self::ALL_ACCESSIBLE as $access => $name) {
-            if ($routeName == $access) {
-                return $access;
-            }
-        }
 
-        return null;
+    /*
+    | Parameters
+    | permission (string) : merupakan nama dari permission
+    */
+    public static function getType($permission)
+    {
+        return explode(self::SEPARATOR, $permission)[1];
     }
 
-    private static function getPermissionTypeFromRequest($request)
+    /*
+    | Parameters
+    | permission (string) : merupakan nama dari permission
+    */
+    public static function getTranslatedType($permission)
     {
-        $routeName = $request->route()->getName();
-        if (self::inArray($routeName, self::ROUTE_NAME_READ)) {
-            return self::PERMISSION_TYPE_READ;
-        } elseif (self::inArray($routeName, self::ROUTE_NAME_CREATE)) {
-            return self::PERMISSION_TYPE_CREATE;
-        } elseif (self::inArray($routeName, self::ROUTE_NAME_UPDATE)) {
-            return self::PERMISSION_TYPE_UPDATE;
-        } elseif (self::inArray($routeName, self::ROUTE_NAME_DELETE)) {
-            return self::PERMISSION_TYPE_DELETE;
-        }
-
-        return null;
+        return self::TRANSLATE_TYPE[self::getType($permission)];
     }
 
-    private static function inArray($needle, $haystack)
+    /*
+    | Parameters
+    | route_name (string) : Nama Route
+    */
+    public static function isRoutePermitted($route_name, $user = null)
     {
-        foreach ($haystack as $obj) {
-            if (str_contains($needle, $obj)) {
-                return true;
-            }
+        // Identifikasi Route
+        $exploded_route_names = explode(".", $route_name);
+        $access = $exploded_route_names[0];
+        $route_type = $exploded_route_names[1];
+
+        if (in_array($route_type, self::ROUTE_TYPE_CREATE)) {
+            $type = self::TYPE_CREATE;
+        } else if (in_array($route_type, self::ROUTE_TYPE_READ)) {
+            $type = self::TYPE_READ;
+        } else if (in_array($route_type, self::ROUTE_TYPE_UPDATE)) {
+            $type = self::TYPE_UPDATE;
+        } else {
+            $type = self::TYPE_DELETE;
         }
 
-        return false;
+        // Pemeriksaan Hak Akses
+        $user = $user == null ? User::find(Auth::id()) : $user;
+        return $user->hasPermissionTo(self::transform($access, $type));
     }
 }

@@ -2,10 +2,11 @@
 
 namespace App\Livewire\Auth;
 
-use App\Models\User;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 use App\Helpers\Alert;
+use App\Repositories\Account\UserRepository;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class Register extends Component
@@ -21,7 +22,7 @@ class Register extends Component
     public $password;
 
     #[Validate('required', message: 'Ketik Ulang Password Harus Diisi', onUpdate: false)]
-    public $retype_password;
+    public $retypePassword;
 
     #[Validate('required', message: 'Captcha Harus Diisi', onUpdate: false)]
     #[Validate('captcha', message: 'Captcha Tidak Sesuai', onUpdate: false)]
@@ -32,25 +33,32 @@ class Register extends Component
         $this->dispatch('reload-captcha');
         $this->validate();
 
-        if ($this->password != $this->retype_password) {
+        if ($this->password != $this->retypePassword) {
             Alert::fail($this, 'Register Gagal', 'Pengetikan Ulang Password Tidak Sama');
             return;
         }
 
-        $user = User::where("email", "=", $this->email)->first();
+        $user = UserRepository::findByEmail($this->email);
         if (!empty($user)) {
             Alert::fail($this, 'Register Gagal', 'Email Sudah Digunakan');
             return;
         }
 
-        $user = User::create([
+        $user = UserRepository::create([
             'name' => $this->name,
             'email' => $this->email,
             'password' => Hash::make($this->password),
         ]);
-        $user->sendEmailVerificationNotification();
+        $user->assignRole(config('template.registration_default_role'));
 
-        $this->redirectRoute('verification.index', ['email' => $this->email]);
+        if (config('template.email_verification_route')) {
+            $user->sendEmailVerificationNotification();
+            $this->redirectRoute('verification.index', ['email' => $this->email]);
+            return;
+        }
+
+        Auth::loginUsingId($user->id);
+        $this->redirectRoute('login');
     }
 
     public function render()

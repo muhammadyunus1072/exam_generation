@@ -31,7 +31,7 @@
     </div>
     <div class="fv-row mb-8">
         <input id="captcha" type="text" class="form-control @error('captcha') is-invalid @enderror"
-            placeholder="Enter Captcha" wire:model.defer="captcha">
+            placeholder="Enter Captcha" wire:model="captcha">
         @error('captcha')
             <div class="invalid-feedback">
                 {{ $message }}
@@ -89,7 +89,8 @@
         });
 
         function disable_send_email() {
-            time_send_email = 30;
+            time_send_email = {{ config('template.email_verification_delay_time') }};
+
             $('#btn-submit').attr('disabled', true);
             $('#btn-submit-info').text(`Kirim Ulang Email Dalam ${time_send_email} Detik`);
 

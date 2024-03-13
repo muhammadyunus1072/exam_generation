@@ -17,7 +17,7 @@
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <!--begin::Email-->
-        <input type="text" placeholder="Name" wire:model.defer="name" autocomplete="off"
+        <input type="text" placeholder="Name" wire:model="name" autocomplete="off"
             class="form-control bg-transparent @error('name') is-invalid @enderror" />
 
         @error('name')
@@ -30,7 +30,7 @@
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <!--begin::Email-->
-        <input type="text" placeholder="Email" wire:model.defer="email" autocomplete="off"
+        <input type="text" placeholder="Email" wire:model="email" autocomplete="off"
             class="form-control bg-transparent @error('email') is-invalid @enderror" />
 
         @error('email')
@@ -44,7 +44,7 @@
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <!--begin::Password-->
-        <input type="password" placeholder="Password" wire:model.defer="password" autocomplete="off"
+        <input type="password" placeholder="Password" wire:model="password" autocomplete="off"
             class="form-control bg-transparent @error('password') is-invalid @enderror" />
 
         @error('password')
@@ -58,10 +58,10 @@
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <!--begin::Repeat Password-->
-        <input placeholder="Repeat Password" wire:model.defer="retype_password" type="password" autocomplete="off"
-            class="form-control bg-transparent @error('retype_password') is-invalid @enderror" />
+        <input placeholder="Repeat Password" wire:model="retypePassword" type="password" autocomplete="off"
+            class="form-control bg-transparent @error('retypePassword') is-invalid @enderror" />
 
-        @error('retype_password')
+        @error('retypePassword')
             <div class="invalid-feedback">
                 {{ $message }}
             </div>
@@ -78,7 +78,7 @@
     </div>
     <div class="fv-row mb-8">
         <input id="captcha" type="text" class="form-control @error('captcha') is-invalid @enderror"
-            placeholder="Enter Captcha" wire:model.defer="captcha">
+            placeholder="Enter Captcha" wire:model="captcha">
 
         @error('captcha')
             <div class="invalid-feedback">

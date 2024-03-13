@@ -25,22 +25,27 @@ class AuthController extends Controller
         return view('app.auth.register');
     }
 
-    public function forgot_password()
+    public function forgotPassword()
     {
         return view('app.auth.forgot-password');
     }
 
-    public function reset_password(Request $request)
+    public function resetPassword(Request $request)
     {
         return view('app.auth.reset-password', ['token' => $request->token, 'email' => $request->email]);
     }
 
-    public function email_verification(Request $request)
+    public function emailVerification(Request $request)
     {
         return view('app.auth.email-verification', ['email' => $request->email]);
     }
 
-    public function email_verification_verify(Request $request)
+    public function profile()
+    {
+        return view('app.auth.profile');
+    }
+
+    public function emailVerificationVerify(Request $request)
     {
         $user = User::find($request->id);
         if (!hash_equals(sha1($user->getEmailForVerification()), (string) $request->hash)) {

@@ -3,7 +3,7 @@
 namespace App\Livewire\Auth;
 
 use App\Helpers\Alert;
-use App\Models\User;
+use App\Repositories\Account\UserRepository;
 use Livewire\Component;
 use Livewire\Attributes\Validate;
 
@@ -20,7 +20,7 @@ class EmailVerification extends Component
         $this->dispatch('reload-captcha');
         $this->validate();
 
-        $user = User::where("email", "=", $this->email)->first();
+        $user = UserRepository::findByEmail($this->email);
         if (empty($user)) {
             Alert::fail($this, 'Kirim Ulang Email Gagal', 'Email Belum Terdaftar');
             return;

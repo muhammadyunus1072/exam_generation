@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Auth;
 
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -10,6 +9,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Validate;
 use App\Helpers\Alert;
+use App\Repositories\Account\UserRepository;
 
 class ResetPassword extends Component
 {
@@ -22,7 +22,7 @@ class ResetPassword extends Component
     public $password;
 
     #[Validate('required', message: 'Ketik Ulang Password Harus Diisi', onUpdate: false)]
-    public $retype_password;
+    public $retypePassword;
 
     #[Validate('required', message: 'Captcha Harus Diisi', onUpdate: false)]
     #[Validate('captcha', message: 'Captcha Tidak Sesuai', onUpdate: false)]
@@ -33,12 +33,12 @@ class ResetPassword extends Component
         $this->dispatch('reload-captcha');
         $this->validate();
 
-        if ($this->password != $this->retype_password) {
+        if ($this->password != $this->retypePassword) {
             Alert::fail($this, 'Register Gagal', 'Pengetikan Ulang Password Tidak Sama');
             return;
         }
 
-        $user = User::where("email", "=", $this->email)->first();
+        $user = UserRepository::findByEmail($this->email);
         if (empty($user)) {
             Alert::fail($this, 'Gagal', 'Email Belum Terdaftar');
             return;
@@ -50,7 +50,7 @@ class ResetPassword extends Component
                 'password' => $this->password,
                 'token' => $this->token,
             ],
-            function (User $user, string $password) {
+            function ($user, string $password) {
                 $user->forceFill([
                     'password' => Hash::make($password)
                 ]);

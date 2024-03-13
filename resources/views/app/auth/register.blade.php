@@ -1,4 +1,4 @@
-@extends('app.auth.layout')
+@extends('app.layouts.auth')
 
 @section('content')
     <!--begin::Body-->
