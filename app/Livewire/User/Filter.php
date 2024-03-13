@@ -107,6 +107,10 @@ class Filter extends Component
         }
     }
 
+    public function resetInput(){
+        $this->reset();
+    }
+
     public function updatedIsVerified($value)
     {
         $this->dispatch('initSelect2');

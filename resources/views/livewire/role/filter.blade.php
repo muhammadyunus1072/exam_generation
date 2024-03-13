@@ -60,32 +60,32 @@
                 @this.call('resetInput');
                 $('#select2-permissions').empty();
                 $('#select2-permissions').select2('destroy').select2({
-                minimumInputLength: 1,
-                dropdownParent: $('#roleModal'),
-                width: '100%',
-                theme: 'bootstrap5',
-                placeholder: "Choose Permissions",
-                ajax: {
-                    url: "{{ route('roles.get.permissions') }}",
-                    dataType: "json",
-                    type: "GET",
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: $.map(data, function(item) {
-                                return {
-                                    "id": item.id,
-                                    "text": item.text,
-                                }
-                            })
-                        };
-                    },
-                }
-            });
+                    minimumInputLength: 1,
+                    dropdownParent: $('#roleModal'),
+                    width: '100%',
+                    theme: 'bootstrap5',
+                    placeholder: "Choose Permissions",
+                    ajax: {
+                        url: "{{ route('roles.get.permissions') }}",
+                        dataType: "json",
+                        type: "GET",
+                        data: function(params) {
+                            return {
+                                search: params.term,
+                            };
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: $.map(data, function(item) {
+                                    return {
+                                        "id": item.id,
+                                        "text": item.text,
+                                    }
+                                })
+                            };
+                        },
+                    }
+                });
             });
         })
         

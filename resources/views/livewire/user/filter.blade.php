@@ -81,6 +81,34 @@
 
             $("#editModal").on('hide.bs.modal', function() {
                 @this.call('resetInput');
+                $('#select2-role').empty();
+                $('#select2-role').select2('destroy').select2({
+                    minimumInputLength: 1,
+                    dropdownParent: $('#editModal'),
+                    width: '100%',
+                    theme: 'bootstrap5',
+                    placeholder: "Choose Role",
+                    ajax: {
+                        url: "{{ route('users.get.roles') }}",
+                        dataType: "json",
+                        type: "GET",
+                        data: function(params) {
+                            return {
+                                search: params.term,
+                            };
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: $.map(data, function(item) {
+                                    return {
+                                        "id": item.id,
+                                        "text": item.text,
+                                    }
+                                })
+                            };
+                        },
+                    }
+                });
             });
         })
 

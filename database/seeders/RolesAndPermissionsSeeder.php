@@ -27,12 +27,19 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'update users']);
         Permission::create(['name' => 'delete users']);
 
-        Permission::create(['name' => 'view roles and permissions']);
-        Permission::create(['name' => 'create roles and permissions']);
-        Permission::create(['name' => 'edit roles and permissions']);
-        Permission::create(['name' => 'read roles and permissions']);
-        Permission::create(['name' => 'update roles and permissions']);
-        Permission::create(['name' => 'delete roles and permissions']);
+        Permission::create(['name' => 'view roles']);
+        Permission::create(['name' => 'create roles']);
+        Permission::create(['name' => 'edit roles']);
+        Permission::create(['name' => 'read roles']);
+        Permission::create(['name' => 'update roles']);
+        Permission::create(['name' => 'delete roles']);
+
+        Permission::create(['name' => 'view permissions']);
+        Permission::create(['name' => 'create permissions']);
+        Permission::create(['name' => 'edit permissions']);
+        Permission::create(['name' => 'read permissions']);
+        Permission::create(['name' => 'update permissions']);
+        Permission::create(['name' => 'delete permissions']);
 
         $role = Role::create(['name' => 'Member']);
         $role->givePermissionTo('view dashboard');
@@ -46,12 +53,19 @@ class RolesAndPermissionsSeeder extends Seeder
                 'update users', 
                 'delete users', 
 
-                'view roles and permissions', 
-                'create roles and permissions', 
-                'edit roles and permissions', 
-                'read roles and permissions', 
-                'update roles and permissions', 
-                'delete roles and permissions', 
+                'view roles', 
+                'create roles', 
+                'edit roles', 
+                'read roles', 
+                'update roles', 
+                'delete roles', 
+
+                'view permissions', 
+                'create permissions', 
+                'edit permissions', 
+                'read permissions', 
+                'update permissions', 
+                'delete permissions', 
             ]);
     }
 }

@@ -16,3 +16,4 @@ use Illuminate\Support\Facades\Route;
 Route::group([], __DIR__ . '/web/Auth.php');
 Route::group([], __DIR__ . '/web/Other.php');
 Route::group([], __DIR__ . '/web/User.php');
+Route::group([], __DIR__ . '/web/Documentation.php');
