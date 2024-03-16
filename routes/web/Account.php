@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Account\UserController;
 use App\Http\Controllers\Account\RoleController;
+use App\Http\Controllers\Account\UserController;
 use App\Http\Controllers\Account\PermissionController;
 
 

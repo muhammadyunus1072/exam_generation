@@ -3,31 +3,32 @@
 namespace App\Livewire\Documentation;
 
 use Carbon\Carbon;
-use App\Models\User;
 use App\Helpers\Alert;
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App\Models\Documentation;
 use App\Traits\WithDatatable;
+use App\Helpers\PermissionHelper;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use App\Repositories\Documentation\DocumentationRepository;
 
 class Datatable extends Component
 {
     use WithDatatable;
+    public $isCanUpdate;
+    public $isCanDelete;
 
-    public $end_date;
-    public $start_date;
+    // Filter
+    public $role;
 
-    protected $listeners = [
-        'addFilter',
-    ];
+    // Delete Dialog
+    public $targetDeleteId;
 
     public function onMount()
     {
-        $this->sortDirection = 'desc';
-        $this->end_date = Carbon::now()->format('Y-m-d');
-        $this->start_date = Carbon::now()->subMonths(1)->format('Y-m-d');
+        $authUser = DocumentationRepository::authenticatedUser();
+        $this->isCanUpdate = $authUser->hasPermissionTo(PermissionHelper::transform(PermissionHelper::ACCESS_DOCUMENTATION, PermissionHelper::TYPE_UPDATE));
+        $this->isCanDelete = $authUser->hasPermissionTo(PermissionHelper::transform(PermissionHelper::ACCESS_DOCUMENTATION, PermissionHelper::TYPE_DELETE));
     }
 
     #[On('refreshDatatable')]
@@ -36,24 +37,37 @@ class Datatable extends Component
         $this->dispatch('$refresh');
     }
 
-    #[On('addFilter')]
-    public function addFilter($filter)
+    #[On('on-delete-dialog-confirm')]
+    public function onDialogDeleteConfirm()
     {
-        foreach ($filter as $key => $value) {
-            $this->$key = $value;
-        }
-    }
-
-    public function destroy($id)
-    {
-        $item = User::find($id);
-        $authUser = User::find(Auth::id());
-        if (!$authUser->hasPermissionTo("delete users")) {
+        if (!$this->isCanDelete || $this->targetDeleteId == null) {
             return;
         }
 
-        $item->delete();
-        Alert::success($this, 'Success', 'Data has been successfully deleted!');
+        RoleRepository::delete($this->targetDeleteId);
+        Alert::success($this, 'Berhasil', 'Data berhasil dihapus');
+    }
+
+    #[On('on-delete-dialog-cancel')]
+    public function onDialogDeleteCancel()
+    {
+        $this->targetDeleteId = null;
+    }
+
+    public function showDeleteDialog($id)
+    {
+        $this->targetDeleteId = $id;
+
+        Alert::confirmation(
+            $this,
+            Alert::ICON_QUESTION,
+            "Hapus Data",
+            "Apakah Anda Yakin Ingin Menghapus Data Ini ?",
+            "on-delete-dialog-confirm",
+            "on-delete-dialog-cancel",
+            "Hapus",
+            "Batal",
+        );
     }
 
     public function getColumns(): array
@@ -64,11 +78,49 @@ class Datatable extends Component
                 'sortable' => false,
                 'searchable' => false,
                 'render' => function ($item) {
-
-                    $authUser = User::find(Auth::id());
-
                     $editHtml = "";
-                    if ($authUser->hasPermissionTo("edit documentation")) {
+                    if ($this->isCanUpdate) {
+                        $editUrl = route('role.edit', $item->id);
+                        $editHtml = "<div class='col-auto mb-2'>
+                            <button class='btn btn-primary btn-sm' type='button' data-bs-toggle='modal' data-bs-target='#editModal' @click=\"\$dispatch('editDetail', { id: '$item->id' })\">
+                                <i class='ki-duotone ki-notepad-edit fs-1'>
+                                    <span class='path1'></span>
+                                    <span class='path2'></span>
+                                </i>
+                                Ubah
+                            </button>
+                        </div>";
+                    }
+
+                    $destroyHtml = "";
+                    if ($this->isCanDelete) {
+                        $destroyHtml = "<div class='col-auto mb-2'>
+                            <button class='btn btn-danger btn-sm m-0' 
+                                wire:click=\"showDeleteDialog($item->id)\">
+                                <i class='ki-duotone ki-trash fs-1'>
+                                    <span class='path1'></span>
+                                    <span class='path2'></span>
+                                    <span class='path3'></span>
+                                    <span class='path4'></span>
+                                    <span class='path5'></span>
+                                </i>
+                                Hapus
+                            </button>
+                        </div>";
+                    }
+
+                    $showUrl = route('documentation.show', ['id' => $item->id]);
+                    $showHtml = "<div class='col-auto mb-2'>
+                    <a href='$showUrl'target='_blank' class='btn btn-sm btn-primary'><i class='fa fa-eye'></i> show</a>
+                    </div>";
+
+                    $html = "<div class='row'>
+                        $editHtml $destroyHtml $showHtml
+                    </div>";
+
+                    return $html;
+                    $editHtml = "";
+                    if ($this->isCanUpdate) {
                         $editHtml = "<div class='col-auto'>
                         <button class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#editModal' wire:click=\"\$dispatch('editDetail', { id: '$item->id' })\">
                         <i class='fa fa-edit'></i> Edit
@@ -77,7 +129,7 @@ class Datatable extends Component
                     }
 
                     $destroyHtml = "";
-                    if ($authUser->hasPermissionTo("delete documentation")) {
+                    if ($this->isCanDelete) {
                         $destroyHtml = "<div class='col-auto'>
                             <form wire:submit.prevent=\"destroy('$item->id')\">"
                             . method_field('DELETE') . csrf_field() .
@@ -104,27 +156,12 @@ class Datatable extends Component
                     return $item->name;
                 }
             ],
-            [
-                'key' => 'url',
-                'name' => 'URL',
-                'render' => function ($item) {
-                    return $item->url;
-                }
-            ],
-            [
-                'sortable' => false,
-                'searchable' => false,
-                'name' => 'Content',
-                'render' => function ($item) {
-                    return $item->content;
-                }
-            ],
         ];
     }
 
     public function getQuery(): Builder
     {
-        return Documentation::query();
+        return DocumentationRepository::datatable();
     }
 
     public function getView(): string

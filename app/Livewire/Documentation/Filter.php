@@ -3,78 +3,75 @@
 namespace App\Livewire\Documentation;
 
 use Exception;
-use Carbon\Carbon;
-use App\Models\User;
 use App\Helpers\Alert;
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App\Models\Documentation;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Validator;
+use Livewire\Attributes\Validate;
+use App\Repositories\Documentation\DocumentationRepository;
 
 
 class Filter extends Component
 {
+    #[Validate('required', message: 'Nama Harus Diisi', onUpdate: false)]
     public $name = '';
-    public $url = '';
+    
+    #[Validate('required', message: 'Content Harus Diisi', onUpdate: false)]
     public $content = '';
-
-    public $is_edit = false;
+    public $objId;
 
     public function save()
     {   
         $this->dispatch('consoleLog', $this->content);
-        // $validated = Validator::make(
-        //     // Data to validate...
-        //     [
-        //         'name' => $this->name, 
-        //         'url' => $this->url,
-        //     ],
-        //     [
-        //         'name' => 'required', 
-        //         'url' => 'required|unique:documentations',
-        //     ],
-        //     )->validate();
+        $this->validate();
 
-        // if ($validated) {
-        //     $documentation = New Documentation();
-        //     $documentation->name = $validated['name'];
-        //     $documentation->url = $validated['url'];
-        //     $documentation->content = 'Content';
-        //     $documentation->save();
+        $validatedData = [
+            'name' => $this->name,
+            'content' => $this->content,
+        ];
 
-        //     Alert::success($this, 'Berhasil', 'Dokumentasi Berhasil Disimpan');
-        // }
-        // $this->reset();
+        try {
+            DB::beginTransaction();
+            if ($this->objId) {
+                DocumentationRepository::update($this->objId, $validatedData);
+            } else {
+                DocumentationRepository::create($validatedData);
+            }
+            DB::commit();
+
+            Alert::confirmation(
+                $this,
+                Alert::ICON_SUCCESS,
+                "Berhasil",
+                "Dokumentasi Berhasil Diperbarui",
+                "on-dialog-confirm",
+                "on-dialog-cancel",
+                "Oke",
+                "Tutup",
+            );
+            $this->dispatch('refreshDatatable');
+            
+        } catch (Exception $e) {
+            DB::rollBack();
+            Alert::fail($this, "Gagal", $e->getMessage());
+        }
     }
 
     public function resetInput(){
         $this->reset();
     }
 
-    public function updatedName($value)
-    {
-        $this->url = strtolower(preg_replace('/\s+/', '_', $value));
-    }
-    public function updatedUrl($value)
-    {
-        $this->url = strtolower(preg_replace('/\s+/', '_', $value));
-    }
-
     #[On('editDetail')]
     public function editDetail($id)
     {
         if ($id) {
-            $user = User::find($id);
-            if ($user) {
-                $this->user_id = $user->id;
-                $this->name = $user->name;
-                $this->email = $user->email;
-                $this->password = '';
-                $this->is_edit = true;
-                $this->dispatch('initSelect2');
-                $this->dispatch('addSelect2Role', role: $user->getRoleNames());
+            $documentation = DocumentationRepository::find($id);
+            if ($documentation) {
+                $this->objId = $documentation->id;
+                $this->name = $documentation->name;
+                $this->content = $documentation->content;
+
+                $this->dispatch('editContent', content : $this->content);
             }
         }
     }

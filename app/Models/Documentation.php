@@ -10,4 +10,9 @@ use Sis\TrackHistory\HasTrackHistory;
 class Documentation extends Model
 {
     use HasFactory, SoftDeletes, HasTrackHistory;
+
+    protected $fillable = [
+        'name',
+        'content',
+    ];
 }

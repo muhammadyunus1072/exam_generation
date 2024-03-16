@@ -1,7 +1,10 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <!--begin::Head-->
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
 
     <!--begin::Fonts(mandatory for all pages)-->
@@ -20,6 +23,8 @@
     <!--end::Global Stylesheets Bundle-->
 
     @livewireStyles
+    
+    @stack('css')
 </head>
 <!--end::Head-->
 
@@ -243,6 +248,9 @@
                 title: event[1],
                 text: event[2],
             });
+        });
+        Livewire.on("{{ Alert::EVENT_CONSOLE_LOG }}", (event) => {
+            console.log(event[0])
         });
         Livewire.on("{{ Alert::EVENT_CONFIRMATION }}", (event) => {
             Swal.fire({

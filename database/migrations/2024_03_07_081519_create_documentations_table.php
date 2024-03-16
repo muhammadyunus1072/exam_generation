@@ -35,10 +35,7 @@ return new class extends Migration
 
         if ($is_history) {
             $table->bigInteger('obj_id')->unsigned();
-            $table->string('url');
         } else {
-            $table->index('url', 'documentations_url_idx');
-            $table->string('url')->unique();
         }
 
         $table->string('name');

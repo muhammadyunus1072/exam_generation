@@ -1,6 +1,6 @@
-@extends('layouts.index')
+@extends('app.layouts.panel')
 
-@section('title', 'Master Data User')
+@section('title', 'Master Data Documentation')
 
 @section('header')
     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
