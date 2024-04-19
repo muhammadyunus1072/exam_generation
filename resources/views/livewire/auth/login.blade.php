@@ -55,6 +55,14 @@
             </div>
         @enderror
     </div>
+    <div class="fv-row mb-8">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="1" id="remember_me" wire:model='rememberMe'>
+            <label class="form-check-label" for="remember_me">
+                Ingat Saya
+            </label>
+        </div>
+    </div>
     <!--end::Input group=-->
 
     <!--begin::Submit button-->
