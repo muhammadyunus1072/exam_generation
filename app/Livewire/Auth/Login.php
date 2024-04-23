@@ -12,9 +12,8 @@ use Livewire\Attributes\Validate;
 
 class Login extends Component
 {
-    #[Validate('required', message: 'Email Harus Diisi', onUpdate: false)]
-    #[Validate('email', message: "Format Email Tidak Sesuai", onUpdate: false)]
-    public $email;
+    #[Validate('required', message: 'Username / Email Harus Diisi', onUpdate: false)]
+    public $usernameOrEmail;
 
     #[Validate('required', message: 'Password Harus Diisi', onUpdate: false)]
     public $password;
@@ -28,9 +27,9 @@ class Login extends Component
         $this->dispatch('reload-captcha');
         $this->validate();
 
-        $user = UserRepository::findByEmail($this->email);
+        $user = UserRepository::findByUsernameOrEmail($this->usernameOrEmail);
         if (empty($user)) {
-            Alert::fail($this, 'Login Gagal', 'Email Belum Terdaftar');
+            Alert::fail($this, 'Login Gagal', 'Akun Belum Terdaftar');
             return;
         }
 
@@ -41,12 +40,11 @@ class Login extends Component
 
         if (empty($user->email_verified_at) && config('template.email_verification_route')) {
             $user->sendEmailVerificationNotification();
-            $this->redirectRoute('verification.index', ['email' => $this->email]);
+            $this->redirectRoute('verification.index', ['email' => $user->email]);
             return;
         }
 
-        Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->rememberMe);
-        
+        Auth::loginUsingId($user->id);
         $this->redirectRoute('dashboard.index');
     }
 

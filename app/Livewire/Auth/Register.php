@@ -14,6 +14,9 @@ class Register extends Component
     #[Validate('required', message: 'Nama Harus Diisi', onUpdate: false)]
     public $name;
 
+    #[Validate('required', message: 'Username Harus Diisi', onUpdate: false)]
+    public $username;
+
     #[Validate('required', message: 'Email Harus Diisi', onUpdate: false)]
     #[Validate('email', message: "Format Email Tidak Sesuai", onUpdate: false)]
     public $email;
@@ -44,8 +47,15 @@ class Register extends Component
             return;
         }
 
+        $user = UserRepository::findByUsername($this->username);
+        if (!empty($user)) {
+            Alert::fail($this, 'Register Gagal', 'Username Sudah Digunakan');
+            return;
+        }
+
         $user = UserRepository::create([
             'name' => $this->name,
+            'username' => $this->username,
             'email' => $this->email,
             'password' => Hash::make($this->password),
         ]);

@@ -36,9 +36,23 @@ class UserRepository extends MasterDataRepository
             ->get();
     }
 
+    public static function findByUsername($username)
+    {
+        return User::where('username', '=', $username)
+        ->first();
+    }
+
     public static function findByEmail($email)
     {
-        return User::whereEmail($email)->first();
+        return User::whereEmail($email)
+        ->first();
+    }
+
+    public static function findByUsernameOrEmail($usernameOrEmail)
+    {
+        return User::where('username', '=', $usernameOrEmail)
+            ->orWhere('email', '=', $usernameOrEmail)
+            ->first();
     }
 
     public static function datatable($roleId)

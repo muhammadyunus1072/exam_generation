@@ -34,10 +34,12 @@ return new class extends Migration
             $table->bigInteger('obj_id')->unsigned();
         } else {
             $table->index('email', 'users_email_idx');
+            $table->index('username', 'users_username_idx');
         }
 
         $table->string('name');
         $table->string('email');
+        $table->string('username');
         $table->string('password');
         $table->datetime('email_verified_at')->nullable()->default(null);
         $table->rememberToken();

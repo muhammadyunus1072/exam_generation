@@ -11,7 +11,7 @@
     <!--end::Login options-->
     <!--begin::Separator-->
     <div class="separator separator-content my-14">
-        <span class="w-125px text-gray-500 fw-semibold fs-7">With email</span>
+        <span class="w-125px text-gray-500 fw-semibold fs-7">With username / email</span>
     </div>
     <!--end::Separator-->
     <!--begin::Input group=-->
@@ -27,6 +27,20 @@
         @enderror
         <!--end::Email-->
     </div>
+    <!--begin::Input group=-->
+    <div class="fv-row mb-8">
+        <!--begin::Username-->
+        <input type="text" placeholder="Username" wire:model="username" autocomplete="off"
+            class="form-control bg-transparent @error('username') is-invalid @enderror" />
+
+        @error('username')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+        @enderror
+        <!--end::Username-->
+    </div>
+    <!--end::Input group=-->
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <!--begin::Email-->

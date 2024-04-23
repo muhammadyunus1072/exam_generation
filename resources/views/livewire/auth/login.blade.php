@@ -11,15 +11,15 @@
     <!--end::Login options-->
     <!--begin::Separator-->
     <div class="separator separator-content my-14">
-        <span class="w-125px text-gray-500 fw-semibold fs-7">With email</span>
+        <span class="w-125px text-gray-500 fw-semibold fs-7">With username / email</span>
     </div>
     <!--end::Separator-->
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <!--begin::Email-->
-        <input type="text" placeholder="Email" wire:model="email" autocomplete="off"
-            class="form-control bg-transparent @error('email') is-invalid @enderror" />
-        @error('email')
+        <input type="text" placeholder="Username / Email" wire:model="usernameOrEmail" autocomplete="off"
+            class="form-control bg-transparent @error('usernameOrEmail') is-invalid @enderror" />
+        @error('usernameOrEmail')
             <div class="invalid-feedback">
                 {{ $message }}
             </div>
