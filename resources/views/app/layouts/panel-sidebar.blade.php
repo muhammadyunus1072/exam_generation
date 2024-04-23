@@ -12,9 +12,11 @@
                 @foreach (App\Helpers\MenuHelper::menu() as $menu)
                     @if (isset($menu['submenu']))
                         <!--begin:Menu item-->
-                        <div data-kt-menu-trigger="click" class="menu-item here menu-accordion {{ $menu['is_active'] ? 'show' : '' }}">
+                        <div data-kt-menu-trigger="click"
+                            class="menu-item here menu-accordion {{ $menu['is_active'] ? 'show' : '' }}">
                             <!--begin:Menu link-->
-                            <span class="menu-link {{ $menu['is_active'] ? 'active' : '' }}">
+                            <span class="menu-link {{ $menu['is_active'] ? 'active' : '' }}"
+                                {{ isset($menu['id']) ? "id={$menu['id']}" : '' }}>
                                 @if (isset($menu['icon']))
                                     <span class="menu-icon">
                                         <i class="{{ $menu['icon'] }} fs-2">
@@ -25,7 +27,10 @@
                                         </i>
                                     </span>
                                 @endif
-                                <span class="menu-title">{{ $menu['text'] }}</span>
+                                <span class="menu-title">
+                                    {{ $menu['text'] }}
+                                    <label class='badge-notification badge bg-danger text-white ms-3'></label>
+                                </span>
                                 <span class="menu-arrow"></span>
                             </span>
                             <!--end:Menu link-->
@@ -33,14 +38,18 @@
                             <div class="menu-sub menu-sub-accordion">
                                 @foreach ($menu['submenu'] as $submenu)
                                     <!--begin:Menu item-->
-                                    <div class="menu-item">
+                                    <div class="menu-item" {{ isset($submenu['id']) ? "id={$submenu['id']}" : '' }}>
                                         <!--begin:Menu link-->
                                         <a class="menu-link {{ $submenu['is_active'] ? 'active' : '' }}"
                                             href="{{ route($submenu['route']) }}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">{{ $submenu['text'] }}</span>
+                                            <span class="menu-title">
+                                                {{ $submenu['text'] }}
+                                                <label
+                                                    class='badge-notification badge bg-danger text-white ms-3'></label>
+                                            </span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -55,7 +64,7 @@
                         <div class="menu-item">
                             <!--begin:Menu link-->
                             <a class="menu-link {{ $menu['is_active'] ? 'active' : '' }}"
-                                href="{{ route($menu['route']) }}">
+                                href="{{ route($menu['route']) }}" {{ isset($menu['id']) ? "id={$menu['id']}" : '' }}>
                                 @if (isset($menu['icon']))
                                     <span class="menu-icon">
                                         <i class="{{ $menu['icon'] }} fs-2">
@@ -66,7 +75,10 @@
                                         </i>
                                     </span>
                                 @endif
-                                <span class="menu-title">{{ $menu['text'] }}</span>
+                                <span class="menu-title">
+                                    {{ $menu['text'] }}
+                                    <label class='badge-notification badge bg-danger text-white ms-3'></label>
+                                </span>
                             </a>
                             <!--end:Menu link-->
                         </div>
@@ -81,3 +93,25 @@
     <!--end::Menu wrapper-->
 </div>
 <!--end::sidebar menu-->
+
+@push('js')
+    <script>
+        $(() => {
+            $.ajax({
+                type: "get",
+                processData: false,
+                contentType: false,
+                url: "{{ route('menu_notification') }}",
+                success: function(response) {
+                    Object.keys(response).forEach(key => {
+                        let val = response[key];
+                        if (val > 0) {
+                            $(`#${key}`).find('.badge-notification').html(val);
+                        }
+                    });
+
+                }
+            });
+        })
+    </script>
+@endpush

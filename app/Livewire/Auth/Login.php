@@ -45,7 +45,8 @@ class Login extends Component
             return;
         }
 
-        Auth::loginUsingId($user->id);
+        Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->rememberMe);
+        
         $this->redirectRoute('dashboard.index');
     }
 

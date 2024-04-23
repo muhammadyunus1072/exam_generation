@@ -32,6 +32,7 @@ return [
             'icon' => 'ki-duotone ki-element-11',
         ],
         [
+            // 'id' => 'menu_admin'
             'text' => 'Admin',
             'icon' => 'ki-duotone ki-shield-tick',
             'submenu' => [
