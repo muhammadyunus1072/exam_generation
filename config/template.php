@@ -53,15 +53,5 @@ return [
                 ],
             ],
         ],
-        [
-            'text' => 'Manage Documentation',
-            'route'  => 'documentation.index',
-            'icon' => 'ki-duotone ki-book',
-        ],
-        [
-            'text' => 'Documentation',
-            'route'  => 'documentation.show',
-            'icon' => 'ki-duotone ki-book',
-        ],
     ],
 ];
