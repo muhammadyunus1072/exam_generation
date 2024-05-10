@@ -20,6 +20,9 @@ class Detail extends Component
 
     #[Validate('required', message: 'Nama Harus Diisi', onUpdate: false)]
     public $name;
+    
+    #[Validate('required', message: 'Username Harus Diisi', onUpdate: false)]
+    public $username;
 
     #[Validate('required', message: 'Email Harus Diisi', onUpdate: false)]
     #[Validate('email', message: "Format Email Tidak Sesuai", onUpdate: false)]
@@ -40,6 +43,7 @@ class Detail extends Component
             $user = UserRepository::find($this->objId);
 
             $this->name = $user->name;
+            $this->username = $user->username;
             $this->email = $user->email;
             $this->role = $user->roles[0]->name;
         }
@@ -53,6 +57,7 @@ class Detail extends Component
         }
 
         $this->name = "";
+        $this->username = "";
         $this->email = "";
         $this->role = $this->roles[0];
         $this->password = "";
@@ -74,12 +79,19 @@ class Detail extends Component
             return;
         }
 
+        $otherUser = UserRepository::findByUsername($this->username);
+        if (!empty($otherUser) && $otherUser->id != $this->objId) {
+            Alert::fail($this, "Gagal", "Username telah digunakan pada akun yang lainnya. Silahkan gunakan email lain.");
+            return;
+        }
+
         if (empty($this->objId) && empty($this->password)) {
             Alert::fail($this, "Gagal", "Password Harus Diisi");
             return;
         }
 
         $validatedData = [
+            'username' => $this->username,
             'name' => $this->name,
             'email' => $this->email,
         ];

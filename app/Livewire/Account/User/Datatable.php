@@ -113,16 +113,14 @@ class Datatable extends Component
             [
                 'key' => 'name',
                 'name' => 'Name',
-                'render' => function ($item) {
-                    return $item->name;
-                }
+            ],
+            [
+                'key' => 'username',
+                'name' => 'Username',
             ],
             [
                 'key' => 'email',
                 'name' => 'Email',
-                'render' => function ($item) {
-                    return $item->email;
-                }
             ],
             [
                 'sortable' => false,

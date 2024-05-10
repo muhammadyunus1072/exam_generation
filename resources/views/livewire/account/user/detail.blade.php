@@ -1,6 +1,6 @@
 <form wire:submit="store">
     <div class='row'>
-        <div class="col-md-6 mb-4">
+        <div class="col-md-4 mb-4">
             <label>Nama</label>
             <input type="text" class="form-control @error('name') is-invalid @enderror" wire:model.blur="name" />
 
@@ -11,7 +11,18 @@
             @enderror
         </div>
 
-        <div class="col-md-6 mb-4">
+        <div class="col-md-4 mb-4">
+            <label>Username</label>
+            <input type="text" class="form-control @error('username') is-invalid @enderror" wire:model.blur="username" />
+
+            @error('username')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+
+        <div class="col-md-4 mb-4">
             <label>Email</label>
             <input type="email" class="form-control @error('email') is-invalid @enderror" wire:model.blur="email" />
 
