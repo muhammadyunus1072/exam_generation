@@ -58,6 +58,26 @@ class Detail extends Component
         }
     }
 
+    public function checkAllAccess($isCheck, $key = null)
+    {
+        if ($key == null) {
+            foreach ($this->accesses as $keyAccess => $access) {
+                foreach ($access['permissions'] as $keyPermission => $permission) {
+                    $this->accesses[$keyAccess]['permissions'][$keyPermission]['is_checked'] = $isCheck == 1 ? true : false;
+                }
+            }
+        } else {
+            foreach ($this->accesses as $keyAccess => $access) {
+                if ($keyAccess == $key) {
+                    foreach ($access['permissions'] as $keyPermission => $permission) {
+                        $this->accesses[$keyAccess]['permissions'][$keyPermission]['is_checked'] = true;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
     #[On('on-dialog-confirm')]
     public function onDialogConfirm()
     {
