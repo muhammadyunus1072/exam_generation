@@ -36,6 +36,10 @@ class Detail extends Component
     #[On('on-dialog-confirm')]
     public function onDialogConfirm()
     {
+        if ($this->objId) {
+            return;
+        }
+
         $this->name = "";
         $this->type = PermissionHelper::TYPE_ALL[0];
     }
@@ -82,7 +86,6 @@ class Detail extends Component
                 "Oke",
                 "Tutup",
             );
-            
         } catch (Exception $e) {
             DB::rollBack();
             Alert::fail($this, "Gagal", $e->getMessage());

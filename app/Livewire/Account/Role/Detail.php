@@ -61,6 +61,10 @@ class Detail extends Component
     #[On('on-dialog-confirm')]
     public function onDialogConfirm()
     {
+        if ($this->objId) {
+            return;
+        }
+
         $this->name = "";
         foreach ($this->accesses as $keyAccess => $access) {
             foreach ($access['permissions'] as $keyPermission => $permission) {

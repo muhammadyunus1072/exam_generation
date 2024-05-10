@@ -48,6 +48,10 @@ class Detail extends Component
     #[On('on-dialog-confirm')]
     public function onDialogConfirm()
     {
+        if ($this->objId) {
+            return;
+        }
+
         $this->name = "";
         $this->email = "";
         $this->role = $this->roles[0];
