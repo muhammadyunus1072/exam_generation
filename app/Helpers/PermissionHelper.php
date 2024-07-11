@@ -26,13 +26,11 @@ class PermissionHelper
     const ROUTE_TYPE_UPDATE = ['edit', 'update'];
     const ROUTE_TYPE_DELETE = ['destroy'];
 
-    const ACCESS_DOCUMENTATION = "documentation";
     const ACCESS_DASHBOARD = "dashboard";
     const ACCESS_USER = "user";
     const ACCESS_PERMISSION = "permission";
     const ACCESS_ROLE = "role";
     const ACCESS_ALL = [
-        self::ACCESS_DOCUMENTATION,
         self::ACCESS_DASHBOARD,
         self::ACCESS_USER,
         self::ACCESS_PERMISSION,
@@ -40,7 +38,6 @@ class PermissionHelper
     ];
 
     const TRANSLATE_ACCESS = [
-        self::ACCESS_DOCUMENTATION => "Dokumentasi",
         self::ACCESS_DASHBOARD => "Dashboard",
         self::ACCESS_USER => "Pengguna",
         self::ACCESS_PERMISSION => "Akses",
