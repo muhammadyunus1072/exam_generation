@@ -10,7 +10,7 @@
         </div>
         <div class="col-sm-6 mb-2 {{ !isset($keyword_filter) || $keyword_filter == true ? '' : 'd-none' }}">
             <label>Kata Kunci</label>
-            <input wire:model.live="search" type="text" class="form-control">
+            <input wire:model.live.debounce.300ms="search" type="text" class="form-control">
         </div>
     </div>
 
@@ -60,10 +60,32 @@
                     @foreach ($data as $index => $item)
                         <tr wire:key='datatable_row_{{ $index }}'>
                             @foreach ($columns as $col)
+                                @php
+                                    $cell_style = '';
+                                    if (isset($col['style'])) {
+                                        $cell_style = is_callable($col['style'])
+                                            ? call_user_func($col['style'], $item, $index)
+                                            : $col['style'];
+                                        $cell_style = "style='{$cell_class}'";
+                                    }
+
+                                    $cell_class = '';
+                                    if (isset($col['class'])) {
+                                        $cell_class = is_callable($col['class'])
+                                            ? call_user_func($col['class'], $item, $index)
+                                            : $col['class'];
+                                        $cell_class = "class='{$cell_class}'";
+                                    }
+                                @endphp
+
                                 @if (isset($col['render']) && is_callable($col['render']))
-                                    <td>{!! call_user_func($col['render'], $item) !!}</td>
+                                    <td {!! $cell_class !!} {!! $cell_style !!}>
+                                        {!! call_user_func($col['render'], $item) !!}
+                                    </td>
                                 @elseif (isset($col['key']))
-                                    <td>{{ $item->{$col['key']} }}</td>
+                                    <td {!! $cell_class !!} {!! $cell_style !!}>
+                                        {{ $item->{$col['key']} }}
+                                    </td>
                                 @endif
                             @endforeach
                         </tr>
