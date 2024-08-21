@@ -22,9 +22,7 @@ trait WithDatatable
     abstract public function getQuery();
     abstract public function getView(): string;
 
-    public function onMount()
-    {
-    }
+    public function onMount() {}
 
     public function mount()
     {
@@ -94,7 +92,7 @@ trait WithDatatable
                         isset($col['key'])
                         && (!isset($col['searchable']) || (isset($col['searchable']) && $col['searchable']))
                     ) {
-                        $query->orWhere($col['key'], 'LIKE', "%$search%");
+                        $query->orWhere($col['key'], env('QUERY_LIKE'), "%$search%");
                     }
                 }
             });
