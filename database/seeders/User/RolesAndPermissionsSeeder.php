@@ -19,37 +19,17 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        $permissions = [
-            PermissionHelper::ACCESS_DASHBOARD => [PermissionHelper::TYPE_READ],
-            PermissionHelper::ACCESS_USER => PermissionHelper::TYPE_ALL,
-            PermissionHelper::ACCESS_ROLE => PermissionHelper::TYPE_ALL,
-            PermissionHelper::ACCESS_PERMISSION => PermissionHelper::TYPE_ALL,
-        ];
-        foreach ($permissions as $access => $types) {
+        foreach (PermissionHelper::ACCESS_TYPE_ALL as $access => $types) {
             foreach ($types as $type) {
                 Permission::create(['name' => PermissionHelper::transform($access, $type)]);
             }
         }
 
         // create role
-        $roles = [
-            "Admin" => [
-                PermissionHelper::ACCESS_DASHBOARD => [PermissionHelper::TYPE_READ],
-                PermissionHelper::ACCESS_USER => PermissionHelper::TYPE_ALL,
-                PermissionHelper::ACCESS_PERMISSION => PermissionHelper::TYPE_ALL,
-                PermissionHelper::ACCESS_ROLE => PermissionHelper::TYPE_ALL,
-            ],
-            "Member" => [
-                PermissionHelper::ACCESS_DASHBOARD => [PermissionHelper::TYPE_READ]
-            ]
-        ];
-        foreach ($roles as $name => $permissions) {
-            $role = Role::create(['name' => $name]);
-
-            foreach ($permissions as $access => $types) {
-                foreach ($types as $type) {
-                    $role->givePermissionTo(PermissionHelper::transform($access, $type));
-                }
+        $role = Role::create(['name' => "Super Admin"]);
+        foreach (PermissionHelper::ACCESS_TYPE_ALL as $access => $types) {
+            foreach ($types as $type) {
+                $role->givePermissionTo(PermissionHelper::transform($access, $type));
             }
         }
     }

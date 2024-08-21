@@ -26,6 +26,13 @@ class PermissionHelper
     const ROUTE_TYPE_UPDATE = ['edit', 'update'];
     const ROUTE_TYPE_DELETE = ['destroy'];
 
+    const ACCESS_TYPE_ALL = [
+        PermissionHelper::ACCESS_DASHBOARD => [PermissionHelper::TYPE_READ],
+        PermissionHelper::ACCESS_USER => PermissionHelper::TYPE_ALL,
+        PermissionHelper::ACCESS_ROLE => PermissionHelper::TYPE_ALL,
+        PermissionHelper::ACCESS_PERMISSION => PermissionHelper::TYPE_ALL,
+    ];
+
     const ACCESS_DASHBOARD = "dashboard";
     const ACCESS_USER = "user";
     const ACCESS_PERMISSION = "permission";
@@ -43,8 +50,6 @@ class PermissionHelper
         self::ACCESS_PERMISSION => "Akses",
         self::ACCESS_ROLE => "Jabatan",
     ];
-
-
 
     /*
     | Parameters
