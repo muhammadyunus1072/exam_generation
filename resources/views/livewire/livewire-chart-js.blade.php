@@ -1,10 +1,5 @@
-<div>
-    <button type="button" wire:click='updateChart()'>
-        Update
-    </button>
-    <div class="{!! $containerClass !!}" style="{!! $containerStyle !!}" wire:ignore>
-        <canvas id="{{ $canvasId }}"></canvas>
-    </div>
+<div class="{!! $containerClass !!}" style="{!! $containerStyle !!}" wire:ignore>
+    <canvas id="{{ $canvasId }}"></canvas>
 </div>
 
 @script
