@@ -1,33 +1,42 @@
 <?php
 
-namespace App\Traits;
+namespace App\Traits\Livewire;
 
 use Livewire\WithPagination;
 use Livewire\Attributes\On;
+use Livewire\WithoutUrlPagination;
 
 trait WithDatatable
 {
-    use WithPagination;
+    use WithPagination, WithoutUrlPagination;
 
     protected $paginationTheme = 'bootstrap';
 
+    public $pageName = "";
     public $lengthOptions = [10, 25, 50, 100];
     public $length = 10;
     public $search;
     public $sortBy = '';
     public $sortDirection = 'asc';
-    public $loading = false;
+    public $keyword_filter = true;
+    public $show_filter = true;
+
+    public $showLoadingIndicator = true;
+    public $loadingIndicatorTarget = "";
 
     abstract public function getColumns(): array;
     abstract public function getQuery();
     abstract public function getView(): string;
 
-    public function onMount() {}
+    public function onMount()
+    {
+    }
 
     public function mount()
     {
+        $this->onMount();
+
         $columns = $this->getColumns();
-        $this->loading = true;
         if ('' == $this->sortBy && count($columns) > 0) {
             foreach ($columns as $col) {
                 if (!isset($col['sortable']) || $col['sortable']) {
@@ -36,8 +45,6 @@ trait WithDatatable
                 }
             }
         }
-
-        $this->onMount();
     }
 
     public function updatingSearch()
@@ -56,12 +63,15 @@ trait WithDatatable
     #[On('datatable-refresh')]
     public function datatableRefresh()
     {
-        $this->refresh();
     }
 
     public function datatablePaginate($query)
     {
-        return $query->paginate($this->length);
+        if ($this->pageName) {
+            return $query->paginate($this->length, pageName: $this->pageName);
+        } else {
+            return $query->paginate($this->length);
+        }
     }
 
     public function datatableSort($field)
@@ -92,7 +102,7 @@ trait WithDatatable
                         isset($col['key'])
                         && (!isset($col['searchable']) || (isset($col['searchable']) && $col['searchable']))
                     ) {
-                        $query->orWhere($col['key'], env('QUERY_LIKE'), "%$search%");
+                        $query->orWhere($col['key'], 'LIKE', "%$search%");
                     }
                 }
             });

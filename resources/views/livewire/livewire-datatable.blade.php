@@ -40,10 +40,10 @@
                                             <div class="d-flex flex-column">
                                                 <i
                                                     class="ki-duotone ki-up fs-4 m-0 p-0
-                                {{ $isSortAscending ? 'text-dark' : 'text-secondary' }}"></i>
+                                {{ $isSortAscending ? 'text-secondary' : 'text-dark' }}"></i>
                                                 <i
                                                     class="ki-duotone ki-down fs-4 m-0 p-0
-                                {{ $isSortAscending ? 'text-secondary' : 'text-dark' }}"></i>
+                                {{ $isSortAscending ? 'text-dark' : 'text-secondary' }}"></i>
                                             </div>
                                         </div>
                                     </button>
@@ -100,7 +100,7 @@
             <em>Total Data: {{ $data->total() }}</em>
         </div>
         <div class="col-auto">
-            {{ $data->links() }}
+            {{ $data->links(data: ['scrollTo' => false]) }}
         </div>
     </div>
 </div>

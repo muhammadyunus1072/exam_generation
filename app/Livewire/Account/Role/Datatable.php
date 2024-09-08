@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Account\Role;
 
-use App\Traits\WithDatatable;
+use App\Traits\Livewire\WithDatatable;
 use App\Helpers\Alert;
 use App\Helpers\PermissionHelper;
 use App\Repositories\Account\RoleRepository;
