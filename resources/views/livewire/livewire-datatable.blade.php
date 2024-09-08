@@ -40,10 +40,10 @@
                                             <div class="d-flex flex-column">
                                                 <i
                                                     class="ki-duotone ki-up fs-4 m-0 p-0
-                                {{ $isSortAscending ? 'text-secondary' : 'text-dark' }}"></i>
+                                {{ $isSortAscending ? 'text-dark' : 'text-secondary' }}"></i>
                                                 <i
                                                     class="ki-duotone ki-down fs-4 m-0 p-0
-                                {{ $isSortAscending ? 'text-dark' : 'text-secondary' }}"></i>
+                                {{ $isSortAscending ? 'text-secondary' : 'text-dark' }}"></i>
                                             </div>
                                         </div>
                                     </button>
