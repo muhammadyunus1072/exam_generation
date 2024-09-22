@@ -11,6 +11,16 @@ abstract class MasterDataRepository
         return app(static::className())::create($data);
     }
 
+    public static function getBy($whereClause)
+    {
+        $query = app(static::className())->query();
+        foreach ($whereClause as $clause) {
+            $query->where($clause['column'], $clause['operator'], $clause['value']);
+        }
+
+        return $query->get();
+    }
+
     public static function find($id)
     {
         return app(static::className())->find($id);
