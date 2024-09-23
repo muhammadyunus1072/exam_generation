@@ -11,14 +11,24 @@ abstract class MasterDataRepository
         return app(static::className())::create($data);
     }
 
-    public static function getBy($whereClause)
+    public static function whereClauseProcess($whereClause)
     {
         $query = app(static::className())->query();
         foreach ($whereClause as $clause) {
+            if (isset($clause['conjunction']) || $clause['conjunction'] == 'OR') {
+                $query->orWhere($clause['column'], $clause['operator'], $clause['value']);
+                continue;
+            }
+
             $query->where($clause['column'], $clause['operator'], $clause['value']);
         }
 
-        return $query->get();
+        return $query;
+    }
+
+    public static function getBy($whereClause)
+    {
+        return self::whereClauseProcess($whereClause)->get();
     }
 
     public static function find($id)
@@ -28,12 +38,7 @@ abstract class MasterDataRepository
 
     public static function findBy($whereClause)
     {
-        $query = app(static::className())->query();
-        foreach ($whereClause as $clause) {
-            $query->where($clause['column'], $clause['operator'], $clause['value']);
-        }
-
-        return $query->first();
+        return self::whereClauseProcess($whereClause)->first();
     }
 
     public static function update($id, $data)
