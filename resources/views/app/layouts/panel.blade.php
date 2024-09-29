@@ -14,7 +14,8 @@
     <!--begin::Vendor Stylesheets(used for this page only)-->
     <link href="{{ asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.css') }}" rel="stylesheet"
         type="text/css" />
-    <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet"
+        type="text/css" />
     <!--end::Vendor Stylesheets-->
 
     <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
@@ -23,7 +24,7 @@
     <!--end::Global Stylesheets Bundle-->
 
     @livewireStyles
-    
+
     @stack('css')
 </head>
 <!--end::Head-->
@@ -97,6 +98,10 @@
 
                         <!--begin::Navbar-->
                         <div class="app-navbar flex-shrink-0">
+                            <div class="app-navbar-item ms-1 ms-md-4">
+                                <livewire:core.connection-state />
+                            </div>
+
                             <!--begin::User menu-->
                             <div class="app-navbar-item ms-1 ms-md-4" id="kt_header_user_menu_toggle">
                                 <!--begin::Menu wrapper-->
