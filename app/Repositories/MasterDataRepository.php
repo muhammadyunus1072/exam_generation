@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 abstract class MasterDataRepository
 {
+    const OPERATOR = ['=', '!=', '<>', '<', '<=', '>', '>='];
+
     abstract protected static function className(): string;
 
     public static function create($data)
@@ -15,12 +17,23 @@ abstract class MasterDataRepository
     {
         $query = app(static::className())->query();
         foreach ($whereClause as $clause) {
-            if (isset($clause['conjunction']) || $clause['conjunction'] == 'OR') {
-                $query->orWhere($clause['column'], $clause['operator'], $clause['value']);
-                continue;
+            $column = isset($clause['column']) ? $clause['column'] : $clause[0];
+
+            if (isset($clause['operator']) || in_array($clause[1], self::OPERATOR)) {
+                $operator = isset($clause['operator']) ? $clause['operator'] : $clause[1];
+                $value = isset($clause['value']) ? $clause['value'] : $clause[2];
+                $conjunction = isset($clause['conjunction']) ? isset($clause['conjunction']) : (isset($clause[3]) ? $clause[3] : null);
+            } else {
+                $operator = "=";
+                $value = isset($clause['value']) ? $clause['value'] : $clause[1];
+                $conjunction = isset($clause['conjunction']) ? isset($clause['conjunction']) : (isset($clause[2]) ? $clause[2] : null);
             }
 
-            $query->where($clause['column'], $clause['operator'], $clause['value']);
+            if ($conjunction == 'OR') {
+                $query->orWhere($column, $operator, $value);
+            } else {
+                $query->where($column, $operator, $value);
+            }
         }
 
         return $query;
@@ -29,6 +42,16 @@ abstract class MasterDataRepository
     public static function getBy($whereClause)
     {
         return self::whereClauseProcess($whereClause)->get();
+    }
+
+    public static function count()
+    {
+        return app(static::className())->count();
+    }
+
+    public static function countBy($whereClause)
+    {
+        return self::whereClauseProcess($whereClause)->count();
     }
 
     public static function find($id)
