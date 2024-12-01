@@ -70,7 +70,7 @@ class Detail extends Component
             foreach ($this->accesses as $keyAccess => $access) {
                 if ($keyAccess == $key) {
                     foreach ($access['permissions'] as $keyPermission => $permission) {
-                        $this->accesses[$keyAccess]['permissions'][$keyPermission]['is_checked'] = true;
+                        $this->accesses[$keyAccess]['permissions'][$keyPermission]['is_checked'] = $isCheck == 1 ? true : false;
                     }
                     break;
                 }

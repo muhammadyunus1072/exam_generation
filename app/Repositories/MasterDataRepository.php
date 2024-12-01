@@ -13,7 +13,7 @@ abstract class MasterDataRepository
         return app(static::className())::create($data);
     }
 
-    public static function whereClauseProcess($whereClause)
+    public static function clauseProcess($whereClause, $orderByClause = null)
     {
         $query = app(static::className())->query();
         foreach ($whereClause as $clause) {
@@ -36,12 +36,25 @@ abstract class MasterDataRepository
             }
         }
 
+        if (is_array($orderByClause)) {
+            foreach ($orderByClause as $clause) {
+                $column = isset($clause['column']) ? $clause['column'] : $clause[0];
+
+                $direction = 'ASC';
+                if (isset($clause['direction']) || isset($clause[1])) {
+                    $direction = isset($clause['direction']) ? $clause['direction'] : $clause[1];
+                }
+
+                $query->orderBy($column, $direction);
+            }
+        }
+
         return $query;
     }
 
-    public static function getBy($whereClause)
+    public static function getBy($whereClause, $orderByClause = null)
     {
-        return self::whereClauseProcess($whereClause)->get();
+        return self::clauseProcess($whereClause, $orderByClause)->get();
     }
 
     public static function count()
@@ -51,7 +64,7 @@ abstract class MasterDataRepository
 
     public static function countBy($whereClause)
     {
-        return self::whereClauseProcess($whereClause)->count();
+        return self::clauseProcess($whereClause)->count();
     }
 
     public static function find($id)
@@ -61,7 +74,7 @@ abstract class MasterDataRepository
 
     public static function findBy($whereClause)
     {
-        return self::whereClauseProcess($whereClause)->first();
+        return self::clauseProcess($whereClause)->first();
     }
 
     public static function update($id, $data)

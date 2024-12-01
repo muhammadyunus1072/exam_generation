@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title')</title>
+    <title>@yield('title', env('APP_NAME'))</title>
 
     <!--begin::Fonts(mandatory for all pages)-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
@@ -93,13 +93,19 @@
                             data-kt-drawer-toggle="#kt_app_header_menu_toggle" data-kt-swapper="true"
                             data-kt-swapper-mode="{default: 'append', lg: 'prepend'}"
                             data-kt-swapper-parent="{default: '#kt_app_body', lg: '#kt_app_header_wrapper'}">
+
+                            <div class='menu-item d-none unhide-123'>
+                                <livewire:core.user-state :arrangement="'horizontal'">
+                            </div>
                         </div>
                         <!--end::Menu wrapper-->
 
                         <!--begin::Navbar-->
                         <div class="app-navbar flex-shrink-0">
                             <div class="app-navbar-item ms-1 ms-md-4">
-                                <livewire:core.connection-state />
+                                <div class='menu-item'>
+                                    <livewire:core.connection-state />
+                                </div>
                             </div>
 
                             <!--begin::User menu-->
@@ -135,6 +141,13 @@
                                         </div>
                                     </div>
                                     <!--end::Menu item-->
+
+                                    <!--begin::Menu item-->
+                                    <div class="menu-item px-5 d-none unhide-123">
+                                        <livewire:core.user-state :arrangement="'vertical'">
+                                    </div>
+                                    <!--end::Menu item-->
+
                                     <!--begin::Menu item-->
                                     @if (config('template.profile_route'))
                                         <div class="menu-item px-5">
@@ -143,6 +156,7 @@
                                         </div>
                                     @endif
                                     <!--end::Menu item-->
+
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-5">
                                         <a href="{{ route('logout') }}" class="menu-link px-5">Sign Out</a>
@@ -254,9 +268,11 @@
                 text: event[2],
             });
         });
+
         Livewire.on("{{ Alert::EVENT_CONSOLE_LOG }}", (event) => {
             console.log(event[0])
         });
+
         Livewire.on("{{ Alert::EVENT_CONFIRMATION }}", (event) => {
             Swal.fire({
                 icon: event[0],
@@ -274,6 +290,10 @@
                     Livewire.dispatch(event[6]);
                 }
             });
+        });
+
+        Livewire.on('refresh-page', (data) => {
+            location.reload();
         });
 
         Livewire.on('consoleLog', (data) => {
