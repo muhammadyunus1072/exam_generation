@@ -11,7 +11,7 @@ return [
     'logo_panel_background' => 'white',
 
     'registration_route' => 'register',
-    'registration_default_role' => 'Member',
+    'registration_default_role' => 'Murid',
 
     'forgot_password_route' => 'password.request',
     'reset_password_route' => 'password.reset',
