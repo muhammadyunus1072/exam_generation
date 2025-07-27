@@ -3,17 +3,18 @@
 namespace App\Livewire\Service\Exam;
 
 use App\Helpers\Alert;
-use App\Models\MasterData\PaymentMethod;
 use Livewire\Component;
+use App\Helpers\ExamHelper;
 use Livewire\Attributes\On;
-use App\Traits\Livewire\WithDatatable;
-
 use App\Helpers\PermissionHelper;
+
 use Illuminate\Support\Facades\Crypt;
+use App\Traits\Livewire\WithDatatable;
+use App\Models\MasterData\PaymentMethod;
 use Illuminate\Database\Eloquent\Builder;
 use App\Repositories\Account\UserRepository;
-use App\Repositories\MasterData\PaymentMethod\PaymentMethodRepository;
 use App\Repositories\Service\Exam\ExamRepository;
+use App\Repositories\MasterData\PaymentMethod\PaymentMethodRepository;
 
 class Datatable extends Component
 {
@@ -41,7 +42,7 @@ class Datatable extends Component
             return;
         }
 
-        ExamRepository::delete(Crypt::decrypt($this->targetDeleteId));
+        ExamRepository::delete(ExamHelper::simple_decrypt($this->targetDeleteId));
         Alert::success($this, 'Berhasil', 'Data berhasil dihapus');
     }
 
@@ -77,7 +78,7 @@ class Datatable extends Component
                 'render' => function ($item) {
 
                     $editHtml = "";
-                    $id = Crypt::encrypt($item->id);
+                    $id = ExamHelper::simple_encrypt($item->id);
                     if ($this->isCanUpdate) {
                         $editUrl = route('exam.edit', $id);
                         $editHtml = "<div class='col-auto mb-2'>
