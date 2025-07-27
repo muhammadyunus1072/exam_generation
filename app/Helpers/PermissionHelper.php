@@ -26,22 +26,19 @@ class PermissionHelper
     const ROUTE_TYPE_UPDATE = ['edit', 'update'];
     const ROUTE_TYPE_DELETE = ['destroy'];
 
-    const ACCESS_TYPE_ALL = [
-        PermissionHelper::ACCESS_DASHBOARD => [PermissionHelper::TYPE_READ],
-        PermissionHelper::ACCESS_USER => PermissionHelper::TYPE_ALL,
-        PermissionHelper::ACCESS_ROLE => PermissionHelper::TYPE_ALL,
-        PermissionHelper::ACCESS_PERMISSION => PermissionHelper::TYPE_ALL,
-    ];
-
     const ACCESS_DASHBOARD = "dashboard";
     const ACCESS_USER = "user";
     const ACCESS_PERMISSION = "permission";
     const ACCESS_ROLE = "role";
+    const ACCESS_EXAM = "exam";
+    const ACCESS_PERFORM = "perform";
     const ACCESS_ALL = [
         self::ACCESS_DASHBOARD,
         self::ACCESS_USER,
         self::ACCESS_PERMISSION,
         self::ACCESS_ROLE,
+        self::ACCESS_EXAM,
+        self::ACCESS_PERFORM,
     ];
 
     const TRANSLATE_ACCESS = [
@@ -49,6 +46,17 @@ class PermissionHelper
         self::ACCESS_USER => "Pengguna",
         self::ACCESS_PERMISSION => "Akses",
         self::ACCESS_ROLE => "Jabatan",
+        self::ACCESS_EXAM => "Data Ujian",
+        self::ACCESS_PERFORM => "Mengerjakan Ujian",
+    ];
+
+    const ACCESS_TYPE_ALL = [
+        PermissionHelper::ACCESS_DASHBOARD => [PermissionHelper::TYPE_READ],
+        PermissionHelper::ACCESS_USER => PermissionHelper::TYPE_ALL,
+        PermissionHelper::ACCESS_ROLE => PermissionHelper::TYPE_ALL,
+        PermissionHelper::ACCESS_PERMISSION => PermissionHelper::TYPE_ALL,
+        PermissionHelper::ACCESS_EXAM => PermissionHelper::TYPE_ALL,
+        PermissionHelper::ACCESS_PERFORM => PermissionHelper::TYPE_ALL,
     ];
 
     /*

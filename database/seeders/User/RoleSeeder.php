@@ -14,11 +14,15 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         // create role
-        $role = Role::create(['name' => "Super Admin"]);
+        $role = Role::create(['name' => "Guru"]);
         foreach (PermissionHelper::ACCESS_TYPE_ALL as $access => $types) {
             foreach ($types as $type) {
                 $role->givePermissionTo(PermissionHelper::transform($access, $type));
             }
+        }
+        $role = Role::create(['name' => "Murid"]);
+        foreach (PermissionHelper::TYPE_ALL as $type) {
+            $role->givePermissionTo(PermissionHelper::transform(PermissionHelper::ACCESS_PERFORM, $type));
         }
     }
 }

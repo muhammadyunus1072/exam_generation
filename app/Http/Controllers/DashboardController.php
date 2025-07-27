@@ -9,7 +9,10 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('app.layouts.panel');
+        if (auth()->user()->hasRole('Guru')) {
+            return redirect()->route('exam.index');
+        } else {
+            return redirect()->route('perform.index');
+        }
     }
-
 }

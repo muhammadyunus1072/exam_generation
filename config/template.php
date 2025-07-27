@@ -27,8 +27,8 @@ return [
 
     'menu' => [
         [
-            'text' => 'Dashboard',
-            'route'  => 'dashboard.index',
+            'text' => 'Data Ujian',
+            'route'  => 'exam.index',
             'icon' => 'ki-duotone ki-element-11',
         ],
         [

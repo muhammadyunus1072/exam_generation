@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Sis\TrackHistory\HasTrackHistory;
+use Muhammadyunus1072\TrackHistory\HasTrackHistory;
 
 class User extends Authenticatable implements MustVerifyEmail
 {

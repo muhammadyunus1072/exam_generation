@@ -95,7 +95,6 @@
                             data-kt-swapper-parent="{default: '#kt_app_body', lg: '#kt_app_header_wrapper'}">
 
                             <div class='menu-item d-none unhide-123'>
-                                <livewire:core.user-state :arrangement="'horizontal'">
                             </div>
                         </div>
                         <!--end::Menu wrapper-->
@@ -144,7 +143,6 @@
 
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-5 d-none unhide-123">
-                                        <livewire:core.user-state :arrangement="'vertical'">
                                     </div>
                                     <!--end::Menu item-->
 
