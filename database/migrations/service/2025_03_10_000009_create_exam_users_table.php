@@ -33,9 +33,12 @@ return new class extends Migration
         if ($is_history) {
             $table->bigInteger('obj_id')->unsigned();
         } else {
+            $table->index('exam_id', 'exam_users_exam_id_idx');
+            $table->index('user_id', 'exam_users_user_id_idx');
         }
 
         $table->unsignedBigInteger('exam_id')->comment('ID Exam');
+        $table->unsignedBigInteger('user_id')->comment('ID User');
         $table->json('exams_data')->comment('Data Ujian');
         $table->decimal('score', 5, 2)->nullable();
         $table->decimal('minimal_score', 5, 2)->nullable();

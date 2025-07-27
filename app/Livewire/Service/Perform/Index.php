@@ -19,6 +19,7 @@ class Index extends Component
 
     public $input_kode;
     public $kode;
+    public $is_progress = true;
 
     #[Validate('required', message: 'Jenjang Pendidikan Harus Diisi', onUpdate: false)]
     public $level;
@@ -49,6 +50,16 @@ class Index extends Component
 
     private function getExam($kode)
     {
+        $done = ExamUserRepository::findBy(whereClause: [
+            ['user_id', auth()->user()->id],
+            ['exam_id', ExamHelper::simple_decrypt($this->kode)]
+        ]);
+        if ($done) {
+            $this->is_progress = false;
+            $this->score = $done->score;
+            $this->minimal_score = $done->minimal_score;
+            $this->summary_message = $done->summary_message;
+        }
         $exam = ExamRepository::find(ExamHelper::simple_decrypt($kode));
         if ($exam) {
             $this->kode = ExamHelper::simple_encrypt($exam->id);
@@ -148,6 +159,7 @@ Berikan hasil dalam format JSON tanpa komentar atau tambahan teks apapun. Contoh
 
             $validatedData = [
                 'exam_id' => ExamHelper::simple_decrypt($this->kode),
+                'user_id' => auth()->user()->id,
                 'score' => $this->score,
                 'minimal_score' => $this->minimal_score,
                 'summary_message' => $this->summary_message,
@@ -157,7 +169,7 @@ Berikan hasil dalam format JSON tanpa komentar atau tambahan teks apapun. Contoh
             $obj = ExamUserRepository::create($validatedData);
 
             DB::commit();
-            $this->dispatch('setTran');
+            return redirect()->route('perform.index', ['kode' => $this->kode]);
         } catch (Exception $e) {
             Alert::fail($this, "Gagal", $e->getMessage());
         }

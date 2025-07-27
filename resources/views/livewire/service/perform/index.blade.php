@@ -60,54 +60,60 @@
   
     </div>
   </section>
-  <section>
-    <div id="exam-section">
-      <div class="carousel--wrapper carousel--wrapper--sec">
-        <div class="carousel" >
-          <div class="progress-bar" >
-            <div class="progress-bar-insider" data-progress="🏁🏁" ></div>
-          </div>
-          <div class="carousel__content" style=" transform: translate(0%, 0px);" >
-            <div class="carousel--item" style="width: 5.55556%;">
-              <p class="carousel--title carousel--title--sub"> Sebelum memulai ujian, pastikan Anda sudah membaca petunjuk dengan seksama.  
-        Luangkan waktu sejenak untuk berdoa agar ujian berjalan lancar dan hasilnya maksimal.</p>
-              <span class="carousel--radios"><button class="btn btn-primary nav--buttons--right mt">Mulai Ujian</button>
-                </span>
+  
+      
+    <section class="{{($is_progress) ? '' : 'd-none'}}">
+      <div id="exam-section" class="ab">
+        <div class="carousel--wrapper carousel--wrapper--sec">
+          <div class="carousel" >
+            <div class="progress-bar" >
+              <div class="progress-bar-insider" data-progress="🏁🏁" ></div>
             </div>
-            @foreach ($exams_data as $number => $exam)
+            <div class="carousel__content" style=" transform: translate(0%, 0px);" >
               <div class="carousel--item" style="width: 5.55556%;">
-                <p class="fs-5">{{$number + 1}}. {{$exam['question']}}</p>
-                <div class="carousel--radios">
-                  @foreach ($exam['choices'] as $index => $choice)  
-                    <label class="fs-5"><input type="radio" wire:model="exams_answer.{{$number}}" name="q1" value="{{$choice}}"> {{ chr(65 + $index) }}. {{$choice}}</label> 
-                  @endforeach
+                <p class="carousel--title carousel--title--sub"> Sebelum memulai ujian, pastikan Anda sudah membaca petunjuk dengan seksama.  
+          Luangkan waktu sejenak untuk berdoa agar ujian berjalan lancar dan hasilnya maksimal.</p>
+                <span class="carousel--radios"><button class="btn btn-primary nav--buttons--right mt">Mulai Ujian</button>
+                  </span>
+              </div>
+              @foreach ($exams_data as $number => $exam)
+                <div class="carousel--item" style="width: 5.55556%;">
+                  <p class="fs-5">{{$number + 1}}. {{$exam['question']}}</p>
+                  <div class="carousel--radios">
+                    @foreach ($exam['choices'] as $index => $choice)  
+                      <label class="fs-5"><input type="radio" wire:model="exams_answer.{{$number}}" name="q1" value="{{$choice}}"> {{ chr(65 + $index) }}. {{$choice}}</label> 
+                    @endforeach
+                  </div>
+                </div>
+              @endforeach
+              <div class="carousel--item" style="width: 5.55556%;" >
+
+                <div
+                    class="row d-flex justify-content-center"
+                    style="transform: scale(3)">
+                  <div class="btn text-white col-auto" style="background-color: #5d2fc2;">
+                    <i class="indicator-progress animate-wand fas fa-wand-magic-sparkles text-white"></i>
+                    Sedang Memproses
+                  </div>
                 </div>
               </div>
-            @endforeach
-            <div class="carousel--item" style="width: 5.55556%;" >
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-  <section>
-  
-    <div class="row d-block d-flex justify-content-center" id="loading-section">
-      <div class="btn text-white col-auto" style="background-color: #5d2fc2; ">
-        
-          <i class="indicator-progress animate-wand fas fa-wand-magic-sparkles"></i>  
-          Sedang Memproses
-        
+    </section>
+
+
+    <section class="{{($is_progress) ? 'd-none' : ''}}">
+    
+      <div class="row" id="summary-section">
+        <h3 class="fw-bold">Nilai : {{$score}}</h3>
+        <h3 class="fw-bold">Status : {!!$score >= $minimal_score ? '<span class="text-success">Lulus</span>' : '<span class="text-danger">Tidak Lulus</span>' !!}</h3>
+        <h3 class="fw-bold">Pesan Kesimpulan : {{$summary_message}}</h3>
       </div>
-    </div>
-    <div class="row d-none" id="summary-section">
-      <h3 class="fw-bold">Nilai : {{$score}}</h3>
-      <h3 class="fw-bold">Status : {!!$score >= $minimal_score ? '<span class="text-success">Lulus</span>' : '<span class="text-danger">Tidak Lulus</span>' !!}</h3>
-      <h3 class="fw-bold">Pesan Kesimpulan : {{$summary_message}}</h3>
-    </div>
-  </section>
+    </section>
   @endif
+  
 </div>
 
 @push('css')
@@ -694,16 +700,17 @@ function update_progress_bar(index) {
   else {
     $(".progress-bar-insider").attr("data-progress", "100% 🔥🔥🔥");
 
-    $('#exam-section').hide();
-    $('#loading-section').show();
+  // const exam = document.getElementById('exam-section');
+  // const loading = document.getElementById('loading-section');
+  // const summary = document.getElementById('summary-section');
+  //         exam.classList.add('d-none');
+  //       loading.classList.remove('d-none');
+        
     @this.call('result');
   }
 }
 Livewire.on("setTran", (event) => {
   console.log('set tran')
-  $('#exam-section').hide();
-  $('#loading-section').hide();
-  $('#summary-section').show();
 });
 
 $(".carousel--item input[type=radio]").click(function(){

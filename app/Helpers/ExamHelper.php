@@ -216,7 +216,7 @@ class ExamHelper
       'Authorization' => 'Bearer ' . env('REPLICATE_API_TOKEN'),
       'Content-Type' => 'application/json',
 
-    ])->post('https://api.replicate.com/v1/models/ibm-granite/granite-3.0-8b-instruct/predictions', [
+    ])->post(env('REPLICATE_URL'), [
       'input' => [
         'prompt' => $prompt,
         'top_p' => 0.9,
@@ -274,7 +274,7 @@ class ExamHelper
       'Authorization' => 'Bearer ' . env('REPLICATE_API_TOKEN'),
       'Content-Type' => 'application/json',
 
-    ])->post('https://api.replicate.com/v1/models/ibm-granite/granite-3.0-8b-instruct/predictions', [
+    ])->post(env('REPLICATE_URL'), [
       'input' => [
         'prompt' => $prompt,
         'top_p' => 0.9,

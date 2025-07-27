@@ -13,6 +13,7 @@ class ExamUser extends Model
 
     protected $fillable = [
         'exam_id',
+        'user_id',
         'exams_data',
         'score',
         'minimal_score',
