@@ -32,6 +32,11 @@ return [
             'icon' => 'ki-duotone ki-element-11',
         ],
         [
+            'text' => 'Kerjakan Ujian',
+            'route'  => 'perform.index',
+            'icon' => 'ki-duotone ki-element-11',
+        ],
+        [
             // 'id' => 'menu_admin'
             'text' => 'Admin',
             'icon' => 'ki-duotone ki-shield-tick',
