@@ -45,7 +45,11 @@ class Login extends Component
         }
 
         Auth::loginUsingId($user->id);
-        $this->redirectRoute('dashboard.index');
+        if (auth()->user()->hasRole('Guru')) {
+            $this->redirectRoute('dashboard.index');
+        } {
+            $this->redirectRoute('perform.index');
+        }
     }
 
     public function render()
