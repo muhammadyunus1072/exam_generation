@@ -1,57 +1,78 @@
-📝 UJIAN AI – Aplikasi Ujian Berbasis AI
-Aplikasi ini memungkinkan Guru untuk membuat soal ujian otomatis dengan AI, dan Murid mengerjakannya langsung secara online. Soal dibuat sesuai dengan jenjang, kelas, dan mata pelajaran berdasarkan Kurikulum Merdeka.
+# 📝 UJIAN AI – Aplikasi Ujian Berbasis AI
 
-🔐 Login Sebagai Guru
-Email: admin@gmail.com
-Password: 123
+Aplikasi ini memungkinkan Guru untuk **membuat soal ujian otomatis dengan AI**, dan Murid dapat **mengerjakannya langsung secara online**. Soal dibuat berdasarkan jenjang, kelas, dan mata pelajaran sesuai **Kurikulum Merdeka**.
 
-🧑‍🏫 Langkah Guru untuk Membuat Ujian
-Masuk ke menu "Data Ujian"
+---
 
-Klik tombol "Buat Ujian"
+## 🔐 Login Sebagai Guru
 
-Isi formulir berikut:
+- **Email:** `admin@gmail.com`  
+- **Password:** `123`
 
-Jenjang Sekolah (SD, SMP, SMA, dll)
+---
 
-Kelas
+## 🧑‍🏫 Langkah Guru untuk Membuat Ujian
 
-Mata Pelajaran
+1. Masuk ke menu **"Data Ujian"**
+2. Klik tombol **"Buat Ujian"**
+3. Isi formulir berikut:
+   - Jenjang Sekolah (SD, SMP, SMA, dll)
+   - Kelas
+   - Mata Pelajaran
+   - Jumlah Soal
+   - Nilai Minimal Lulus
+4. Klik **"Generate Soal Ujian"**  
+   Aplikasi akan menggunakan AI untuk membuat soal pilihan ganda lengkap dengan jawaban.
+5. Klik **"Simpan"**
+6. Setelah disimpan, salin **kode ujian** yang muncul — kode ini dibagikan ke Murid.
 
-Jumlah Soal
+---
 
-Nilai Minimal Lulus
+## 🎓 Langkah Murid untuk Mengerjakan Ujian
 
-Klik "Generate Soal Ujian"
-Aplikasi akan menggunakan AI untuk membuat soal pilihan ganda lengkap dengan jawaban.
+1. **Login / Register** terlebih dahulu
+2. Masuk ke menu **"Kerjakan Ujian"**
+3. Masukkan **kode ujian** yang diberikan oleh Guru
+4. Ujian akan dimulai secara interaktif
+5. Jawab semua soal
+6. Setelah selesai, nilai dan pesan kesimpulan akan muncul (otomatis dari AI)
 
-Klik "Simpan"
+---
 
-Setelah disimpan, salin kode ujian yang muncul — kode ini dibagikan ke Murid.
+## 🤖 Fitur AI Otomatis
 
-🎓 Langkah Murid untuk Mengerjakan Ujian
-Login / Register terlebih dahulu
+- Soal otomatis dibuat oleh AI berdasarkan kurikulum
+- Penilaian otomatis berdasarkan jawaban siswa
+- AI memberikan pesan evaluasi yang personal dan memotivasi
 
-Masuk ke menu "Kerjakan Ujian"
+---
 
-Masukkan kode ujian yang diberikan oleh Guru
+## 💡 Teknologi Digunakan
 
-Ujian akan dimulai secara interaktif
+- Laravel + Livewire
+- Bootstrap / TailwindCSS
+- Replicate API (ibm-granite-3.3-8b-instruct)
 
-Jawab semua soal
+---
 
-Setelah selesai, nilai dan pesan kesimpulan akan muncul (otomatis dari AI)
+## 🚀 Catatan Pengembangan
 
-🤖 Fitur AI Otomatis
-Soal otomatis dibuat oleh AI (berdasarkan jenjang dan mapel)
+- Semua soal dan evaluasi bersifat otomatis
+- Admin dapat melihat hasil dan statistik ujian
 
-Analisis kesalahan murid dan memberikan pesan kesimpulan evaluatif
+---
 
-Penilaian langsung berdasarkan jawaban siswa
+## 🧠 AI Support Explanation
 
-💡 Teknologi Digunakan
-Laravel + Livewire
+Aplikasi ini memanfaatkan teknologi AI untuk dua hal utama:
 
-Tailwind / Bootstrap
+1. **Generate Soal Ujian Otomatis**
+   - Berdasarkan input dari form: jenjang pendidikan, kelas, mata pelajaran, jumlah soal, dan nilai minimal lulus.
+   - AI akan menghasilkan soal pilihan ganda lengkap dengan jawaban yang relevan sesuai Kurikulum Merdeka.
 
-Replicate API dengan model: ibm-granite-3.3-8b-instruct
+2. **Membuat Summary Message (Evaluasi)**
+   - Setelah siswa mengerjakan ujian, AI akan menganalisis hasilnya.
+   - AI memberikan pesan evaluatif yang personal, menjelaskan area yang perlu ditingkatkan atau diperbaiki oleh siswa.
+   - Bahasa yang digunakan ramah, memotivasi, dan menyerupai bimbingan seorang guru.
+
+Teknologi AI yang digunakan: `ibm-granite-3.3-8b-instruct` melalui layanan Replicate API.
