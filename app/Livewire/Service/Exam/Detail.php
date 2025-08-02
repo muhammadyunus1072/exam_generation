@@ -108,6 +108,7 @@ Instruksi penting:
 - Setiap soal memiliki 1 pertanyaan, 4 pilihan jawaban (a, b, c, d), dan hanya satu jawaban yang benar.
 
 Format keluaran:
+- Format JSON valid. Gunakan hanya kutip ganda (\"). Tanpa komentar, tanpa teks tambahan. Jangan gunakan kutip melengkung.
 - Jawaban hanya berupa JSON array (tanpa komentar, tanpa penjelasan, tanpa teks tambahan).
 - Gunakan hanya tanda kutip ganda (\"), dan jangan pernah gunakan kutip tunggal (') atau kutip melengkung (‘ ’ “ ”) untuk format JSON.
 

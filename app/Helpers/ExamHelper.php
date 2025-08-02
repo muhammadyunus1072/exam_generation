@@ -210,7 +210,7 @@ class ExamHelper
     );
   }
 
-  private static function generate($prompt)
+  public static function generate($prompt)
   {
     // Step 1: Make prediction request
     $response = Http::withHeaders([
@@ -225,7 +225,7 @@ class ExamHelper
         'temperature' => 0.5,
         'presence_penalty' => 0.3,
         'frequency_penalty' => 0.5,
-        'max_tokens' => 4000,
+        'max_tokens' => 100000
       ]
     ]);
 
@@ -239,34 +239,44 @@ class ExamHelper
       Log::info('✅ Replicate success to return prediction URL.', ['url' => $url]);
     }
 
-    // Step 2: Poll until finished
+    // Step 2: Polling until ready
     do {
       sleep(1);
       $check = Http::withToken(env('REPLICATE_API_TOKEN'))->get($url)->json();
     } while (in_array($check['status'], ['starting', 'processing']));
 
-    // Step 3: Capture and clean raw output
-    $botReply = $check['output'] ?? [];
-    $botReply = is_array($botReply) ? implode('', $botReply) : (string) $botReply;
+    // Step 3: Get & clean raw output
+    $botReply = implode('', $check['output'] ?? []);
     Log::info('[AI RAW]', ['raw' => $botReply]);
 
     $raw = trim($botReply);
 
-    // Normalize smart quotes to regular double quote
-    $raw = str_replace(['“', '”', '‘', '’'], '"', $raw);
+    // === CLEANING SECTION ===
 
-    // Convert single-quoted keys/values to double quote
-    $raw = preg_replace_callback("/'([^']*?)'/", fn($m) => '"' . addslashes($m[1]) . '"', $raw);
+    // 1. Ganti kutip melengkung jadi kutip standar
+    $raw = strtr($raw, [
+      '“' => '"',
+      '”' => '"',
+      '‘' => '"',
+      '’' => '"',
+      '′' => "'",
+    ]);
 
-    // Remove trailing commas before } or ]
+    // 2. Ganti single-quote (jika ada) ke double-quote
+    $raw = preg_replace_callback("/'([^']*?)'/", function ($m) {
+      return '"' . addslashes($m[1]) . '"';
+    }, $raw);
+
+    // 3. Hapus koma di akhir array/object
     $raw = preg_replace('/,\s*([\]}])/', '$1', $raw);
 
-    // Remove control characters including \t, \r, \n
-    $raw = preg_replace('/[\x00-\x1F\x7F]+/u', '', $raw);
+    // 4. Hapus karakter tak terlihat seperti tab, non-breaking space, null, dll
+    $raw = preg_replace('/[\x00-\x1F\x7F\xA0]+/u', '', $raw);
 
+    // Optional: Debug output yang sudah dibersihkan
     Log::debug('[AI CLEANED]', ['cleaned' => $raw]);
 
-    // Step 4: Parse JSON
+    // Step 4: Decode JSON
     $parsed = json_decode($raw, true);
 
     if (json_last_error() !== JSON_ERROR_NONE) {
@@ -277,9 +287,29 @@ class ExamHelper
       return false;
     }
 
-    Log::info('✅ JSON decoded successfully', ['count' => count($parsed)]);
+    // Step 5: Normalize jika format choices salah (hanya 1 string yang dipisah koma)
+    foreach ($parsed as &$q) {
+      if (
+        isset($q['choices']) &&
+        is_array($q['choices']) &&
+        count($q['choices']) === 1 &&
+        str_contains($q['choices'][0], ',')
+      ) {
+        $q['choices'] = array_map('trim', explode(',', $q['choices'][0]));
+      }
+
+      if (
+        isset($q['correct_answer']) &&
+        isset($q['choices']) &&
+        !in_array($q['correct_answer'], $q['choices'])
+      ) {
+        Log::warning('⚠️ correct_answer not found in choices', ['question' => $q['question']]);
+      }
+    }
+
     return $parsed;
   }
+
 
 
   public static function generateExam($prompt)
