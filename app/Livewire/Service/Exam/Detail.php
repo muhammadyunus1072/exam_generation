@@ -109,7 +109,7 @@ Instruksi penting:
 
 Format keluaran:
 - Jawaban hanya berupa JSON array (tanpa komentar, tanpa penjelasan, tanpa teks tambahan).
-- Gunakan hanya tanda kutip ganda (\"), dan hindari kutip tunggal (') atau kutip melengkung (‘ ’ “ ”).
+- Gunakan hanya tanda kutip ganda (\"), dan jangan pernah gunakan kutip tunggal (') atau kutip melengkung (‘ ’ “ ”) untuk format JSON.
 
 Contoh format JSON yang harus diikuti:
 

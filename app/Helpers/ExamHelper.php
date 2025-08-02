@@ -239,32 +239,30 @@ class ExamHelper
       Log::info('✅ Replicate success to return prediction URL.', ['url' => $url]);
     }
 
-    // Step 2: Poll until status is done
+    // Step 2: Poll until finished
     do {
       sleep(1);
       $check = Http::withToken(env('REPLICATE_API_TOKEN'))->get($url)->json();
     } while (in_array($check['status'], ['starting', 'processing']));
 
-    // Step 3: Capture and clean raw AI output
-    $botReply = implode('', $check['output'] ?? []);
+    // Step 3: Capture and clean raw output
+    $botReply = $check['output'] ?? [];
+    $botReply = is_array($botReply) ? implode('', $botReply) : (string) $botReply;
     Log::info('[AI RAW]', ['raw' => $botReply]);
 
     $raw = trim($botReply);
 
-    // Normalize smart quotes to standard double quote
+    // Normalize smart quotes to regular double quote
     $raw = str_replace(['“', '”', '‘', '’'], '"', $raw);
 
-    // Convert single-quoted keys and values to double quotes
-    $raw = preg_replace_callback("/'([^']*?)'/", function ($m) {
-      return '"' . addslashes($m[1]) . '"';
-    }, $raw);
+    // Convert single-quoted keys/values to double quote
+    $raw = preg_replace_callback("/'([^']*?)'/", fn($m) => '"' . addslashes($m[1]) . '"', $raw);
 
     // Remove trailing commas before } or ]
     $raw = preg_replace('/,\s*([\]}])/', '$1', $raw);
 
-    // Remove tabs or control characters
-    $raw = preg_replace('/\t+/', '', $raw);
-    $raw = preg_replace('/[\x00-\x1F\x7F]/u', '', $raw);
+    // Remove control characters including \t, \r, \n
+    $raw = preg_replace('/[\x00-\x1F\x7F]+/u', '', $raw);
 
     Log::debug('[AI CLEANED]', ['cleaned' => $raw]);
 
@@ -278,6 +276,8 @@ class ExamHelper
       ]);
       return false;
     }
+
+    Log::info('✅ JSON decoded successfully', ['count' => count($parsed)]);
     return $parsed;
   }
 
