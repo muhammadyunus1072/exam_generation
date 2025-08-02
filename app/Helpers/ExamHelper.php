@@ -224,7 +224,8 @@ class ExamHelper
         'temperature' => 0.5,
         'presence_penalty' => 0,
         'frequency_penalty' => 0,
-        'max_tokens' => env('REPLICATE_MAX_TOKEN', 10000)
+        'max_tokens' => 10000
+        // 'max_tokens' => env('REPLICATE_MAX_TOKEN', 10000)
       ]
     ]);
 
@@ -282,7 +283,8 @@ class ExamHelper
         'temperature' => 0.5,
         'presence_penalty' => 0.3,
         'frequency_penalty' => 0.5,
-        'max_tokens' => env('REPLICATE_MAX_TOKEN', 10000)
+        'max_tokens' => 10000
+        // 'max_tokens' => env('REPLICATE_MAX_TOKEN', 10000)
       ]
     ]);
 
