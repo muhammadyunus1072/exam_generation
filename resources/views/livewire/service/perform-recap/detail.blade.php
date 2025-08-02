@@ -1,32 +1,41 @@
 <form wire:submit="store">
+    
+    <div class="row mb-3">
+        <div class="col-auto">
+            <a href="{{route('perform_recap.index', $exam_id)}}" class="btn btn-info mt-3 px-5">
+                Kembali
+            </a>
+        </div>
+    </div>
     <div class="row">
-        <div class="mb-3">
+
+        <div class="col-md-6 mb-1">
+            <label for="level">Nama Peserta</label>
+            <p class="pt-3">{{$perform_name}} - {!! ($score >= $minimal_score) ? "<span class='badge badge-success'>Lulus</span>" : "<span class='badge badge-danger'>Tidak Lulus</span>" !!}</p>
+        </div>
+        <div class="col-md-6 mb-1">
             <label for="level">Jenjang Pendidikan</label>
             <p class="form-control">{{ $level }}</p>
         </div>
-        <div class="mb-3">
-            <label for="level">Kelas</label>
-            <p class="form-control">{{ $grade }}</p>
-        </div>
-        <div class="mb-3">
-            <label for="level">Mata Pelajaran</label>
-            <p class="form-control">{{ $subject }}</p>
-        </div>
-        <div class="mb-3">
+        <div class="col-md-6 mb-1">
             <label for="level">Jumlah Soal</label>
             <p class="form-control">{{ $question_amount }}</p>
         </div>
-        <div class="mb-3">
+        <div class="col-md-6 mb-1">
+            <label for="level">Kelas</label>
+            <p class="form-control">{{ $grade }}</p>
+        </div>
+        <div class="col-md-6 mb-1">
             <label for="level">Nilai Minimal Lulus</label>
             <p class="form-control">{{ $minimal_score }}</p>
         </div>
-        <div class="mb-3">
+        <div class="col-md-6 mb-1">
+            <label for="level">Mata Pelajaran</label>
+            <p class="form-control">{{ $subject }}</p>
+        </div>
+        <div class="col-md-6 mb-1">
             <label for="level">Nilai Akhir</label>
             <p class="form-control">@currency($score)</p>
-        </div>
-        <div class="mb-3">
-            <label for="level">Status</label>
-            <p>{!! ($score >= $minimal_score) ? "<span class='badge badge-success'>Lulus</span>" : "<span class='badge badge-danger'>Tidak Lulus</span>" !!}</p>
         </div>
     </div>
     
@@ -43,13 +52,6 @@
         @endif
     @endforeach
 
-    <div class="row">
-        <div class="col-auto">
-            <a href="{{route('perform_recap.index', $exam_id)}}" class="btn btn-success mt-3">
-                Kembali
-            </a>
-        </div>
-    </div>
 </form>
 
 @include('js.imask')
