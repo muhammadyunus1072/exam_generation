@@ -97,30 +97,32 @@ class Detail extends Component
         // $this->exams_data = [];
         try {
             $prompt = sprintf(
-                "Buatkan sebanyak %s soal pilihan ganda untuk jenjang %s kelas %s pada mata pelajaran %s, berdasarkan Kurikulum Merdeka di Indonesia. " .
-                    "Setiap soal harus berupa pertanyaan yang faktual, logis, jelas, dan dapat diukur. " .
-                    "Gunakan bahasa Indonesia yang benar. Hindari soal yang tidak relevan, mengandung humor, atau bersifat imajinatif. " .
-                    "Jika mata pelajaran adalah bahasa inggris maka gunakan bahasa Inggris. " .
-                    "Kecuali soal bahasa inggris gunakan bahasa Inggris. " .
-                    "Topik/topik umum mata pelajaran boleh digunakan jika tidak disebutkan secara spesifik. " .
-                    "Masing-masing soal harus memiliki 1 pertanyaan, 4 pilihan jawaban (a, b, c, d), dan hanya satu jawaban benar. " .
-                    "Jawaban dalam format JSON valid, tanpa tambahan teks lain, tanpa penjelasan, tanpa komentar. Contoh format JSON sebagai berikut:
+                "Buatkan sebanyak %s soal pilihan ganda untuk jenjang %s kelas %s pada mata pelajaran %s, berdasarkan Kurikulum Merdeka yang berlaku di Indonesia. " .
+                    "Topik dan materi harus disesuaikan **khusus untuk tingkat kelas %s %s**, tidak boleh menggunakan materi dari kelas di bawah atau di atasnya. " .
+                    "Gunakan struktur soal yang faktual, logis, relevan, dan mengacu pada capaian pembelajaran yang sesuai dengan kelas dan mata pelajaran tersebut. " .
+                    "Gunakan bahasa Indonesia yang benar dan jelas, kecuali jika mata pelajaran adalah Bahasa Inggris, maka gunakan Bahasa Inggris. " .
+                    "Hindari soal yang mengandung humor, fiksi, atau bersifat imajinatif. Fokus pada penguasaan konsep dan keterampilan sesuai standar kurikulum. " .
+                    "Setiap soal harus memiliki 1 pertanyaan, 4 pilihan jawaban (a, b, c, d), dan hanya satu jawaban benar. " .
+                    "Format keluaran harus dalam JSON valid tanpa tambahan teks lain, tanpa penjelasan, dan tanpa komentar. Contoh format JSON sebagai berikut:
 
-                [
-                    {
-                        'question': 'Apa fungsi utama paru-paru dalam sistem pernapasan manusia?',
-                        'choices': ['Menukar oksigen dan karbon dioksida', 'Mencerna makanan', 'Menyaring darah', 'Mengatur suhu tubuh'],
-                        'correct_answer': 'Menukar oksigen dan karbon dioksida'
-                    },
-                ...
-                ]
+[
+    {
+        'question': 'Apa fungsi utama paru-paru dalam sistem pernapasan manusia?',
+        'choices': ['Menukar oksigen dan karbon dioksida', 'Mencerna makanan', 'Menyaring darah', 'Mengatur suhu tubuh'],
+        'correct_answer': 'Menukar oksigen dan karbon dioksida'
+    },
+    ...
+]
 
-Berikan hanya isi JSON array sesuai format di atas.",
+Berikan hanya isi array JSON sesuai format di atas.",
                 ExamHelper::imaskToValue($this->question_amount),
                 $this->level,
                 $this->grade,
-                $this->subject
+                $this->subject,
+                $this->level,
+                $this->grade
             );
+
             $data = ExamHelper::generateExam($prompt);
             if (!$data) {
                 $this->generate();
