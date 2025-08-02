@@ -287,26 +287,6 @@ class ExamHelper
       return false;
     }
 
-    // Step 5: Normalize jika format choices salah (hanya 1 string yang dipisah koma)
-    foreach ($parsed as &$q) {
-      if (
-        isset($q['choices']) &&
-        is_array($q['choices']) &&
-        count($q['choices']) === 1 &&
-        str_contains($q['choices'][0], ',')
-      ) {
-        $q['choices'] = array_map('trim', explode(',', $q['choices'][0]));
-      }
-
-      if (
-        isset($q['correct_answer']) &&
-        isset($q['choices']) &&
-        !in_array($q['correct_answer'], $q['choices'])
-      ) {
-        Log::warning('⚠️ correct_answer not found in choices', ['question' => $q['question']]);
-      }
-    }
-
     return $parsed;
   }
 
@@ -327,17 +307,12 @@ class ExamHelper
         $q['choices'] = array_map('trim', explode(',', $q['choices'][0]));
       }
 
-      // Warn if correct answer is not found in choices
       if (
         isset($q['correct_answer']) &&
         isset($q['choices']) &&
         !in_array($q['correct_answer'], $q['choices'])
       ) {
-        Log::warning('⚠️ correct_answer not found in choices', [
-          'question' => $q['question'],
-          'correct_answer' => $q['correct_answer'],
-          'choices' => $q['choices']
-        ]);
+        Log::warning('⚠️ correct_answer not found in choices', ['question' => $q['question']]);
       }
     }
 
