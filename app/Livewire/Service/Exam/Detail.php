@@ -102,7 +102,6 @@ class Detail extends Component
 Instruksi penting:
 - Topik dan materi soal harus sesuai dengan tingkat kelas %s %s (bukan dari kelas di atas atau di bawah).
 - Fokus pada capaian pembelajaran dan kompetensi dasar yang sesuai untuk kelas dan mata pelajaran tersebut.
-- Hindari soal dari topik SMA, SD, atau jenjang lainnya jika saat ini untuk SMP kelas 8, misalnya.
 - Gunakan struktur soal yang faktual, logis, dan relevan.
 - Gunakan bahasa Indonesia yang jelas dan baku. Jika mata pelajaran adalah Bahasa Inggris, gunakan bahasa Inggris.
 - Hindari soal yang mengandung humor, fiksi, imajinasi, atau teka-teki. Soal harus bersifat akademik dan mengukur kemampuan siswa.
