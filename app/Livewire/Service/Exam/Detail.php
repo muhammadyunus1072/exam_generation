@@ -97,8 +97,8 @@ class Detail extends Component
         // $this->exams_data = [];
         try {
             $prompt = sprintf(
-                "Buatkan sebanyak %s soal pilihan ganda untuk jenjang %s kelas %s pada mata pelajaran %s, berdasarkan Kurikulum Merdeka yang berlaku di Indonesia. " .
-                    "Topik dan materi harus disesuaikan **khusus untuk tingkat kelas %s %s**, tidak boleh menggunakan materi dari kelas di bawah atau di atasnya. " .
+                "Buatkan sebanyak %s soal ujian pilihan ganda untuk jenjang %s kelas %s pada mata pelajaran %s, berdasarkan Kurikulum Merdeka yang berlaku di Indonesia. " .
+                    "Topik dan materi harus disesuaikan khusus untuk tingkat kelas %s %s, tidak boleh menggunakan materi dari jenjang dan kelas di bawah atau di atasnya. " .
                     "Gunakan struktur soal yang faktual, logis, relevan, dan mengacu pada capaian pembelajaran yang sesuai dengan kelas dan mata pelajaran tersebut. " .
                     "Gunakan bahasa Indonesia yang benar dan jelas, kecuali jika mata pelajaran adalah Bahasa Inggris, maka gunakan Bahasa Inggris. " .
                     "Hindari soal yang mengandung humor, fiksi, atau bersifat imajinatif. Fokus pada penguasaan konsep dan keterampilan sesuai standar kurikulum. " .
