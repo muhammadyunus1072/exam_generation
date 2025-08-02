@@ -52,6 +52,14 @@
         @endif
     @endforeach
 
+    <hr>
+    <div class="row">
+        <div class="col-md-6 mb-1">
+            <label for="level">Pesan Kesimpulan</label>
+            <p class="form-control">{{$summary_message}}</p>
+        </div>
+    </div>
+
 </form>
 
 @include('js.imask')

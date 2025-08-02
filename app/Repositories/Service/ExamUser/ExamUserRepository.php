@@ -18,6 +18,7 @@ class ExamUserRepository extends MasterDataRepository
             'exam_users.id as id',
             'exam_users.score as score',
             'exam_users.minimal_score as minimal_score',
+            'exam_users.summary_message as summary_message',
             'users.name as perform_name',
         )
             ->join('users', 'exam_users.user_id', '=', 'users.id')

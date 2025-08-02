@@ -20,6 +20,7 @@ class Detail extends Component
     public $objId;
     public $exam_id;
     public $perform_name;
+    public $summary_message;
 
     #[Validate('required', message: 'Jenjang Pendidikan Harus Diisi', onUpdate: false)]
     public $level;
@@ -46,7 +47,8 @@ class Detail extends Component
             $this->question_amount = $examUser->exam->question_amount;
             $this->minimal_score = $examUser->exam->minimal_score;
             $this->score = $examUser->score;
-            $this->perform_name = $examUser->user->name;
+            $this->perform_name = $examUser->perform_name;
+            $this->summary_message = $examUser->summary_message;
             $this->exams_data = json_decode($examUser->exams_data, true);
         }
     }
