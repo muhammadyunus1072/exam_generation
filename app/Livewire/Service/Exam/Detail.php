@@ -96,14 +96,14 @@ class Detail extends Component
     {
         // $this->exams_data = [];
         try {
-            $prompt = sprintf(
-                "Buatkan sebanyak %s soal ujian pilihan ganda untuk jenjang %s kelas %s pada mata pelajaran %s, berdasarkan Kurikulum Merdeka yang berlaku di Indonesia. " .
-                    "Topik dan materi harus disesuaikan khusus untuk tingkat kelas %s %s, tidak boleh menggunakan materi dari jenjang dan kelas di bawah atau di atasnya. " .
-                    "Gunakan struktur soal yang faktual, logis, relevan, dan mengacu pada capaian pembelajaran yang sesuai dengan kelas dan mata pelajaran tersebut. " .
-                    "Gunakan bahasa Indonesia yang benar dan jelas, kecuali jika mata pelajaran adalah Bahasa Inggris, maka gunakan Bahasa Inggris. " .
-                    "Hindari soal yang mengandung humor, fiksi, atau bersifat imajinatif. Fokus pada penguasaan konsep dan keterampilan sesuai standar kurikulum. " .
-                    "Setiap soal harus memiliki 1 pertanyaan, 4 pilihan jawaban (a, b, c, d), dan hanya satu jawaban benar. " .
-                    `Format keluaran harus dalam JSON valid tanpa tambahan teks lain, tanpa penjelasan, dan tanpa komentar.
+            $prompt =
+                "Buatkan sebanyak " . ExamHelper::imaskToValue($this->question_amount) . " soal ujian pilihan ganda untuk jenjang " . $this->level . " kelas " . $this->grade . " pada mata pelajaran " . $this->subject . ", berdasarkan Kurikulum Merdeka yang berlaku di Indonesia. " .
+                "Topik dan materi harus disesuaikan khusus untuk tingkat kelas " . $this->level . " " . $this->grade . ", tidak boleh menggunakan materi dari jenjang dan kelas di bawah atau di atasnya. " .
+                "Gunakan struktur soal yang faktual, logis, relevan, dan mengacu pada capaian pembelajaran yang sesuai dengan kelas dan mata pelajaran tersebut. " .
+                "Gunakan bahasa Indonesia yang benar dan jelas, kecuali jika mata pelajaran adalah Bahasa Inggris, maka gunakan Bahasa Inggris. " .
+                "Hindari soal yang mengandung humor, fiksi, atau bersifat imajinatif. Fokus pada penguasaan konsep dan keterampilan sesuai standar kurikulum. " .
+                "Setiap soal harus memiliki 1 pertanyaan, 4 pilihan jawaban (a, b, c, d), dan hanya satu jawaban benar. " .
+                `Format keluaran harus dalam JSON valid tanpa tambahan teks lain, tanpa penjelasan, dan tanpa komentar.
                     Gunakan hanya tanda kutip ganda ("), dan jangan gunakan tanda kutip tunggal (') atau kutip melengkung (‘ ’ “ ”). Contoh format JSON sebagai berikut:
 
 [
@@ -115,14 +115,7 @@ class Detail extends Component
     ...
 ]
 
-Berikan hanya isi array JSON sesuai format di atas.`,
-                ExamHelper::imaskToValue($this->question_amount),
-                $this->level,
-                $this->grade,
-                $this->subject,
-                $this->level,
-                $this->grade
-            );
+Berikan hanya isi array JSON sesuai format di atas.`;
 
             $data = ExamHelper::generateExam($prompt);
             if (!$data) {
