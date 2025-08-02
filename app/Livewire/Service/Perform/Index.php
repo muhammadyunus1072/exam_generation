@@ -133,13 +133,14 @@ Berikut adalah data jawaban salah dari soal ujian siswa dalam format JSON:
 
 Gunakan data di atas untuk menganalisis dan memberikan evaluasi yang sesuai.
 
-Berikan hasil dalam format JSON tanpa komentar atau tambahan teks apapun. Contoh format:
+Format keluaran:
+- Format JSON valid. Gunakan hanya kutip ganda (\"). Tanpa komentar, tanpa teks tambahan. Jangan gunakan kutip melengkung.
+- Jawaban hanya berupa JSON array (tanpa komentar, tanpa penjelasan, tanpa teks tambahan).
+- Gunakan hanya tanda kutip ganda (\"), dan jangan pernah gunakan kutip tunggal (') atau kutip melengkung (‘ ’ “ ”) untuk format JSON.
 
-[
-  {
-    \"summary_message\": \"...pesan evaluasi personal di sini...\"
-  }
-]",
+Contoh format JSON yang harus diikuti:
+
+[{\"summary_message\": \"...pesan evaluasi personal di sini...\"}]",
                 $this->level,
                 $this->grade,
                 $this->subject,
