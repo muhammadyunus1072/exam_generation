@@ -103,7 +103,7 @@ Instruksi penting:
 - Topik dan materi soal harus sesuai dengan tingkat kelas %s %s (bukan dari jenjang dan kelas di atas atau di bawah).
 - Fokus pada capaian pembelajaran dan kompetensi dasar yang sesuai untuk kelas dan mata pelajaran tersebut.
 - Gunakan topik dan capaian pembelajaran yang sesuai untuk semester ini, khusus untuk jenjang dan kelas tersebut, bukan dari kelas di atas atau di bawahnya.
-- Setiap soal harus faktual, jelas, logis, dan relevan dengan kompetensi dasar kelas %s.
+- Setiap soal harus faktual, jelas, logis, dan relevan dengan kompetensi kelas %s.
 - Gunakan bahasa Indonesia yang jelas dan baku. Jika mata pelajaran adalah Bahasa Inggris, gunakan bahasa Inggris.
 - Hindari soal yang mengandung humor, fiksi, imajinasi, atau teka-teki. Soal harus bersifat akademik dan mengukur kemampuan siswa.
 - Setiap soal memiliki 1 pertanyaan, 4 pilihan jawaban (a, b, c, d), dan hanya satu jawaban yang benar.
