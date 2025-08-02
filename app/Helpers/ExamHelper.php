@@ -279,14 +279,6 @@ class ExamHelper
     // Step 4: Decode JSON
     $parsed = json_decode($raw, true);
 
-    if (json_last_error() !== JSON_ERROR_NONE) {
-      Log::error('🛑 JSON Decode Error', [
-        'error' => json_last_error_msg(),
-        'json' => $raw
-      ]);
-      return false;
-    }
-
     return $parsed;
   }
 
