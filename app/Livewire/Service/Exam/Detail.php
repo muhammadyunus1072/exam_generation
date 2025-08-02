@@ -103,19 +103,19 @@ class Detail extends Component
                     "Gunakan bahasa Indonesia yang benar dan jelas, kecuali jika mata pelajaran adalah Bahasa Inggris, maka gunakan Bahasa Inggris. " .
                     "Hindari soal yang mengandung humor, fiksi, atau bersifat imajinatif. Fokus pada penguasaan konsep dan keterampilan sesuai standar kurikulum. " .
                     "Setiap soal harus memiliki 1 pertanyaan, 4 pilihan jawaban (a, b, c, d), dan hanya satu jawaban benar. " .
-                    "Format keluaran harus dalam JSON valid tanpa tambahan teks lain, tanpa penjelasan, dan tanpa komentar.
-                    Gunakan hanya tanda kutip ganda (\"), dan jangan gunakan tanda kutip tunggal (') atau kutip melengkung (‘ ’ “ ”). Contoh format JSON sebagai berikut:
+                    `Format keluaran harus dalam JSON valid tanpa tambahan teks lain, tanpa penjelasan, dan tanpa komentar.
+                    Gunakan hanya tanda kutip ganda ("), dan jangan gunakan tanda kutip tunggal (') atau kutip melengkung (‘ ’ “ ”). Contoh format JSON sebagai berikut:
 
 [
     {
-        'question': 'Apa fungsi utama paru-paru dalam sistem pernapasan manusia?',
-        'choices': ['Menukar oksigen dan karbon dioksida', 'Mencerna makanan', 'Menyaring darah', 'Mengatur suhu tubuh'],
-        'correct_answer': 'Menukar oksigen dan karbon dioksida'
+        "question": "Apa fungsi utama paru-paru dalam sistem pernapasan manusia?",
+        "choices": ["Menukar oksigen dan karbon dioksida", "Mencerna makanan", "Menyaring darah", "Mengatur suhu tubuh"],
+        "correct_answer": "Menukar oksigen dan karbon dioksida"
     },
     ...
 ]
 
-Berikan hanya isi array JSON sesuai format di atas.",
+Berikan hanya isi array JSON sesuai format di atas.`,
                 ExamHelper::imaskToValue($this->question_amount),
                 $this->level,
                 $this->grade,

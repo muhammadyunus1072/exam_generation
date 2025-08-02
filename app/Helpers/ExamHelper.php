@@ -209,72 +209,14 @@ class ExamHelper
       true
     );
   }
-  public static function generateSummary($prompt)
-  {
-    // Step 1: Send prompt to Replicate
-    $response = Http::withHeaders([
-      'Authorization' => 'Bearer ' . env('REPLICATE_API_TOKEN'),
-      'Content-Type' => 'application/json',
 
-    ])->post(env('REPLICATE_MODEL_URL', 'https://api.replicate.com/v1/models/ibm-granite/granite-3.3-8b-instruct/predictions'), [
-      'input' => [
-        'prompt' => $prompt,
-        'top_p' => 0.9,
-        'top_k' => 50,
-        'temperature' => 0.5,
-        'presence_penalty' => 0,
-        'frequency_penalty' => 0,
-        'max_tokens' => 1000000
-        // 'max_tokens' => env('REPLICATE_MAX_TOKEN', 10000)
-      ]
-    ]);
-
-    $prediction = $response->json();
-    $url = $prediction['urls']['get'] ?? null;
-
-    if (!$url) {
-      Log::error('🛑 Failed to get prediction URL.', ['response' => $prediction]);
-      return false;
-    }
-
-    // Step 2: Wait until complete
-    do {
-      sleep(1);
-      $check = Http::withToken(env('REPLICATE_API_TOKEN'))->get($url)->json();
-    } while (in_array($check['status'], ['starting', 'processing']));
-
-    // Step 3: Clean and parse the result
-    $botReply = implode('', $check['output'] ?? []);
-    Log::info('[AI Summary RAW]', ['raw' => $botReply]);
-
-    $raw = trim($botReply);
-    $clean = preg_replace_callback("/'([^']*?)'/", fn($m) => '"' . addslashes($m[1]) . '"', $raw);
-    $clean = preg_replace('/,\s*([\]}])/', '$1', $clean);
-
-    $parsed = json_decode($clean, true);
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-      Log::error('🛑 JSON Decode Error: ' . json_last_error_msg(), ['json' => $clean]);
-      return false;
-    }
-
-    // Step 4: Extract summary message
-    if (isset($parsed[0]['summary_message'])) {
-      return $parsed[0]['summary_message'];
-    }
-
-    Log::warning('⚠️ No summary_message found in response.', ['parsed' => $parsed]);
-    return false;
-  }
-
-
-  public static function generateExam($prompt)
+  private static function generate($prompt)
   {
     // Step 1: Make prediction request
     $response = Http::withHeaders([
       'Authorization' => 'Bearer ' . env('REPLICATE_API_TOKEN'),
       'Content-Type' => 'application/json',
-
+      'Prefer' => 'wait',
     ])->post(env('REPLICATE_MODEL_URL', 'https://api.replicate.com/v1/models/ibm-granite/granite-3.3-8b-instruct/predictions'), [
       'input' => [
         'prompt' => $prompt,
@@ -283,8 +225,7 @@ class ExamHelper
         'temperature' => 0.5,
         'presence_penalty' => 0.3,
         'frequency_penalty' => 0.5,
-        'max_tokens' => 1000000
-        // 'max_tokens' => env('REPLICATE_MAX_TOKEN', 10000)
+        'max_tokens' => 4000,
       ]
     ]);
 
@@ -295,7 +236,7 @@ class ExamHelper
       Log::error('🛑 Replicate failed to return prediction URL.', ['response' => $prediction]);
       return false;
     } else {
-      Log::info('Replicate success to return prediction URL.', ['response' => $prediction]);
+      Log::info('✅ Replicate success to return prediction URL.', ['url' => $url]);
     }
 
     // Step 2: Poll until status is done
@@ -304,26 +245,48 @@ class ExamHelper
       $check = Http::withToken(env('REPLICATE_API_TOKEN'))->get($url)->json();
     } while (in_array($check['status'], ['starting', 'processing']));
 
+    // Step 3: Capture and clean raw AI output
     $botReply = implode('', $check['output'] ?? []);
     Log::info('[AI RAW]', ['raw' => $botReply]);
 
-    // Step 3: Fix JSON issues (single quote, trailing commas)
     $raw = trim($botReply);
 
-    $clean = preg_replace_callback("/'([^']*?)'/", function ($m) {
+    // Normalize smart quotes to standard double quote
+    $raw = str_replace(['“', '”', '‘', '’'], '"', $raw);
+
+    // Convert single-quoted keys and values to double quotes
+    $raw = preg_replace_callback("/'([^']*?)'/", function ($m) {
       return '"' . addslashes($m[1]) . '"';
     }, $raw);
 
-    $clean = preg_replace('/,\s*([\]}])/', '$1', $clean);
+    // Remove trailing commas before } or ]
+    $raw = preg_replace('/,\s*([\]}])/', '$1', $raw);
 
-    $parsed = json_decode($clean, true);
+    // Remove tabs or control characters
+    $raw = preg_replace('/\t+/', '', $raw);
+    $raw = preg_replace('/[\x00-\x1F\x7F]/u', '', $raw);
+
+    Log::debug('[AI CLEANED]', ['cleaned' => $raw]);
+
+    // Step 4: Parse JSON
+    $parsed = json_decode($raw, true);
 
     if (json_last_error() !== JSON_ERROR_NONE) {
-      Log::error('🛑 JSON Decode Error: ' . json_last_error_msg(), ['json' => $clean]);
+      Log::error('🛑 JSON Decode Error', [
+        'error' => json_last_error_msg(),
+        'json' => $raw
+      ]);
       return false;
     }
+    return $parsed;
+  }
 
-    // Step 4: Normalize malformed `choices` if needed
+
+  public static function generateExam($prompt)
+  {
+
+    $parsed = self::generate($prompt);
+    // Step 5: Normalize malformed `choices`
     foreach ($parsed as &$q) {
       if (
         isset($q['choices']) &&
@@ -334,17 +297,35 @@ class ExamHelper
         $q['choices'] = array_map('trim', explode(',', $q['choices'][0]));
       }
 
-      // Optional: Ensure correct_answer is inside choices
+      // Warn if correct answer is not found in choices
       if (
         isset($q['correct_answer']) &&
         isset($q['choices']) &&
         !in_array($q['correct_answer'], $q['choices'])
       ) {
-        Log::warning('⚠️ correct_answer not found in choices', ['question' => $q['question']]);
+        Log::warning('⚠️ correct_answer not found in choices', [
+          'question' => $q['question'],
+          'correct_answer' => $q['correct_answer'],
+          'choices' => $q['choices']
+        ]);
       }
     }
 
     return $parsed;
+  }
+
+
+  public static function generateSummary($prompt)
+  {
+    $parsed = self::generate($prompt);
+
+    // Step 4: Extract summary message
+    if (isset($parsed[0]['summary_message'])) {
+      return $parsed[0]['summary_message'];
+    }
+
+    Log::warning('⚠️ No summary_message found in response.', ['parsed' => $parsed]);
+    return false;
   }
 
 
