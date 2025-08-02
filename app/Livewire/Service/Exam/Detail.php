@@ -114,13 +114,7 @@ Format keluaran:
 
 Contoh format JSON yang harus diikuti:
 
-[
-  {
-    \"question\": \"Apa fungsi utama paru-paru dalam sistem pernapasan manusia?\",
-    \"choices\": [\"Menukar oksigen dan karbon dioksida\", \"Mencerna makanan\", \"Menyaring darah\", \"Mengatur suhu tubuh\"],
-    \"correct_answer\": \"Menukar oksigen dan karbon dioksida\"
-  }
-]
+[{\"question\":\"Apa fungsi utama paru-paru dalam sistem pernapasan manusia?\",\"choices\":[\"Menukar oksigen dan karbon dioksida\",\"Mencerna makanan\",\"Menyaring darah\",\"Mengatur suhu tubuh\"],\"correct_answer\":\"Menukar oksigen dan karbon dioksida\"}]
 
 Berikan hanya isi JSON array sesuai format di atas.",
                 ExamHelper::imaskToValue($this->question_amount),
