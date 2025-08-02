@@ -216,15 +216,15 @@ class ExamHelper
       'Authorization' => 'Bearer ' . env('REPLICATE_API_TOKEN'),
       'Content-Type' => 'application/json',
 
-    ])->post(env('REPLICATE_URL'), [
+    ])->post(env('REPLICATE_MODEL_URL', 'https://api.replicate.com/v1/models/ibm-granite/granite-3.3-8b-instruct/predictions'), [
       'input' => [
         'prompt' => $prompt,
         'top_p' => 0.9,
         'top_k' => 50,
-        'temperature' => 0.2,
+        'temperature' => 0.5,
         'presence_penalty' => 0,
         'frequency_penalty' => 0,
-        'max_tokens' => 10_000_000
+        env('REPLICATE_MAX_TOKEN', 10_000) => 10_000_000
       ]
     ]);
 
@@ -274,15 +274,15 @@ class ExamHelper
       'Authorization' => 'Bearer ' . env('REPLICATE_API_TOKEN'),
       'Content-Type' => 'application/json',
 
-    ])->post(env('REPLICATE_URL'), [
+    ])->post(env('REPLICATE_MODEL_URL', 'https://api.replicate.com/v1/models/ibm-granite/granite-3.3-8b-instruct/predictions', 'https://api.replicate.com/v1/models/ibm-granite/granite-3.3-8b-instruct/predictions'), [
       'input' => [
         'prompt' => $prompt,
         'top_p' => 0.9,
-        'top_k' => 50,
-        'temperature' => 0.2,
-        'presence_penalty' => 0,
-        'frequency_penalty' => 0,
-        'max_tokens' => 10_000_000
+        'top_k' => 100,
+        'temperature' => 0.5,
+        'presence_penalty' => 0.3,
+        'frequency_penalty' => 0.5,
+        env('REPLICATE_MAX_TOKEN', 10_000) => 10_000_000
       ]
     ]);
 
