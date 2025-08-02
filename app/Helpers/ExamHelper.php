@@ -251,27 +251,27 @@ class ExamHelper
 
     $raw = trim($botReply);
 
-    // === CLEANING SECTION ===
+    // Normalize smart quotes to standard double quote
+    $raw = str_replace(['“', '”', '‘', '’'], '"', $raw);
 
-    // 1. Ganti kutip melengkung jadi kutip standar
-    $raw = strtr($raw, [
-      '“' => '"',
-      '”' => '"',
-      '‘' => '"',
-      '’' => '"',
-      '′' => "'",
-    ]);
+    // Replace invalid curly quotes accidentally escaped
+    $raw = preg_replace('/[\x{2018}-\x{201F}]/u', '"', $raw);
 
-    // 2. Ganti single-quote (jika ada) ke double-quote
+    // Remove tabs and non-breaking spaces and invisible Unicode control chars
+    $raw = str_replace(["\t", "\u{00a0}", "\u{200b}", "\u{200c}", "\u{200d}", "\u{FEFF}"], '', $raw);
+    $raw = preg_replace('/[\x00-\x1F\x7F]/u', '', $raw);
+
+    // Convert single quotes around keys/values into double quotes
     $raw = preg_replace_callback("/'([^']*?)'/", function ($m) {
       return '"' . addslashes($m[1]) . '"';
     }, $raw);
 
-    // 3. Hapus koma di akhir array/object
+    // Remove trailing commas
     $raw = preg_replace('/,\s*([\]}])/', '$1', $raw);
 
-    // 4. Hapus karakter tak terlihat seperti tab, non-breaking space, null, dll
-    $raw = preg_replace('/[\x00-\x1F\x7F\xA0]+/u', '', $raw);
+    // Optional: remove backslashes before math notation (optional)
+    $raw = str_replace(['\\(', '\\)', '\\^'], '', $raw);
+
 
     // Optional: Debug output yang sudah dibersihkan
     Log::debug('[AI CLEANED]', ['cleaned' => $raw]);
