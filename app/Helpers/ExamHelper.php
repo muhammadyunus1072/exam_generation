@@ -294,6 +294,8 @@ class ExamHelper
     if (!$url) {
       Log::error('🛑 Replicate failed to return prediction URL.', ['response' => $prediction]);
       return false;
+    } else {
+      Log::info('Replicate success to return prediction URL.', ['response' => $prediction]);
     }
 
     // Step 2: Poll until status is done
