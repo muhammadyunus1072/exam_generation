@@ -31,4 +31,9 @@ class ExamUser extends Model
     {
         return true;
     }
+
+    public function exam()
+    {
+        return $this->belongsTo(Exam::class, 'exam_id', 'id');
+    }
 }

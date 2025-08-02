@@ -59,7 +59,7 @@
         </div>
         @endif
 
-        @if (!empty($subject))
+        @if (!empty($subject) && !$objId)
 
         <div class="col-md-3 mx-auto">
             <button type="button" class="btn text-white w-100" style="background-color: #5d2fc2; " wire:click="generate"> 
@@ -82,7 +82,7 @@
         <p>Jawaban => {{$exams['correct_answer']}}</p>
     @endforeach
 
-    @if ($exams_data)
+    @if ($exams_data && !$objId)
     <div class="row">
         <div class="col-auto">
             <button type="submit" class="btn btn-success mt-3">
@@ -90,6 +90,11 @@
                 Simpan
             </button>
         </div>
+    </div>
+    @endif
+    @if ($objId)
+        
+    <div class="row">
         <div class="col-auto">
             <div x-data="{ copied: false }">
                 <div class="flex items-center">
@@ -117,7 +122,6 @@
             </a>
         </div>
     </div>
-
     @endif
 </form>
 

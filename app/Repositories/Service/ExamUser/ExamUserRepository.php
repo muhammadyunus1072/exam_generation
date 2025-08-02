@@ -12,8 +12,15 @@ class ExamUserRepository extends MasterDataRepository
         return ExamUser::class;
     }
 
-    public static function datatable()
+    public static function datatable($id)
     {
-        return ExamUser::query();
+        return ExamUser::select(
+            'exam_users.id as id',
+            'exam_users.score as score',
+            'exam_users.minimal_score as minimal_score',
+            'users.name as perform_name',
+        )
+            ->join('users', 'exam_users.user_id', '=', 'users.id')
+            ->where('exam_id', '=', $id);
     }
 }

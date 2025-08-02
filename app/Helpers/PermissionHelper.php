@@ -32,6 +32,7 @@ class PermissionHelper
     const ACCESS_ROLE = "role";
     const ACCESS_EXAM = "exam";
     const ACCESS_PERFORM = "perform";
+    const ACCESS_PERFORM_RECAP = "perform_recap";
     const ACCESS_ALL = [
         self::ACCESS_DASHBOARD,
         self::ACCESS_USER,
@@ -39,6 +40,7 @@ class PermissionHelper
         self::ACCESS_ROLE,
         self::ACCESS_EXAM,
         self::ACCESS_PERFORM,
+        self::ACCESS_PERFORM_RECAP,
     ];
 
     const TRANSLATE_ACCESS = [
@@ -48,6 +50,7 @@ class PermissionHelper
         self::ACCESS_ROLE => "Jabatan",
         self::ACCESS_EXAM => "Data Ujian",
         self::ACCESS_PERFORM => "Mengerjakan Ujian",
+        self::ACCESS_PERFORM_RECAP => "Rekap Pengerjaan",
     ];
 
     const ACCESS_TYPE_ALL = [
@@ -57,6 +60,7 @@ class PermissionHelper
         PermissionHelper::ACCESS_PERMISSION => PermissionHelper::TYPE_ALL,
         PermissionHelper::ACCESS_EXAM => PermissionHelper::TYPE_ALL,
         PermissionHelper::ACCESS_PERFORM => PermissionHelper::TYPE_ALL,
+        PermissionHelper::ACCESS_PERFORM_RECAP => PermissionHelper::TYPE_ALL,
     ];
 
     /*

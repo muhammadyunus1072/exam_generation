@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Service\Exam;
+namespace App\Livewire\Service\PerformRecap;
 
 use App\Helpers\Alert;
 use Livewire\Component;
@@ -15,11 +15,13 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Repositories\Account\UserRepository;
 use App\Repositories\Service\Exam\ExamRepository;
 use App\Repositories\MasterData\PaymentMethod\PaymentMethodRepository;
+use App\Repositories\Service\ExamUser\ExamUserRepository;
 
 class Datatable extends Component
 {
     use WithDatatable;
 
+    public $objId;
     public $isCanUpdate;
     public $isCanDelete;
     public $isCanUpdateBookingTime;
@@ -31,8 +33,8 @@ class Datatable extends Component
     public function onMount()
     {
         $authUser = UserRepository::authenticatedUser();
-        $this->isCanUpdate = $authUser->hasPermissionTo(PermissionHelper::transform(PermissionHelper::ACCESS_EXAM, PermissionHelper::TYPE_UPDATE));
-        $this->isCanDelete = $authUser->hasPermissionTo(PermissionHelper::transform(PermissionHelper::ACCESS_EXAM, PermissionHelper::TYPE_DELETE));
+        $this->isCanUpdate = $authUser->hasPermissionTo(PermissionHelper::transform(PermissionHelper::ACCESS_PERFORM_RECAP, PermissionHelper::TYPE_UPDATE));
+        $this->isCanDelete = $authUser->hasPermissionTo(PermissionHelper::transform(PermissionHelper::ACCESS_PERFORM_RECAP, PermissionHelper::TYPE_DELETE));
     }
 
     #[On('on-delete-dialog-confirm')]
@@ -80,77 +82,53 @@ class Datatable extends Component
                     $editHtml = "";
                     $id = ExamHelper::simple_encrypt($item->id);
                     if ($this->isCanUpdate) {
-                        $editUrl = route('exam.edit', $id);
+                        $editUrl = route('perform_recap.edit', $id);
                         $editHtml = "<div class='col-auto mb-2'>
                             <a class='btn btn-primary btn-sm' href='$editUrl'>
-                                <i class='ki-duotone ki-notepad-edit fs-1'>
-                                    <span class='path1'></span>
-                                    <span class='path2'></span>
-                                </i>
-                                Detail
-                            </a>
-                        </div>";
-                    }
-
-                    $destroyHtml = "";
-                    if ($this->isCanDelete) {
-                        $destroyHtml = "<div class='col-auto mb-2'>
-                            <button class='btn btn-danger btn-sm m-0' 
-                                wire:click=\"showDeleteDialog('$id')\">
-                                <i class='ki-duotone ki-trash fs-1'>
+                                <i class='ki-duotone ki-eye fs-1'>
                                     <span class='path1'></span>
                                     <span class='path2'></span>
                                     <span class='path3'></span>
                                     <span class='path4'></span>
                                     <span class='path5'></span>
                                 </i>
-                                Hapus
-                            </button>
+                                Detail
+                            </a>
                         </div>";
                     }
 
-                    $performRecapUrl = route('perform_recap.index', $id);
-                    $performRecapHtml = "<div class='col-auto mb-2'>
-                            <a class='btn btn-success btn-sm' href='$performRecapUrl'>
-                                <i class='ki-duotone ki-eye fs-1'>
-                                    <span class='path1'></span>
-                                    <span class='path2'></span>
-                                    <span class='path3'></span>
-                                    <span class='path4'></span>
-                                </i>
-                                Rekap Pengerjaan
-                            </a>
-                        </div>";
-
                     $html = "<div class='row'>
-                        $editHtml $destroyHtml $performRecapHtml
+                        $editHtml
                     </div>";
 
                     return $html;
                 },
             ],
             [
-                'key' => 'level',
-                'name' => 'Jenjang Pendidikan',
+                'key' => 'perform_name',
+                'name' => 'Nama Peserta',
             ],
             [
-                'key' => 'grade',
-                'name' => 'Kelas',
+                'key' => 'score',
+                'name' => 'Nilai',
             ],
             [
-                'key' => 'subject',
-                'name' => 'Mata Pelajaran',
+                'key' => 'score',
+                'name' => 'Status',
+                'render' => function ($item) {
+                    return $item->score >= $item->minimal_score ? "<span class='badge badge-success'>Lulus</span>" : "<span class='badge badge-danger'>Tidak Lulus</span>";
+                }
             ],
         ];
     }
 
     public function getQuery(): Builder
     {
-        return ExamRepository::datatable();
+        return ExamUserRepository::datatable(ExamHelper::simple_decrypt($this->objId));
     }
 
     public function getView(): string
     {
-        return 'livewire.service.exam.datatable';
+        return 'livewire.service.perform-recap.datatable';
     }
 }

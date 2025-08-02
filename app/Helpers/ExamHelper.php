@@ -339,6 +339,13 @@ class ExamHelper
     return str($data)->replace('.', '')->replace(',', '.')->toFloat();
   }
 
+  const DECIMAL_POIN = 2;
+
+  public static function format($number, $decimalPoin = self::DECIMAL_POIN)
+  {
+    $decimalPoin = fmod($number, 1) !== 0.00 ? $decimalPoin : 0;
+    return number_format($number, $decimalPoin, ",", ".");
+  }
 
   public static function valueToImask($data)
   {
